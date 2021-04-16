@@ -11,7 +11,7 @@ import sys
 from multiprocessing import cpu_count
 
 import numpy as np
-import resampy # to resample frequency
+import resampy 
 
 try:
     from joblib import Parallel
