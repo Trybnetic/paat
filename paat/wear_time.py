@@ -7,8 +7,7 @@ import logging
 import os
 from tensorflow.keras import models
 
-from functions.helper_functions import calculate_vector_magnitude
-from signal_processing import resample_acceleration
+from . import preprocessing
 
 def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_segment_length = 1, sliding_window = 1, use_vmu = False):
 	"""
@@ -48,7 +47,7 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
 		# calculate VMU if set to true
 		if use_vmu:
 			# calculate the VMU of XYZ
-			data = calculate_vector_magnitude(data)
+			data = preprocessing.calculate_vector_magnitude(data)
 
 		# calculate the standard deviation of each column (YXZ)
 		std = np.std(data, axis=0)
@@ -397,7 +396,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
 	if hz != 100:
 		logging.info(f'Sampling frequency of the data is {hz}Hz, should be 100Hz, starting resampling....')
 		# call resampling function
-		raw_acc = resample_acceleration(data = raw_acc, from_hz = hz, to_hz = 100, verbose = verbose)
+		raw_acc = preprocessing.resample_acceleration(data = raw_acc, from_hz = hz, to_hz = 100, verbose = verbose)
 		logging.info('Data resampled to 100hz')
 		# set sampling frequency to 100hz
 		hz = 100
