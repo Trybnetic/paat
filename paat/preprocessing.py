@@ -72,7 +72,7 @@ def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=Fal
 
     except Exception as e:
 
-        logging.error('[{}] : {}'.format(sys._getframe().f_code.co_name,e))
+        logging.error('[{}] : {}'.format(sys._getframe().f_code.co_name, e))
         exit(1)
 
 
@@ -130,13 +130,13 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel=False, num_jobs=cpu
         executor = Parallel(n_jobs=num_jobs, backend='multiprocessing')
 
         # create tasks so we can execute them in parallel
-        tasks = (delayed(resample)(data[:,i], from_hz, to_hz, i) for i in range(axes))
+        tasks = (delayed(resample)(data[:, i], from_hz, to_hz, i) for i in range(axes))
 
         # execute tasks in parallel. It returns the resampled columns and column index i
         for i, column_data in executor(tasks):
 
             # add column data to correct column index
-            new_data[:,i] = column_data
+            new_data[:, i] = column_data
 
         # finished and return new data
         return new_data
@@ -145,7 +145,7 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel=False, num_jobs=cpu
         # loop over each of the columns of the original data, resample, and then add to the new_data array
         for i in range(axes):
 
-            _, new_data[:,i] = resample(data[:,i], from_hz, to_hz, i, verbose)
+            _, new_data[:, i] = resample(data[:, i], from_hz, to_hz, i, verbose)
 
         return new_data
 

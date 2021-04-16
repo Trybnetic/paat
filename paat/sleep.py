@@ -41,7 +41,7 @@ def cole_kripke(data, weights=[106, 54, 58, 76, 230, 74, 67], P=0.001):
     sliding_windows = np.stack([data[xx:xx-6] for xx in range(6)], axis=-1)
 
     def _score(window, weights=weights, P=P):
-        return P * sum([xx * yy for xx,yy in zip(window, weights)])
+        return P * sum([xx * yy for xx, yy in zip(window, weights)])
 
     sleep_data = np.apply_along_axis(_score, 1, sliding_windows)
 

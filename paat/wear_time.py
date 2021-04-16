@@ -38,14 +38,14 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
     # adjust the sliding window to match the samples per second (this is encoded in the samplign frequency)
     sliding_window *= hz * 60
     # adjust the minimum segment lenght to reflect minutes
-    min_segment_length*= hz * 60
+    min_segment_length *= hz * 60
 
     # define new non wear time vector that we initiale to all 1s, so we only have the change when we have non wear time as it is encoded as 0
     non_wear_vector = np.ones((len(acc_data), 1), dtype=np.uint8)
     non_wear_vector_final = np.ones((len(acc_data), 1), dtype=np.uint8)
 
     # loop over slices of the data
-    for i in range(0,len(acc_data), sliding_window):
+    for i in range(0, len(acc_data), sliding_window):
 
         # slice the data
         data = acc_data[i:i + sliding_window]
@@ -257,24 +257,24 @@ def group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=F
                 counter_label = f'{current_counter}-{next_counter}'
 
                 # save to new dataframe
-                grouped_episodes[counter_label] = pd.Series({     'counter': counter_label,
-                                                                'start_index': current_start_index,
-                                                                'start': current_start,
-                                                                'stop_index': current_stop_index,
-                                                                'stop': current_stop,
-                                                                'label': None if not training else current_label })
+                grouped_episodes[counter_label] = pd.Series({'counter': counter_label,
+                                                             'start_index': current_start_index,
+                                                             'start': current_start,
+                                                             'stop_index': current_stop_index,
+                                                             'stop': current_stop,
+                                                             'label': None if not training else current_label})
         else:
 
             # create the counter label
             counter_label = current_counter if (next_counter - current_counter == 1) else f'{current_counter}-{next_counter - 1}'
 
             # save to new dataframe
-            grouped_episodes[counter_label] = pd.Series({     'counter': counter_label,
-                                                            'start_index': current_start_index,
-                                                            'start': current_start,
-                                                            'stop_index': current_stop_index,
-                                                            'stop': current_stop,
-                                                            'label': None if not training else current_label})
+            grouped_episodes[counter_label] = pd.Series({'counter': counter_label,
+                                                         'start_index': current_start_index,
+                                                         'start': current_start,
+                                                         'stop_index': current_stop_index,
+                                                         'stop': current_stop,
+                                                         'label': None if not training else current_label})
 
             # update tracker variables
             current_start = next_start
@@ -288,19 +288,19 @@ def group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=F
             if next_counter == episodes.iloc[-1]['counter']:
 
                 # save to new dataframe
-                grouped_episodes[next_counter] = pd.Series({     'counter': next_counter,
-                                                                'start_index': current_start_index,
-                                                                'start': current_start,
-                                                                'stop_index': current_stop_index,
-                                                                'stop': current_stop,
-                                                                'label': None if not training else current_label })
+                grouped_episodes[next_counter] = pd.Series({'counter': next_counter,
+                                                            'start_index': current_start_index,
+                                                            'start': current_start,
+                                                            'stop_index': current_stop_index,
+                                                            'stop': current_stop,
+                                                            'label': None if not training else current_label})
 
     return grouped_episodes
 
 
 def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
-                                start_stop_label_decision='and', nwt_encoding=1, wt_encoding=0,
-                                min_segment_length=1, sliding_window=1, verbose=False):
+                     start_stop_label_decision='and', nwt_encoding=1, wt_encoding=0,
+                     min_segment_length=1, sliding_window=1, verbose=False):
     """
     Infer non-wear time from raw 100Hz triaxial data. Data at different sample frequencies will be resampled to 100hz.
 
@@ -403,7 +403,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_
         raw_acc = preprocessing.resample_acceleration(data=raw_acc, from_hz=hz, to_hz=100, verbose=verbose)
         logging.info('Data resampled to 100hz')
         # set sampling frequency to 100hz
-        hz=100
+        hz = 100
 
     # create new non-wear vector that is prepopulated with wear-time encoding. This way we only have to record the non-wear time
     nw_vector = np.full(shape=[raw_acc.shape[0], 1], fill_value=wt_encoding, dtype='uint8')
@@ -554,7 +554,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_
 
 
 def hees_2013_calculate_non_wear_time(data, hz=100, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
-                                        value_range_mg_threshold=50.0, value_range_min_num_axes=2, nwt_encoding=0, wt_encoding=1):
+                                      value_range_mg_threshold=50.0, value_range_min_num_axes=2, nwt_encoding=0, wt_encoding=1):
     """
     Estimation of non-wear time periods based on Hees 2013 paper
 
