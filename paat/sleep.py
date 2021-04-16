@@ -10,12 +10,14 @@ acceleration signals.
 import numpy as np
 
 
+# pylint: disable=C0103
 def cole_kripke(data, weights=[106, 54, 58, 76, 230, 74, 67], P=0.001):
     """
     Implementation of the Algorithm proposed by Cole et al. (1992).
 
     See
-    Cole, R. J., Kripke, D. F., Gruen, W., Mullaney, D. J., & Gillin, J. C. (1992). Automatic sleep/wake identification from wrist activity. Sleep, 15(5), 461-469.
+    Cole, R. J., Kripke, D. F., Gruen, W., Mullaney, D. J., & Gillin, J. C. (1992). Automatic
+    sleep/wake identification from wrist activity. Sleep, 15(5), 461-469.
 
     Parameters
     ----------
@@ -35,7 +37,8 @@ def cole_kripke(data, weights=[106, 54, 58, 76, 230, 74, 67], P=0.001):
 
     """
 
-    # Actigraph treats missing epochs as 0, see https://actigraphcorp.force.com/support/s/article/Where-can-I-find-documentation-for-the-Sadeh-and-Cole-Kripke-algorithms
+    # Actigraph treats missing epochs as 0, see https://actigraphcorp.force.com/support/
+    # s/article/Where-can-I-find-documentation-for-the-Sadeh-and-Cole-Kripke-algorithms
     data = np.concatenate([[0] * 4, data, [0] * 2])
 
     sliding_windows = np.stack([data[xx:xx-6] for xx in range(6)], axis=-1)
@@ -73,7 +76,8 @@ def sadeh(data, weights=[7.601, 0.065, 1.08, 0.056, 0.703]):
 
     """
 
-    # Actigraph treats missing epochs as 0, see https://actigraphcorp.force.com/support/s/article/Where-can-I-find-documentation-for-the-Sadeh-and-Cole-Kripke-algorithms
+    # Actigraph treats missing epochs as 0, see https://actigraphcorp.force.com/support/
+    # s/article/Where-can-I-find-documentation-for-the-Sadeh-and-Cole-Kripke-algorithms
     data = np.concatenate([[0] * 5, data, [0] * 6])
 
     sliding_windows = np.stack([data[xx:xx-11] for xx in range(11)], axis=-1)
@@ -85,7 +89,9 @@ def sadeh(data, weights=[7.601, 0.065, 1.08, 0.056, 0.703]):
         else:
             log_res = np.log(window[5])
 
-        return weights[0] - (weights[1] * np.average(window)) - (weights[2] * np.sum((window >= 50) & (window < 100))) - (weights[3] * np.std(window)) - (weights[4] * log_res)
+        return weights[0] - (weights[1] * np.average(window)) -
+                            (weights[2] * np.sum((window >= 50) & (window < 100))) -
+                            (weights[3] * np.std(window)) - (weights[4] * log_res)
 
     sleep_data = np.apply_along_axis(_score, 1, sliding_windows)
 

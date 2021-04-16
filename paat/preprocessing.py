@@ -130,22 +130,22 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel=False, num_jobs=cpu
         executor = Parallel(n_jobs=num_jobs, backend='multiprocessing')
 
         # create tasks so we can execute them in parallel
-        tasks = (delayed(resample)(data[:, i], from_hz, to_hz, i) for i in range(axes))
+        tasks = (delayed(resample)(data[:, ii], from_hz, to_hz, ii) for ii in range(axes))
 
         # execute tasks in parallel. It returns the resampled columns and column index i
-        for i, column_data in executor(tasks):
+        for ii, column_data in executor(tasks):
 
             # add column data to correct column index
-            new_data[:, i] = column_data
+            new_data[:, ii] = column_data
 
         # finished and return new data
         return new_data
 
     else:
         # loop over each of the columns of the original data, resample, and then add to the new_data array
-        for i in range(axes):
+        for ii in range(axes):
 
-            _, new_data[:, i] = resample(data[:, i], from_hz, to_hz, i, verbose)
+            _, new_data[:, ii] = resample(data[:, ii], from_hz, to_hz, ii, verbose)
 
         return new_data
 

@@ -45,10 +45,10 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
     non_wear_vector_final = np.ones((len(acc_data), 1), dtype=np.uint8)
 
     # loop over slices of the data
-    for i in range(0, len(acc_data), sliding_window):
+    for ii in range(0, len(acc_data), sliding_window):
 
         # slice the data
-        data = acc_data[i:i + sliding_window]
+        data = acc_data[ii:ii + sliding_window]
 
         # calculate VMU if set to true
         if use_vmu:
@@ -62,7 +62,7 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
         if np.all(std <= std_threshold):
 
             # add the non-wear time encoding to the non-wear-vector for the correct time slices
-            non_wear_vector[i:i+sliding_window] = 0
+            non_wear_vector[ii:ii+sliding_window] = 0
 
     # find all indexes of the numpy array that have been labeled non-wear time
     non_wear_indexes = np.where(non_wear_vector == 0)[0]
@@ -434,14 +434,14 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_
     if len(non_wear_segments[0]) > 0:
 
         # find start and stop times (the indexes of the edges and find corresponding time)
-        for i, row in enumerate(non_wear_segments):
+        for ii, row in enumerate(non_wear_segments):
 
             # find start and stop
             start, stop = np.min(row), np.max(row)
 
             # add the start and stop times to the dictionary
             # note that start and stop timestamps are not given.
-            dic_segments[i] = {'counter': i, 'start': start, 'start_index': start, 'stop': stop, 'stop_index': stop}
+            dic_segments[ii] = {'counter': ii, 'start': start, 'start_index': start, 'stop': stop, 'stop_index': stop}
 
     # create dataframe from segments
     episodes = pd.DataFrame.from_dict(dic_segments)
@@ -618,12 +618,12 @@ def hees_2013_calculate_non_wear_time(data, hz=100, min_non_wear_time_window=60,
     non_wear_vector = np.full(shape=[data.shape[0], 1], fill_value=wt_encoding, dtype='uint8')
 
     # loop over the data, start from the beginning with a step size of window overlap
-    for i in range(0, len(data), window_overlap):
+    for ii in range(0, len(data), window_overlap):
 
         # define the start of the sequence
-        start = i
+        start = ii
         # define the end of the sequence
-        end = i + min_non_wear_time_window
+        end = ii + min_non_wear_time_window
 
         # slice the data from start to end
         subset_data = data[start:end]
@@ -712,14 +712,14 @@ def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, 
     # calculate max slice index
     max_slice_index = acc_data.shape[0]
 
-    for i in range(hz * 60 * max_search_min):
+    for ii in range(hz * 60 * max_search_min):
 
         # create new slices
         new_start_slice = index
         new_stop_slice = index + hz
 
         if verbose:
-            logging.info(f'i: {i}, new_start_slice: {new_start_slice}, new_stop_slice: {new_stop_slice}')
+            logging.info(f'i: {ii}, new_start_slice: {new_start_slice}, new_stop_slice: {new_stop_slice}')
 
         # check if the new stop slice exceeds the max_slice_index
         if new_stop_slice > max_slice_index:
@@ -742,7 +742,7 @@ def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, 
             break
 
     if verbose:
-        logging.info(f'New index: {index}, number of loops: {i}')
+        logging.info(f'New index: {index}, number of loops: {ii}')
 
     return index
 
@@ -755,14 +755,14 @@ def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold,
     # calculate min slice index
     min_slice_index = 0
 
-    for i in range(hz * 60 * max_search_min):
+    for ii in range(hz * 60 * max_search_min):
 
         # create new slices
         new_start_slice = index - hz
         new_stop_slice = index
 
         if verbose:
-            logging.info(f'i: {i}, new_start_slice: {new_start_slice}, new_stop_slice: {new_stop_slice}')
+            logging.info(f'i: {ii}, new_start_slice: {new_start_slice}, new_stop_slice: {new_stop_slice}')
 
         # check if the new start slice exceeds the max_slice_index
         if new_start_slice < min_slice_index:
@@ -785,5 +785,5 @@ def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold,
             break
 
     if verbose:
-        logging.info(f'New index: {index}, number of loops: {i}')
+        logging.info(f'New index: {index}, number of loops: {ii}')
     return index
