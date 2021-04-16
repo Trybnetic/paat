@@ -21,7 +21,6 @@ except ImportError:
     delayed = None
 
 
-
 def calculate_vector_magnitude(data, minus_one = False, round_negative_to_zero = False, dtype = np.float32):
     r"""Calculate the vector magnitude of the acceleration data.
 
@@ -70,7 +69,6 @@ def calculate_vector_magnitude(data, minus_one = False, round_negative_to_zero =
 
         # reshape the array into number of acceleration values, 1 column
         return vector_magnitude.reshape(data.shape[0], 1)
-
 
     except Exception as e:
 

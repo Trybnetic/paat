@@ -231,7 +231,6 @@ def group_episodes(episodes, distance_in_min = 3, correction = 3, hz = 100, trai
     current_label = None if not training else episodes.iloc[0]['label']
     current_counter = episodes.iloc[0]['counter']
 
-
     # loop over each next row (note that we skip the first row)
     for _, row in episodes.iloc[1:].iterrows():
 
@@ -296,7 +295,6 @@ def group_episodes(episodes, distance_in_min = 3, correction = 3, hz = 100, trai
                                                                 'label': None if not training else current_label })
 
     return grouped_episodes
-
 
 
 def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distance_in_min = 5, episode_window_sec = 7, edge_true_or_false = True,\
@@ -406,7 +404,6 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
         # set sampling frequency to 100hz
         hz = 100
 
-
     # create new non-wear vector that is prepopulated with wear-time encoding. This way we only have to record the non-wear time
     nw_vector = np.full(shape = [raw_acc.shape[0], 1], fill_value = wt_encoding, dtype = 'uint8')
     # empty list to keep track of non-wear time start and stop indexes.
@@ -504,7 +501,6 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
             # there is an episode right at the start of the data, since we cannot obtain a full epsisode_window_sec array
             # here we say that True for nw-time and False for wear time
             start_stop_label[0] = edge_true_or_false
-
 
         """
             STOP EPISODE
