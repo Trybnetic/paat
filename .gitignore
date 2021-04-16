@@ -1,3 +1,5 @@
 .eggs
 paat/__pycache__
 paat.egg-info
+tests/resources/
+tests/__pycache__
