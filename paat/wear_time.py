@@ -298,7 +298,7 @@ def group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=F
     return grouped_episodes
 
 
-def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,\
+def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
                                 start_stop_label_decision='and', nwt_encoding=1, wt_encoding=0,
                                 min_segment_length=1, sliding_window=1, verbose=False):
     """
@@ -553,7 +553,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_
     return nw_vector, nw_start_stop_indexes
 
 
-def hees_2013_calculate_non_wear_time(data, hz=100, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,\
+def hees_2013_calculate_non_wear_time(data, hz=100, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
                                         value_range_mg_threshold=50.0, value_range_min_num_axes=2, nwt_encoding=0, wt_encoding=1):
     """
     Estimation of non-wear time periods based on Hees 2013 paper
