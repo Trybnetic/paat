@@ -14,6 +14,7 @@ from tensorflow.keras import models
 
 from . import preprocessing
 
+
 def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_segment_length = 1, sliding_window = 1, use_vmu = False):
     """
     Find segements within the raw acceleration data that can potentially be non-wear time (finding the candidates)
@@ -653,6 +654,7 @@ def hees_2013_calculate_non_wear_time(data, hz = 100, min_non_wear_time_window =
 
     return non_wear_vector
 
+
 def raw_baseline_calculate_non_wear_time(raw_acc, std_threshold, min_interval, hz, use_vmu = False, nwt_encoding = 1, wt_encoding = 0, min_segment_length = 1, sliding_window = 1):
     """
         Calculate non-wear time from raw acceleration data by finding intervals in which the acceleration standard deviation is below a std_threshold value
@@ -702,10 +704,6 @@ def raw_baseline_calculate_non_wear_time(raw_acc, std_threshold, min_interval, h
     return nw_vector
 
 
-"""
-    INTERNAL HELPER FUNCTIONS
-"""
-
 def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, verbose = False):
     """
     When we have an episode, this was created on a minute resolution, here we do a forward search to find the edges of the episode with a second resolution
@@ -745,7 +743,9 @@ def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, 
 
     if verbose:
         logging.info(f'New index: {index}, number of loops: {i}')
+
     return index
+
 
 def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold, verbose = False):
     """

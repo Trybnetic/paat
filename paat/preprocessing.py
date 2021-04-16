@@ -150,9 +150,6 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel = False, num_jobs =
         return new_data
 
 
-"""
-    Internal Helper Function
-"""
 def resample(data, from_hz, to_hz, index, verbose):
     """
     Resample data from_hz to to_hz
