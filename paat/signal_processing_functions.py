@@ -16,52 +16,6 @@ except ImportError:
     delayed = None
 
 
-def apply_butterworth_filter(data, n, wn, btype, hz):
-	"""
-	Butterworth digital and analog filter design.
-
-	Design an Nth-order digital or analog Butterworth filter and return the filter coefficients.
-
-	See https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html
-
-	Parameters
-	----------
-	data: np.array(n_samples, axes)
-		numpy array with acceleration data (each column represents an axis)
-	n : int
-		the order of the filter
-	wn: np.array(1,2)
-		A scalar or length-2 sequence giving the critical frequencies. For a Butterworth filter, this is the point at which the gain drops to 1/sqrt(2) that of the passband (the “-3 dB point”).
-		For digital filters, Wn are in the same units as fs. By default, fs is 2 half-cycles/sample, so these are normalized from 0 to 1, where 1 is the Nyquist frequency. (Wn is thus in half-cycles / sample.)
-		For analog filters, Wn is an angular frequency (e.g. rad/s).
-	btype: ‘lowpass’, ‘highpass’, ‘bandpass’, ‘bandstop’}
-		The type of filter. Default is ‘lowpass’.
-	hz 	: float
-		The sampling frequency of the digital system.
-
-	Returns
-	--------
-	data_filtered : np.array(n_samples, axes)
-		numpy array with filtered acceleration data
-	"""
-
-	logging.info('Start {}'.format(sys._getframe().f_code.co_name))
-
-	# create new numpy array to populate with the filtered data
-	data_filtered = np.empty(data.shape)
-
-	# loop over each acceleration axis
-	for i in range(data.shape[1]):
-
-		# get filter values
-		B2, A2 = signal.butter(n, wn / (hz / 2), btype = btype)
-
-		# apply filter and add to empty array
-		data_filtered[:,i] = signal.filtfilt(B2, A2, data[:,i])
-
-	return data_filtered
-
-
 def resample_acceleration(data, from_hz, to_hz, use_parallel = False, num_jobs = cpu_count(), verbose = False):
 	"""
 	Resample acceleration data to different frequency. For example, convert 100hz data to 30hz data.
@@ -87,7 +41,7 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel = False, num_jobs =
 		if 'use_parallel' is set to True, then 'num_jobs' defines how many parallel jobs are executed at the same time. This typically is the number of
 		hyperthreads. Also note that for triaxial data, even if n_jobs > 3 axes, it can only process 3 at the same time.
 	verbose : bool (optional)
-		if set to True, then output debug messages to console and log file. 
+		if set to True, then output debug messages to console and log file.
 
 
 	Returns
@@ -111,7 +65,7 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel = False, num_jobs =
 	new_data = np.zeros((num_samples, axes))
 
 	if use_parallel:
-		
+
 		# use parallel processing to speed up processing time
 		executor = Parallel(n_jobs = num_jobs, backend = 'multiprocessing')
 
@@ -123,7 +77,7 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel = False, num_jobs =
 
 			# add column data to correct column index
 			new_data[:,i] = column_data
-		
+
 		# finished and return new data
 		return new_data
 
@@ -150,7 +104,7 @@ def resample(data, from_hz, to_hz, index, verbose):
 	to_hz : int
 		the sampling frequency to convert to.
 	index : int
-		column index. Is used when use_parallel is set to True and the index is then used to know which column index is being returned. 
+		column index. Is used when use_parallel is set to True and the index is then used to know which column index is being returned.
 
 	Returns
 	-------
