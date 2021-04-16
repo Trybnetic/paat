@@ -29,31 +29,33 @@ except ImportError:
 
 
 def calculate_vector_magnitude(data, minus_one = False, round_negative_to_zero = False, dtype = np.float32):
-	"""
-	Calculate vector magnitude of acceleration data
-	the vector magnitude of acceleration is calculated as the Euclidian Norm
+	r"""Calculate the vector magnitude of the acceleration data.
 
-	sqrt(y^2 + x^2 + z^2)
+    The vector magnitude of the acceleration is calculated as the Euclidian Norm.
 
-	if minus_one is set to True then it it is the Euclidian Norm Minus One
+    .. math:: \sqrt{y^2 + x^2 + z^2}
 
-	sqrt(y^2 + x^2 + z^2) - 1
+    if minus_one is set to True then it it is the Euclidian Norm Minus One.
 
-	Parameters
-	----------
-	data : numpy array (acceleration values, axes)
-		numpy array with acceleration data
-	minus_one : Boolean (optional)
-		If set to True, the calculate the vector magnitude minus one, also known as the ENMO (Euclidian Norm Minus One)
-	round_negative_to_zero : Boolean (optional)
-		If set to True, round negative values to zero
-	dtype = mumpy data type (optional)
-		set the data type of the return array. Standard float 16, but can be set to better precision
+    .. math:: \sqrt{y^2 + x^2 + z^2} - 1
 
-	Returns
-	-------
-	vector_magnitude : numpy array (acceleration values, 1)(np.float)
-		numpy array with vector magnitude of the acceleration
+    if round_negative_to_zero all negative values are clipped.
+
+    Parameters
+    ----------
+    data : np.array (acceleration values, axes)
+       numpy array with acceleration data
+    minus_one : Boolean (optional)
+       If set to True, the calculate the vector magnitude minus one, also known as the ENMO (Euclidian Norm Minus One)
+    round_negative_to_zero : Boolean (optional)
+       If set to True, round negative values to zero
+    dtype : np.dtype (optional)
+       set the data type of the return array. Standard float 16, but can be set to better precision
+
+    Returns
+    -------
+    vector_magnitude : np.array (acceleration values, 1)(np.float)
+       numpy array with vector magnitude of the acceleration
 	"""
 
 	# change dtype of array to float32 (also to hold scaled data correctly). The original unscaled data is stored as int16, but when we want to calculate the vector we exceed the values that can be stored in 16 bit
