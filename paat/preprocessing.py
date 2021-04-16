@@ -1,5 +1,8 @@
 """
-	IMPORT PACKAGES
+	paat.preprocessing
+	------------------
+
+	*paat.preprocessing* provides functions to process the raw acceleration signals. 
 """
 import logging
 import time

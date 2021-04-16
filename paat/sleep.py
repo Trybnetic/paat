@@ -1,3 +1,11 @@
+"""
+	paat.sleep
+	----------
+
+	*paat.sleep* provides functions to detect periods of sleep in the raw
+    acceleration signals. 
+"""
+
 import numpy as np
 
 

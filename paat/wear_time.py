@@ -1,5 +1,9 @@
 """
-	IMPORT PACKAGES
+	paat.wear_time
+	--------------
+
+	*paat.wear_time* provides functions to infer wear and non wear times from
+	raw acceleration signals. 
 """
 import numpy as np
 import pandas as pd
