@@ -89,9 +89,7 @@ def sadeh(data, weights=[7.601, 0.065, 1.08, 0.056, 0.703]):
         else:
             log_res = np.log(window[5])
 
-        return weights[0] - (weights[1] * np.average(window)) -
-                            (weights[2] * np.sum((window >= 50) & (window < 100))) -
-                            (weights[3] * np.std(window)) - (weights[4] * log_res)
+        return weights[0] - (weights[1] * np.average(window)) - (weights[2] * np.sum((window >= 50) & (window < 100))) - (weights[3] * np.std(window)) - (weights[4] * log_res)
 
     sleep_data = np.apply_along_axis(_score, 1, sliding_windows)
 
