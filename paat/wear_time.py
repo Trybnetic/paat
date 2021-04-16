@@ -20,17 +20,17 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
 
     Parameters
     ----------
-    acc_data : np.array(samples, axes)
+    acc_data: np.array(samples, axes)
         numpy array with acceleration data (typically YXZ)
-    std_threshold : int or float
+    std_threshold: int or float
         the standard deviation threshold in g
-    hz : int
+    hz: int
         sample frequency of the acceleration data (could be 32hz or 100hz for example)
-    min_segment_length : int (optional)
+    min_segment_length: int (optional)
         minimum length of the segment to be candidate for non-wear time (default 1 minutes, so any shorter segments will not be considered non-wear time)
-    hz : int (optional)
+    hz: int (optional)
         sample frequency of the data (necessary so we know how many data samples we have in a second window)
-    sliding_window : int (optional)
+    sliding_window: int (optional)
         sliding window in minutes that will go over the acceleration data to find candidate non-wear segments
     """
 
@@ -106,7 +106,7 @@ def find_consecutive_index_ranges(vector, increment = 1):
 
     Returns
     -------
-    indexes : list
+    indexes: list
         list of ranges, for instance [1,2,3,4],[8,9,10], [44]
     """
 
@@ -125,9 +125,9 @@ def forward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time
         start of known non-wear time range
     end_slice: int
         end of known non-wear time range
-    std_max : int or float
+    std_max: int or float
         the standard deviation threshold in g
-    time_step : int (optional)
+    time_step: int (optional)
         value to add (or subtract in the backwards search) to find more non-wear time
     """
 
@@ -166,9 +166,9 @@ def backward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, tim
         start of known non-wear time range
     end_slice: int
         end of known non-wear time range
-    std_max : int or float
+    std_max: int or float
         the standard deviation threshold in g
-    time_step : int (optional)
+    time_step: int (optional)
         value to add (or subtract in the backwards search) to find more non-wear time
     """
 
@@ -200,7 +200,7 @@ def group_episodes(episodes, distance_in_min = 3, correction = 3, hz = 100, trai
 
     Parameters
     -----------
-    episodes : pd.DataFrame()
+    episodes: pd.DataFrame()
         dataframe with episodes that need to be grouped
     distance_in_min = int
         maximum distance two episodes can be apart and need to be grouped together
@@ -211,7 +211,7 @@ def group_episodes(episodes, distance_in_min = 3, correction = 3, hz = 100, trai
 
     Returns
     --------
-    grouped_episodes : pd.DataFrame()
+    grouped_episodes: pd.DataFrame()
         dataframe with grouped episodes
     """
 
@@ -257,24 +257,24 @@ def group_episodes(episodes, distance_in_min = 3, correction = 3, hz = 100, trai
                 counter_label = f'{current_counter}-{next_counter}'
 
                 # save to new dataframe
-                grouped_episodes[counter_label] = pd.Series({     'counter' : counter_label,
-                                                                'start_index' : current_start_index,
-                                                                'start' : current_start,
-                                                                'stop_index' : current_stop_index,
-                                                                'stop' : current_stop,
-                                                                'label' : None if not training else current_label })
+                grouped_episodes[counter_label] = pd.Series({     'counter': counter_label,
+                                                                'start_index': current_start_index,
+                                                                'start': current_start,
+                                                                'stop_index': current_stop_index,
+                                                                'stop': current_stop,
+                                                                'label': None if not training else current_label })
         else:
 
             # create the counter label
             counter_label = current_counter if (next_counter - current_counter == 1) else f'{current_counter}-{next_counter - 1}'
 
             # save to new dataframe
-            grouped_episodes[counter_label] = pd.Series({     'counter' : counter_label,
-                                                            'start_index' : current_start_index,
-                                                            'start' : current_start,
-                                                            'stop_index' : current_stop_index,
-                                                            'stop' : current_stop,
-                                                            'label' : None if not training else current_label})
+            grouped_episodes[counter_label] = pd.Series({     'counter': counter_label,
+                                                            'start_index': current_start_index,
+                                                            'start': current_start,
+                                                            'stop_index': current_stop_index,
+                                                            'stop': current_stop,
+                                                            'label': None if not training else current_label})
 
             # update tracker variables
             current_start = next_start
@@ -288,12 +288,12 @@ def group_episodes(episodes, distance_in_min = 3, correction = 3, hz = 100, trai
             if next_counter == episodes.iloc[-1]['counter']:
 
                 # save to new dataframe
-                grouped_episodes[next_counter] = pd.Series({     'counter' : next_counter,
-                                                                'start_index' : current_start_index,
-                                                                'start' : current_start,
-                                                                'stop_index' : current_stop_index,
-                                                                'stop' : current_stop,
-                                                                'label' : None if not training else current_label })
+                grouped_episodes[next_counter] = pd.Series({     'counter': next_counter,
+                                                                'start_index': current_start_index,
+                                                                'start': current_start,
+                                                                'stop_index': current_stop_index,
+                                                                'stop': current_stop,
+                                                                'label': None if not training else current_label })
 
     return grouped_episodes
 
@@ -339,46 +339,46 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
 
     Parameters
     ----------
-    raw_acc : np.array(n_samples, 3 axes)
+    raw_acc: np.array(n_samples, 3 axes)
         numpy array that contains raw triaxial data at 100hz. Size of the array should be (n_samples, 3)
-    hz : int
+    hz: int
         sample frequency of the data. The CNN model was trained for 100Hz of data. If the data is at a different sampling frequency it will be resampled to 100Hz
-    cnn_model_file : os.path
+    cnn_model_file: os.path
         file location of the trained CNN model
-    std_threshold : float (optional)
+    std_threshold: float (optional)
         standard deviation threshold to find candidate non-wear episodes. Default 0.004 g
-    distance_in_min : int (optional)
+    distance_in_min: int (optional)
         causes two nearby candidate non-wear episodes not more than 'distance_in_min' apart to be grouped/merged together. This results in capturing artificial movement
         that would otherwise break up a longer candidate non-wear time. Defaults to 5 minutes.
-    episode_window_sec : int (optional)
+    episode_window_sec: int (optional)
         length of the window to extract features from the start or the end of a candidate non-wear episode. If a non-wear episodes starts at time t, then a feature
         will be extracted from the raw data t-'episode_window_sec' to t. The same happens at the end of a candidate non-wear episode. So t-end untill t-end + 'episode_window_sec'
         Default to 7 seconds. Also note that a different value will need a different trained CNN model.
-    edge_true_or_false : Bool (optional)
+    edge_true_or_false: Bool (optional)
         default classification if a candidate non-wear episode starts at the start of the acceleration data, so at t=0, or ends at the end of the acceleration data.
         In such cases, we can't obtain the feature at t-'episode_window_sec' since there is no data before t=0. In these cases, the start or stop of the candidate non-wear
         episode will be defaulted to True (non-wear time) or False (wear-time). Default value is True
-    start_stop_label_decision : string ('or','and') (optional)
+    start_stop_label_decision: string ('or','and') (optional)
         Logical operator OR or AND to determine if a candidate non-wear episode should be considered non-wear time if only one side, either the start or the stop parts, is
         inferred as non-wear time, or if both sides need to be inferred as non-wear time for the candidate non-wear time to be considered true non-wear time. Default to AND, meaning
         that both the start and the stop parts of the candidate non-wear time need to be inferred as non-wear time to allow the candidate non-wear time to be true non-wear time.
         In all other cases, the candidate non-wear time is then wear-time.
-    nwt_encoding : int (optional)
+    nwt_encoding: int (optional)
         encoding of non-wear time for the returning vector. Defaults to 1
-    wt_encoding : int (optional)
+    wt_encoding: int (optional)
         encoding of wear time for the returning vector. Defaults to 0
-    min_segment_length : int (optional)
+    min_segment_length: int (optional)
         minimum length of the segment to be candidate for non-wear time
-    sliding_window : int (optional)
+    sliding_window: int (optional)
         sliding window in minutes that will go over the acceleration data to find candidate non-wear segments
-    verbose : Bool (optional)
+    verbose: Bool (optional)
         set to True if debug messages should be printed to the console and log file. Default False.
 
     Returns
     ---------
-    nw_vector : np.array(n_samples, 1)
+    nw_vector: np.array(n_samples, 1)
         non-wear vector which has the same number of samples as 'raw_acc'. Every element has either a non-wear-time encoding or a wear-time encoding.
-    nw_start_stop_indexes : list
+    nw_start_stop_indexes: list
         list of start and stop indexes that are considered non-wear time.
 
     Notes
@@ -443,7 +443,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
 
             # add the start and stop times to the dictionary
             # note that start and stop timestamps are not given.
-            dic_segments[i] = {'counter' : i, 'start' : start, 'start_index': start, 'stop' : stop, 'stop_index' : stop}
+            dic_segments[i] = {'counter': i, 'start': start, 'start_index': start, 'stop': stop, 'stop_index': stop}
 
     # create dataframe from segments
     episodes = pd.DataFrame.from_dict(dic_segments)
@@ -469,7 +469,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
         stop_index = int(row.loc['stop_index'])
 
         if verbose:
-            logging.debug(f'Processing episode start_index : {start_index}, stop_index : {stop_index}')
+            logging.debug(f'Processing episode start_index: {start_index}, stop_index: {stop_index}')
 
         # forward search to extend stop index
         stop_index = _forward_search_episode(raw_acc, stop_index, hz = hz, max_search_min = 5, std_threshold = std_threshold, verbose = verbose)
@@ -477,9 +477,9 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
         start_index = _backward_search_episode(raw_acc, start_index, hz = hz, max_search_min = 5, std_threshold = std_threshold, verbose = verbose)
 
         # get start episode
-        start_episode = raw_acc[start_index - (episode_window_sec * hz) : start_index]
+        start_episode = raw_acc[start_index - (episode_window_sec * hz): start_index]
         # get stop episode
-        stop_episode = raw_acc[stop_index : stop_index + (episode_window_sec * hz)]
+        stop_episode = raw_acc[stop_index: stop_index + (episode_window_sec * hz)]
 
         # default label for start and stop combined. The first False will turn into True if the start of the episode is inferred as non-wear time. The same happens to the
         # second False when the end is inferred as non-weaer time
@@ -535,7 +535,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
                 nw_start_stop_indexes.append([start_index, stop_index])
                 # verbose
                 if verbose:
-                    logging.info(f'Found non-wear time: start_index : {start_index}, Stop_index: {stop_index}')
+                    logging.info(f'Found non-wear time: start_index: {start_index}, Stop_index: {stop_index}')
 
         elif start_stop_label_decision == 'and':
 
@@ -547,7 +547,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
                 nw_start_stop_indexes.append([start_index, stop_index])
                 # verbose
                 if verbose:
-                    logging.info(f'Found non-wear time: start_index : {start_index}, Stop_index: {stop_index}')
+                    logging.info(f'Found non-wear time: start_index: {start_index}, Stop_index: {stop_index}')
 
         else:
             logging.error(f'Start/Stop decision unknown, can only use or/and, given: {start_stop_label_decision}')
@@ -578,29 +578,29 @@ def hees_2013_calculate_non_wear_time(data, hz = 100, min_non_wear_time_window =
     hz: int (optional)
         sample frequency in hertz. Indicates the number of samples per 1 second. Default to 100 for 100hz. The sample frequency is necessary to
         know how many samples there are in a specific window. So let's say we have a window of 15 minutes, then there are hz * 60 * 15 samples
-    min_non_wear_time_window : int (optional)
+    min_non_wear_time_window: int (optional)
         minimum window length in minutes to be classified as non-wear time
-    window_overlap : int (optional)
+    window_overlap: int (optional)
         basically the sliding window that progresses over the acceleration data. Defaults to 15 minutes.
-    std_mg_threshold : float (optional)
+    std_mg_threshold: float (optional)
         standard deviation threshold in mg. Acceleration axes values below or equal this threshold can be considered non-wear time. Defaults to 3.0g.
         Note that within the code we convert mg to g.
-    std_min_num_axes : int (optional)
+    std_min_num_axes: int (optional)
         minimum numer of axes used to check if acceleration values are below the std_mg_threshold value. Defaults to 2 axes; meaning that at least 2
         axes need to have values below a threshold value to be considered non wear time
-    value_range_mg_threshold : float (optional)
+    value_range_mg_threshold: float (optional)
         value range threshold value in mg. If the range of values within a window is below this threshold (meaning that there is very little change
         in acceleration over time) then this can be considered non wear time. Default to 50 mg. Note that within the code we convert mg to g
-    value_range_min_num_axes : int (optional)
+    value_range_min_num_axes: int (optional)
         minimum numer of axes used to check if acceleration values range are below the value_range_mg_threshold value. Defaults to 2 axes; meaning that at least 2 axes need to have a value range below a threshold value to be considered non wear time
-    nwt_encoding : int
+    nwt_encoding: int
         non-wear time encoding. Defaults to 0
-    wt_encoding : int
+    wt_encoding: int
         wear time encoding. Defaults to 1
 
     Returns
     ---------
-    non_wear_vector : np.array((n_samples, 1))
+    non_wear_vector: np.array((n_samples, 1))
         numpy array with non wear time encoded as 'nwt_encoding', and wear time encoded as 'wt_encoding'.
     """
 
@@ -725,12 +725,12 @@ def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, 
         new_stop_slice = index + hz
 
         if verbose:
-            logging.info(f'i : {i}, new_start_slice : {new_start_slice}, new_stop_slice : {new_stop_slice}')
+            logging.info(f'i: {i}, new_start_slice: {new_start_slice}, new_stop_slice: {new_stop_slice}')
 
         # check if the new stop slice exceeds the max_slice_index
         if new_stop_slice > max_slice_index:
             if verbose:
-                logging.info(f'Max slice index reached : {max_slice_index}')
+                logging.info(f'Max slice index reached: {max_slice_index}')
             break
 
         # slice out new activity data
@@ -748,7 +748,7 @@ def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, 
             break
 
     if verbose:
-        logging.info(f'New index : {index}, number of loops : {i}')
+        logging.info(f'New index: {index}, number of loops: {i}')
     return index
 
 def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold, verbose = False):
@@ -766,12 +766,12 @@ def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold,
         new_stop_slice = index
 
         if verbose:
-            logging.info(f'i : {i}, new_start_slice : {new_start_slice}, new_stop_slice : {new_stop_slice}')
+            logging.info(f'i: {i}, new_start_slice: {new_start_slice}, new_stop_slice: {new_stop_slice}')
 
         # check if the new start slice exceeds the max_slice_index
         if new_start_slice < min_slice_index:
             if verbose:
-                logging.debug(f'Minimum slice index reached : {min_slice_index}')
+                logging.debug(f'Minimum slice index reached: {min_slice_index}')
             break
 
         # slice out new activity data
@@ -789,5 +789,5 @@ def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold,
             break
 
     if verbose:
-        logging.info(f'New index : {index}, number of loops : {i}')
+        logging.info(f'New index: {index}, number of loops: {i}')
     return index
