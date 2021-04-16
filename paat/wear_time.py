@@ -6,10 +6,10 @@ paat.wear_time
 raw acceleration signals.
 
 """
+import logging
+
 import numpy as np
 import pandas as pd
-import logging
-import os
 from tensorflow.keras import models
 
 from . import preprocessing

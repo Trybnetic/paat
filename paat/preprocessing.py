@@ -7,17 +7,11 @@ paat.preprocessing
 """
 
 import logging
-import time
-import psutil
-import os
 import sys
-import glob2
-import numpy as np
-import csv
-from datetime import datetime
-import resampy # to resample frequency
-from scipy import signal
 from multiprocessing import cpu_count
+
+import numpy as np
+import resampy # to resample frequency
 
 try:
     from joblib import Parallel
