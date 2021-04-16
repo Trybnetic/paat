@@ -11,7 +11,7 @@ import sys
 from multiprocessing import cpu_count
 
 import numpy as np
-import resampy 
+import resampy
 
 try:
     from joblib import Parallel
@@ -21,7 +21,7 @@ except ImportError:
     delayed = None
 
 
-def calculate_vector_magnitude(data, minus_one = False, round_negative_to_zero = False, dtype = np.float32):
+def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=False, dtype=np.float32):
     r"""Calculate the vector magnitude of the acceleration data.
 
     The vector magnitude of the acceleration is calculated as the Euclidian Norm.
@@ -52,7 +52,7 @@ def calculate_vector_magnitude(data, minus_one = False, round_negative_to_zero =
     """
 
     # change dtype of array to float32 (also to hold scaled data correctly). The original unscaled data is stored as int16, but when we want to calculate the vector we exceed the values that can be stored in 16 bit
-    data = data.astype(dtype = np.float32)
+    data = data.astype(dtype=np.float32)
 
     try:
 
@@ -76,7 +76,7 @@ def calculate_vector_magnitude(data, minus_one = False, round_negative_to_zero =
         exit(1)
 
 
-def resample_acceleration(data, from_hz, to_hz, use_parallel = False, num_jobs = cpu_count(), verbose = False):
+def resample_acceleration(data, from_hz, to_hz, use_parallel=False, num_jobs=cpu_count(), verbose=False):
     """
     Resample acceleration data to different frequency. For example, convert 100hz data to 30hz data.
     Enables upsampling (from lower to higher frequency), or downsampling (from higher to lower frequency)
@@ -127,7 +127,7 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel = False, num_jobs =
     if use_parallel:
 
         # use parallel processing to speed up processing time
-        executor = Parallel(n_jobs = num_jobs, backend = 'multiprocessing')
+        executor = Parallel(n_jobs=num_jobs, backend='multiprocessing')
 
         # create tasks so we can execute them in parallel
         tasks = (delayed(resample)(data[:,i], from_hz, to_hz, i) for i in range(axes))

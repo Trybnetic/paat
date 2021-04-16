@@ -15,7 +15,7 @@ from tensorflow.keras import models
 from . import preprocessing
 
 
-def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_segment_length = 1, sliding_window = 1, use_vmu = False):
+def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_segment_length=1, sliding_window=1, use_vmu=False):
     """
     Find segements within the raw acceleration data that can potentially be non-wear time (finding the candidates)
 
@@ -41,8 +41,8 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
     min_segment_length*= hz * 60
 
     # define new non wear time vector that we initiale to all 1s, so we only have the change when we have non wear time as it is encoded as 0
-    non_wear_vector = np.ones((len(acc_data), 1), dtype = np.uint8)
-    non_wear_vector_final = np.ones((len(acc_data), 1), dtype = np.uint8)
+    non_wear_vector = np.ones((len(acc_data), 1), dtype=np.uint8)
+    non_wear_vector_final = np.ones((len(acc_data), 1), dtype=np.uint8)
 
     # loop over slices of the data
     for i in range(0,len(acc_data), sliding_window):
@@ -77,9 +77,9 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
             start_slice, end_slice = np.min(row), np.max(row)
 
             # backwards search to find the edge of non-wear time vector
-            start_slice = backward_search_non_wear_time(data = acc_data, start_slice = start_slice, end_slice = end_slice, std_max = std_threshold, hz = hz)
+            start_slice = backward_search_non_wear_time(data=acc_data, start_slice=start_slice, end_slice=end_slice, std_max=std_threshold, hz=hz)
             # forward search to find the edge of non-wear time vector
-            end_slice = forward_search_non_wear_time(data = acc_data, start_slice = start_slice, end_slice = end_slice, std_max = std_threshold, hz = hz)
+            end_slice = forward_search_non_wear_time(data=acc_data, start_slice=start_slice, end_slice=end_slice, std_max=std_threshold, hz=hz)
 
             # calculate the length of the slice (or segment)
             length_slice = end_slice - start_slice
@@ -94,7 +94,7 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
     return non_wear_vector_final
 
 
-def find_consecutive_index_ranges(vector, increment = 1):
+def find_consecutive_index_ranges(vector, increment=1):
     """
     Find ranges of consequetive indexes in numpy array
 
@@ -114,7 +114,7 @@ def find_consecutive_index_ranges(vector, increment = 1):
     return np.split(vector, np.where(np.diff(vector) != increment)[0]+1)
 
 
-def forward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time_step = 60):
+def forward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time_step=60):
     """
     Increase the end_slice to obtain more non_wear_time (used when non-wear range has been found but due to window size, the actual non-wear time can be slightly larger)
 
@@ -155,7 +155,7 @@ def forward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time
             return end_slice
 
 
-def backward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time_step = 60):
+def backward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time_step=60):
     """
     Decrease the start_slice to obtain more non_wear_time (used when non-wear range has been found but the actual non-wear time can be slightly larger, so here we try to find the boundaries)
 
@@ -195,7 +195,7 @@ def backward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, tim
             return start_slice
 
 
-def group_episodes(episodes, distance_in_min = 3, correction = 3, hz = 100, training = False):
+def group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=False):
     """
     Group episodes that are very close together
 
@@ -298,9 +298,9 @@ def group_episodes(episodes, distance_in_min = 3, correction = 3, hz = 100, trai
     return grouped_episodes
 
 
-def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distance_in_min = 5, episode_window_sec = 7, edge_true_or_false = True,\
-                                start_stop_label_decision = 'and', nwt_encoding = 1, wt_encoding = 0,
-                                min_segment_length = 1, sliding_window = 1, verbose = False):
+def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,\
+                                start_stop_label_decision='and', nwt_encoding=1, wt_encoding=0,
+                                min_segment_length=1, sliding_window=1, verbose=False):
     """
     Infer non-wear time from raw 100Hz triaxial data. Data at different sample frequencies will be resampled to 100hz.
 
@@ -400,13 +400,13 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
     if hz != 100:
         logging.info(f'Sampling frequency of the data is {hz}Hz, should be 100Hz, starting resampling....')
         # call resampling function
-        raw_acc = preprocessing.resample_acceleration(data = raw_acc, from_hz = hz, to_hz = 100, verbose = verbose)
+        raw_acc = preprocessing.resample_acceleration(data=raw_acc, from_hz=hz, to_hz=100, verbose=verbose)
         logging.info('Data resampled to 100hz')
         # set sampling frequency to 100hz
-        hz = 100
+        hz=100
 
     # create new non-wear vector that is prepopulated with wear-time encoding. This way we only have to record the non-wear time
-    nw_vector = np.full(shape = [raw_acc.shape[0], 1], fill_value = wt_encoding, dtype = 'uint8')
+    nw_vector = np.full(shape=[raw_acc.shape[0], 1], fill_value=wt_encoding, dtype='uint8')
     # empty list to keep track of non-wear time start and stop indexes.
     nw_start_stop_indexes = []
 
@@ -415,9 +415,9 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
     """
 
     # get candidate non-wear episodes (note that these are on a minute resolution). Also note that it returns wear time as 1 and non-wear time as 0
-    nw_episodes = find_candidate_non_wear_segments_from_raw(acc_data = raw_acc, std_threshold = std_threshold,
-                                                            min_segment_length = min_segment_length,
-                                                            sliding_window = sliding_window, hz = hz)
+    nw_episodes = find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold,
+                                                            min_segment_length=min_segment_length,
+                                                            sliding_window=sliding_window, hz=hz)
 
     """
         GET START AND END TIME OF NON WEAR SEGMENTS
@@ -449,7 +449,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
     """
         MERGE EPISODES THAT ARE CLOSE TO EACH OTHER
     """
-    grouped_episodes = group_episodes(episodes = episodes.T, distance_in_min = distance_in_min, correction = 3, hz = hz, training = False).T
+    grouped_episodes = group_episodes(episodes=episodes.T, distance_in_min=distance_in_min, correction=3, hz=hz, training=False).T
 
     """
         LOAD CNN MODEL
@@ -470,9 +470,9 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
             logging.debug(f'Processing episode start_index: {start_index}, stop_index: {stop_index}')
 
         # forward search to extend stop index
-        stop_index = _forward_search_episode(raw_acc, stop_index, hz = hz, max_search_min = 5, std_threshold = std_threshold, verbose = verbose)
+        stop_index = _forward_search_episode(raw_acc, stop_index, hz=hz, max_search_min=5, std_threshold=std_threshold, verbose=verbose)
         # backwar search to extend start index
-        start_index = _backward_search_episode(raw_acc, start_index, hz = hz, max_search_min = 5, std_threshold = std_threshold, verbose = verbose)
+        start_index = _backward_search_episode(raw_acc, start_index, hz=hz, max_search_min=5, std_threshold=std_threshold, verbose=verbose)
 
         # get start episode
         start_episode = raw_acc[start_index - (episode_window_sec * hz): start_index]
@@ -553,8 +553,8 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
     return nw_vector, nw_start_stop_indexes
 
 
-def hees_2013_calculate_non_wear_time(data, hz = 100, min_non_wear_time_window = 60, window_overlap = 15, std_mg_threshold = 3.0, std_min_num_axes = 2,\
-                                        value_range_mg_threshold = 50.0, value_range_min_num_axes = 2, nwt_encoding = 0, wt_encoding = 1):
+def hees_2013_calculate_non_wear_time(data, hz=100, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,\
+                                        value_range_mg_threshold=50.0, value_range_min_num_axes=2, nwt_encoding=0, wt_encoding=1):
     """
     Estimation of non-wear time periods based on Hees 2013 paper
 
@@ -615,7 +615,7 @@ def hees_2013_calculate_non_wear_time(data, hz = 100, min_non_wear_time_window =
 
     # new array to record non-wear time. The default behavior is 0 = non-wear time, and 1 = wear time. Since we create a new array filled with wear time encoding, we only have to
     # deal with non-wear time, since everything else is already set as wear-time.
-    non_wear_vector = np.full(shape = [data.shape[0], 1], fill_value = wt_encoding, dtype = 'uint8')
+    non_wear_vector = np.full(shape=[data.shape[0], 1], fill_value=wt_encoding, dtype='uint8')
 
     # loop over the data, start from the beginning with a step size of window overlap
     for i in range(0, len(data), window_overlap):
@@ -644,7 +644,7 @@ def hees_2013_calculate_non_wear_time(data, hz = 100, min_non_wear_time_window =
             non_wear_vector[start:end] = nwt_encoding
 
         # calculate the value range (difference between the min and max) (here the point-to-point numpy method is used) for each column
-        value_range = np.ptp(subset_data, axis = 0)
+        value_range = np.ptp(subset_data, axis=0)
 
         # check if the value range, for at least 'value_range_min_num_axes' (e.g. 2) out of three axes, was less than 'value_range_mg_threshold' (e.g. 50) mg
         if (value_range < value_range_mg_threshold).sum() >= value_range_min_num_axes:
@@ -655,7 +655,7 @@ def hees_2013_calculate_non_wear_time(data, hz = 100, min_non_wear_time_window =
     return non_wear_vector
 
 
-def raw_baseline_calculate_non_wear_time(raw_acc, std_threshold, min_interval, hz, use_vmu = False, nwt_encoding = 1, wt_encoding = 0, min_segment_length = 1, sliding_window = 1):
+def raw_baseline_calculate_non_wear_time(raw_acc, std_threshold, min_interval, hz, use_vmu=False, nwt_encoding=1, wt_encoding=0, min_segment_length=1, sliding_window=1):
     """
         Calculate non-wear time from raw acceleration data by finding intervals in which the acceleration standard deviation is below a std_threshold value
     """
@@ -664,14 +664,14 @@ def raw_baseline_calculate_non_wear_time(raw_acc, std_threshold, min_interval, h
     hz = int(hz)
 
     # create an new non-wear vector that we propoulate with wear-time encoding. This way we only have to update the vector with non-wear time
-    nw_vector = np.full(shape = [raw_acc.shape[0], 1], fill_value = wt_encoding, dtype = 'uint8')
+    nw_vector = np.full(shape=[raw_acc.shape[0], 1], fill_value=wt_encoding, dtype='uint8')
 
     """
         FIND CANDIDATE NON-WEAR SEGMENTS ACTIGRAPH ACCELERATION DATA
     """
 
     # get candidate non-wear episodes (note that these are on a minute resolution)
-    nw_episodes = find_candidate_non_wear_segments_from_raw(acc_data = raw_acc, std_threshold = std_threshold, min_segment_length = min_segment_length, sliding_window = sliding_window, hz = hz, use_vmu = use_vmu)
+    nw_episodes = find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold, min_segment_length=min_segment_length, sliding_window=sliding_window, hz=hz, use_vmu=use_vmu)
 
     """
         GET START AND END TIME OF NON WEAR SEGMENTS
@@ -704,7 +704,7 @@ def raw_baseline_calculate_non_wear_time(raw_acc, std_threshold, min_interval, h
     return nw_vector
 
 
-def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, verbose = False):
+def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, verbose=False):
     """
     When we have an episode, this was created on a minute resolution, here we do a forward search to find the edges of the episode with a second resolution
     """
@@ -747,7 +747,7 @@ def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, 
     return index
 
 
-def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold, verbose = False):
+def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold, verbose=False):
     """
     When we have an episode, this was created on a minute resolution, here we do a backward search to find the edges of the episode with a second resolution
     """
