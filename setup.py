@@ -18,7 +18,7 @@ def load_requirements(fn):
 
 
 setup(
-    name='Physical Activity Analysis Toolbox (PAAT)',
+    name='paat',
     version=version,
     license='MIT',
     description=description,

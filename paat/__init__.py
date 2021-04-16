@@ -1,6 +1,5 @@
 import os
 import sys
-import multiprocessing as mp
 from pip._vendor import pkg_resources
 
 
@@ -31,16 +30,16 @@ def sysinfo():
     """
     Prints system the dependency information
     """
-    pyndl = pkg_resources.working_set.by_key["pyndl"]
-    dependencies = [r.project_name for r in pyndl.requires()]
+    paat = pkg_resources.working_set.by_key["paat"]
+    dependencies = [r.project_name for r in paat.requires()]
 
-    header = ("Pyndl Information\n"
+    header = ("PAAT Information\n"
               "=================\n\n")
 
     general = ("General Information\n"
                "-------------------\n"
                "Python version: {}\n"
-               "Pyndl version: {}\n\n").format(sys.version.split()[0], __version__)
+               "PAAT version: {}\n\n").format(sys.version.split()[0], __version__)
 
     uname = os.uname()
     osinfo = ("Operating System\n"
