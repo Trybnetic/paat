@@ -54,8 +54,7 @@ def sysinfo():
     osinfo = ("Operating System\n"
               "----------------\n"
               "OS: {s.sysname} {s.machine}\n"
-              "Kernel: {s.release}\n"
-              "CPU: {cpu_count}\n").format(s=uname, cpu_count=mp.cpu_count())
+              "Kernel: {s.release}\n").format(s=uname)
 
     if uname.sysname == "Linux":
         _, *lines = os.popen("free -m").readlines()
