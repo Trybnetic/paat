@@ -83,14 +83,13 @@ and `Shaheen Syed <https://github.com/shaheen-syed/>`_. For the full list of
 contributors have a look at `Github's Contributor summary
 <https://github.com/trybnetic/paat/contributors>`_.
 
-Currently, it is maintained by `Marc Weitz <https://github.com/trybnetic>`_.
-
-In case you want to contact the project maintainers, please send an email to
-
-      marc [dot] weitz [at] uit [dot] no
+Currently, it is maintained by `Marc Weitz <https://github.com/trybnetic>`_. In case
+you want to contact the project maintainers, please send an email to
+marc [dot] weitz [at] uit [dot] no
 
 
 Acknowledgments
 ===============
 
-This work was supported by the High North Population Studies at UiT The Arctic University of Norway.
+This work was supported by the High North Population Studies at UiT The Arctic 
+University of Norway.
