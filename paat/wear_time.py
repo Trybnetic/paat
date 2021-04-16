@@ -1,9 +1,10 @@
 """
-	paat.wear_time
-	--------------
+paat.wear_time
+--------------
 
-	*paat.wear_time* provides functions to infer wear and non wear times from
-	raw acceleration signals. 
+*paat.wear_time* provides functions to infer wear and non wear times from
+raw acceleration signals.
+
 """
 import numpy as np
 import pandas as pd
@@ -18,7 +19,7 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
 	Find segements within the raw acceleration data that can potentially be non-wear time (finding the candidates)
 
 	Parameters
-	---------
+	----------
 	acc_data : np.array(samples, axes)
 		numpy array with acceleration data (typically YXZ)
 	std_threshold : int or float
@@ -97,7 +98,7 @@ def find_consecutive_index_ranges(vector, increment = 1):
 	Find ranges of consequetive indexes in numpy array
 
 	Parameters
-	---------
+	----------
 	data: numpy vector
 		numpy vector of integer values
 	increment: int (optional)
@@ -337,7 +338,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
 
 
 	Parameters
-	--------------
+	----------
 	raw_acc : np.array(n_samples, 3 axes)
 		numpy array that contains raw triaxial data at 100hz. Size of the array should be (n_samples, 3)
 	hz : int
@@ -380,8 +381,8 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold = 0.004, distanc
 	nw_start_stop_indexes : list
 		list of start and stop indexes that are considered non-wear time.
 
-	Important
-	---------
+	Notes
+	-----
 	-	If the data is not 100hz, then it will be resampled to 100hz. However, how the inference of non-wear time is affected by this has not been investigated.
 	-	CNN models were trained with a hip worn accelerometer.
 	"""

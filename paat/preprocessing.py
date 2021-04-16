@@ -1,9 +1,11 @@
 """
-	paat.preprocessing
-	------------------
+paat.preprocessing
+------------------
 
-	*paat.preprocessing* provides functions to process the raw acceleration signals. 
+*paat.preprocessing* provides functions to process the raw acceleration signals.
+
 """
+
 import logging
 import time
 import psutil

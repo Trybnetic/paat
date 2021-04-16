@@ -1,9 +1,10 @@
 """
-	paat
-	----
+PAAT - Physical Activity Analysis Toolbox
+=========================================
 
-	The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to
-    analyse raw acceleration data. 
+The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to
+analyse raw acceleration data.
+
 """
 
 import os
