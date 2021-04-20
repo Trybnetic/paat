@@ -9,11 +9,16 @@ analyse raw acceleration data.
 Installation
 ============
 
-The easiest way to do this is using `pip <https://pip.pypa.io/en/stable/>`_:
+For now, the easiest way to install *paat* is to install it in development mode
+by running:
 
 .. code:: bash
 
-    pip install --user paat
+    git clone https://github.com/trybnetic/paat.git
+    cd paat
+    python setup.py develop --user
+
+This also enables that all changes you make in the code become active immediately.
 
 
 Usage
@@ -91,5 +96,5 @@ marc [dot] weitz [at] uit [dot] no
 Acknowledgments
 ===============
 
-This work was supported by the High North Population Studies at UiT The Arctic 
+This work was supported by the High North Population Studies at UiT The Arctic
 University of Norway.
