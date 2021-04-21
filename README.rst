@@ -31,7 +31,7 @@ Load data from GT3X file
 .. code-block:: python
 
     >>> from paat import io
-    >>> actigraph_acc, actigraph_time, meta_data = io.read_gt3x('path/to/gt3x/file')
+    >>> time, acceleration, meta = io.read_gt3x('path/to/gt3x/file')
 
 
 Detect non-wear times
