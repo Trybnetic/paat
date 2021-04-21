@@ -388,6 +388,51 @@ def _create_time_array(time_data, hz=100):
     return time_data
 
 
+def _format_time(tstamp):
+    tstamp = int(tstamp)//10000000 + np.datetime64('0001-01-01T00:00:00').astype(int)
+    return int(tstamp)
+
+
+def _format_meta_data(meta):
+    """
+    Formats the meta data dict that is extracted from the gt3x file
+
+    Parameters
+    ----------
+    meta : dict
+        the meta data dict from the gt3x file
+
+    Returns
+    -------
+    new_meta : dict
+        an updated meta data dict having the fields of meta in the correct format
+    """
+    new_meta = {}
+
+    # standard meta data fields of ActiGraph and their conversion functions
+    fields_and_formats = {'Serial_Number': str,
+                          'Device_Type': str,
+                          'Firmware': str,
+                          'Battery_Voltage': str,
+                          'Sample_Rate': int,
+                          'Start_Date': _format_time,
+                          'Stop_Date':  _format_time,
+                          'Last_Sample_Time':  _format_time,
+                          'TimeZone': str,
+                          'Download_Date':  _format_time,
+                          'Board_Revision': int,
+                          'Unexpected_Resets': int,
+                          'Acceleration_Scale': float,
+                          'Acceleration_Min': float,
+                          'Acceleration_Max': float,
+                          'Subject_Name': str}
+
+    for field, format in fields_and_formats.items():
+        new_meta[field] = format(meta[field])
+
+    return new_meta
+
+
 def read_gt3x(file, rescale=True):
     """
     Reads a .gt3x file and returns the tri-axial acceleration values together
@@ -420,16 +465,37 @@ def read_gt3x(file, rescale=True):
         # get meta data from info.txt file
         meta = _extract_info(info_txt)
 
+        meta = _format_meta_data(meta)
+
         # extract acceleration data from the log file
-        log_data, time_data = _extract_log(log_bin, float(meta['Acceleration_Scale']), int(meta['Sample_Rate']))
+        log_data, time_data = _extract_log(log_bin, meta['Acceleration_Scale'], meta['Sample_Rate'])
 
         # Rescale the data to g if wanted
         if rescale:
-            values = _rescale_log_data(log_data=log_data, acceleration_scale=float(meta['Acceleration_Scale']))
+            values = _rescale_log_data(log_data=log_data, acceleration_scale=meta['Acceleration_Scale'])
         else:
             values = log_data
 
         # create time array
-        time = _create_time_array(time_data, hz=int(meta['Sample_Rate']))
+        time = _create_time_array(time_data, hz=meta['Sample_Rate'])
 
     return time, values, meta
+
+
+def load_dset(grp, field, timeformat="datetime64[s]"):
+    hz = grp[field].attrs["Sample Frequency"]
+    n_samples = grp[field].attrs["NSamples"]
+    start = np.array(grp.attrs["Start Datetime"], dtype=timeformat)
+
+    time = _create_time_vector(start, n_samples, hz)
+    values = grp[field]
+
+    return time, values, (start, n_samples, hz)
+
+
+def save_dset(grp, field, values, start, n_samples, hz):
+    grp.attrs["Start Datetime"] = int(start)
+    dset = grp.create_dataset(field, data=values)
+    dset.attrs["Sample Frequency"] = hz
+    dset.attrs["NSamples"] = values.shape[0]
+    dset.attrs["Timestamp"] = str(start.dtype)
