@@ -480,22 +480,3 @@ def read_gt3x(file, rescale=True):
         time = _create_time_array(time_data, hz=meta['Sample_Rate'])
 
     return time, values, meta
-
-
-def load_dset(grp, field, timeformat="datetime64[s]"):
-    hz = grp[field].attrs["Sample Frequency"]
-    n_samples = grp[field].attrs["NSamples"]
-    start = np.array(grp.attrs["Start Datetime"], dtype=timeformat)
-
-    time = _create_time_vector(start, n_samples, hz)
-    values = grp[field]
-
-    return time, values, (start, n_samples, hz)
-
-
-def save_dset(grp, field, values, start, n_samples, hz):
-    grp.attrs["Start Datetime"] = int(start)
-    dset = grp.create_dataset(field, data=values)
-    dset.attrs["Sample Frequency"] = hz
-    dset.attrs["NSamples"] = values.shape[0]
-    dset.attrs["Timestamp"] = str(start.dtype)
