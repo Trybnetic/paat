@@ -1,0 +1,16 @@
+name: paat-dev
+dependencies:
+  - python=3.8
+  - ipython
+  - pip
+  - pip:
+    - -r file:requirements.txt
+    # Development tools
+    - pylint
+    - pytest
+    - pycodestyle
+    - sphinx
+    - vulture
+    - numpydoc
+    - easydev
+    - sphinx_rtd_theme
