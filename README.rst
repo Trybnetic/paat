@@ -40,8 +40,7 @@ Detect non-wear times
 .. code-block:: python
 
     >>> from paat import wear_time
-    >>> nw_vector, nw_data = wear_time.cnn_nw_algorithm(raw_acc=acceleration,
-    ...                                                 hz=meta['Sample_Rate'])
+    >>> nw_vector, nw_data = wear_time.cnn_nw_algorithm(acceleration, hz=meta['Sample_Rate'])
 
 
 Detect sleep periods
@@ -77,7 +76,7 @@ Authors and Contributers
 ========================
 
 *paat* was mainly developed by
-`Marc Weitz <https://github.com/trybnetic>`_,
+`Marc Weitz <https://github.com/trybnetic>`_
 and `Shaheen Syed <https://github.com/shaheen-syed/>`_. For the full list of
 contributors have a look at `Github's Contributor summary
 <https://github.com/trybnetic/paat/contributors>`_.
