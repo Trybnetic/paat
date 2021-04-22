@@ -55,8 +55,8 @@ estimates for hip-worn ActiGraph acceleration.
 .. code-block:: python
 
     >>> from paat import wear_time
-    >>> nw_vector, nw_data = wear_time.cnn_nw_algorithm(raw_acc = acceleration,
-    ...                                                 hz = meta['Sample_Rate'])
+    >>> nw_vector, nw_data = wear_time.cnn_nw_algorithm(raw_acc=acceleration,
+    ...                                                 hz=meta['Sample_Rate'])
 
 
 
