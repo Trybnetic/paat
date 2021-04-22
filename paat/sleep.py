@@ -1,6 +1,6 @@
 """
-paat.sleep
-----------
+Sleep Module
+------------
 
 *paat.sleep* provides functions to detect periods of sleep in the raw
 acceleration signals.

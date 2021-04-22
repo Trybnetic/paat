@@ -1,6 +1,6 @@
 """
-paat.preprocessing
-------------------
+Preprocessing Module
+--------------------
 
 *paat.preprocessing* provides functions to process the raw acceleration signals.
 

@@ -1,6 +1,6 @@
 """
-paat.io
--------
+Input & Output Module
+---------------------
 
 *paat.io* provides loading and saving functions to process the raw
 acceleration signals.
@@ -548,7 +548,7 @@ def save_dset(grp, field, time, values, meta):
         use, you might want to adjust that order.
     meta : dict
         a dict containing all meta data produced by ActiGraph
-        
+
     """
     dset = grp.create_dataset(field, data=values)
 

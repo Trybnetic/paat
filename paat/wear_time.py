@@ -1,6 +1,6 @@
 """
-paat.wear_time
---------------
+Wear Time Module
+----------------
 
 *paat.wear_time* provides functions to infer wear and non wear times from
 raw acceleration signals.

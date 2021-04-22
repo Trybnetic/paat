@@ -3,8 +3,13 @@ Package overview
 
 .. automodule:: paat
 
-Submodules
-----------
+This toolbox is divided into different modules:
+
+- Input & Output Module (:mod:`paat.io`)
+- Preprocessing Module (:mod:`paat.preprocessing`)
+- Wear Time Module (:mod:`paat.wear_time`)
+- Sleep Module (:mod:`paat.sleep`)
+
 
 .. automodule:: paat.io
     :members:
