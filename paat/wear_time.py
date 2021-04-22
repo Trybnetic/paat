@@ -15,7 +15,7 @@ from tensorflow.keras import models
 from . import preprocessing
 
 
-def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_segment_length=1, sliding_window=1, use_vmu=False):
+def _find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_segment_length=1, sliding_window=1, use_vmu=False):
     """
     Find segements within the raw acceleration data that can potentially be non-wear time (finding the candidates)
 
@@ -68,7 +68,7 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
     non_wear_indexes = np.where(non_wear_vector == 0)[0]
 
     # find the min and max of those ranges, and increase incrementally to find the edges of the non-wear time
-    for row in find_consecutive_index_ranges(non_wear_indexes):
+    for row in _find_consecutive_index_ranges(non_wear_indexes):
 
         # check if not empty
         if row.size != 0:
@@ -77,9 +77,9 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
             start_slice, end_slice = np.min(row), np.max(row)
 
             # backwards search to find the edge of non-wear time vector
-            start_slice = backward_search_non_wear_time(data=acc_data, start_slice=start_slice, end_slice=end_slice, std_max=std_threshold, hz=hz)
+            start_slice = _backward_search_non_wear_time(data=acc_data, start_slice=start_slice, end_slice=end_slice, std_max=std_threshold, hz=hz)
             # forward search to find the edge of non-wear time vector
-            end_slice = forward_search_non_wear_time(data=acc_data, start_slice=start_slice, end_slice=end_slice, std_max=std_threshold, hz=hz)
+            end_slice = _forward_search_non_wear_time(data=acc_data, start_slice=start_slice, end_slice=end_slice, std_max=std_threshold, hz=hz)
 
             # calculate the length of the slice (or segment)
             length_slice = end_slice - start_slice
@@ -94,7 +94,7 @@ def find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_s
     return non_wear_vector_final
 
 
-def find_consecutive_index_ranges(vector, increment=1):
+def _find_consecutive_index_ranges(vector, increment=1):
     """
     Find ranges of consequetive indexes in numpy array
 
@@ -114,7 +114,7 @@ def find_consecutive_index_ranges(vector, increment=1):
     return np.split(vector, np.where(np.diff(vector) != increment)[0]+1)
 
 
-def forward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time_step=60):
+def _forward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time_step=60):
     """
     Increase the end_slice to obtain more non_wear_time (used when non-wear range has been found but due to window size, the actual non-wear time can be slightly larger)
 
@@ -155,7 +155,7 @@ def forward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time
             return end_slice
 
 
-def backward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time_step=60):
+def _backward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time_step=60):
     """
     Decrease the start_slice to obtain more non_wear_time (used when non-wear range has been found but the actual non-wear time can be slightly larger, so here we try to find the boundaries)
 
@@ -195,7 +195,7 @@ def backward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, tim
             return start_slice
 
 
-def group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=False):
+def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=False):
     """
     Group episodes that are very close together
 
@@ -415,7 +415,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_
     """
 
     # get candidate non-wear episodes (note that these are on a minute resolution). Also note that it returns wear time as 1 and non-wear time as 0
-    nw_episodes = find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold,
+    nw_episodes = _find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold,
                                                             min_segment_length=min_segment_length,
                                                             sliding_window=sliding_window, hz=hz)
 
@@ -426,7 +426,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_
     # find all indexes of the numpy array that have been labeled non-wear time
     nw_indexes = np.where(nw_episodes == 0)[0]
     # find consecutive ranges
-    non_wear_segments = find_consecutive_index_ranges(nw_indexes)
+    non_wear_segments = _find_consecutive_index_ranges(nw_indexes)
     # empty dictionary where we can store the start and stop times
     dic_segments = {}
 
@@ -449,7 +449,7 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_
     """
         MERGE EPISODES THAT ARE CLOSE TO EACH OTHER
     """
-    grouped_episodes = group_episodes(episodes=episodes.T, distance_in_min=distance_in_min, correction=3, hz=hz, training=False).T
+    grouped_episodes = _group_episodes(episodes=episodes.T, distance_in_min=distance_in_min, correction=3, hz=hz, training=False).T
 
     """
         LOAD CNN MODEL
@@ -671,17 +671,17 @@ def raw_baseline_calculate_non_wear_time(raw_acc, std_threshold, min_interval, h
     """
 
     # get candidate non-wear episodes (note that these are on a minute resolution)
-    nw_episodes = find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold, min_segment_length=min_segment_length, sliding_window=sliding_window, hz=hz, use_vmu=use_vmu)
+    nw_episodes = _find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold, min_segment_length=min_segment_length, sliding_window=sliding_window, hz=hz, use_vmu=use_vmu)
 
     """
         GET START AND END TIME OF NON WEAR SEGMENTS
     """
 
-    # find all indexes of the numpy array that have been labeled non-wear time. Note that the function find_candidate_non_wear_segments_from_raw returns
+    # find all indexes of the numpy array that have been labeled non-wear time. Note that the function _find_candidate_non_wear_segments_from_raw returns
     # non-wear episodes as 1, and wear time as 1
     nw_indexes = np.where(nw_episodes == 0)[0]
     # find consecutive ranges
-    non_wear_segments = find_consecutive_index_ranges(nw_indexes)
+    non_wear_segments = _find_consecutive_index_ranges(nw_indexes)
 
     # check if segments are found
     if len(non_wear_segments[0]) > 0:
