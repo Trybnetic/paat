@@ -7,6 +7,7 @@ raw acceleration signals.
 
 """
 import logging
+import os
 
 import numpy as np
 import pandas as pd
@@ -298,7 +299,7 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
     return grouped_episodes
 
 
-def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
+def cnn_nw_algorithm(raw_acc, hz, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
                      start_stop_label_decision='and', nwt_encoding=1, wt_encoding=0,
                      min_segment_length=1, sliding_window=1, verbose=False):
     """
@@ -342,8 +343,8 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_
         numpy array that contains raw triaxial data at 100hz. Size of the array should be (n_samples, 3)
     hz: int
         sample frequency of the data. The CNN model was trained for 100Hz of data. If the data is at a different sampling frequency it will be resampled to 100Hz
-    cnn_model_file: os.path
-        file location of the trained CNN model
+    cnn_model_file: os.path (optional)
+        file location of the trained CNN model. On default, the corresponding pretrained model is used.
     std_threshold: float (optional)
         standard deviation threshold to find candidate non-wear episodes. Default 0.004 g
     distance_in_min: int (optional)
@@ -385,6 +386,10 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file, std_threshold=0.004, distance_
     -    If the data is not 100hz, then it will be resampled to 100hz. However, how the inference of non-wear time is affected by this has not been investigated.
     -    CNN models were trained with a hip worn accelerometer.
     """
+
+    # use one of the default models if no model file is given
+    if cnn_model_file is None:
+        cnn_model_file = os.path.join(os.path.pardir, os.path.dirname(__file__), 'models', f'cnn_v2_{str(episode_window_sec)}.h5')
 
     # check if data is triaxial
     if raw_acc.shape[1] != 3:

@@ -29,6 +29,9 @@ setup(
     classifiers=classifiers,
     platforms='Linux',
     packages=['paat'],
+    package_data = {
+        'paat': ['models/*.h5'],
+    },
     setup_requires=['numpy'],
     install_requires=load_requirements('requirements.txt'),
     extras_require={
