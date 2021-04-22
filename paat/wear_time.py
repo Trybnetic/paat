@@ -378,8 +378,6 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
     ---------
     nw_vector: np.array(n_samples, 1)
         non-wear vector which has the same number of samples as 'raw_acc'. Every element has either a non-wear-time encoding or a wear-time encoding.
-    nw_start_stop_indexes: list
-        list of start and stop indexes that are considered non-wear time.
 
     Notes
     -----
@@ -412,8 +410,6 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
 
     # create new non-wear vector that is prepopulated with wear-time encoding. This way we only have to record the non-wear time
     nw_vector = np.full(shape=[raw_acc.shape[0], 1], fill_value=wt_encoding, dtype='uint8')
-    # empty list to keep track of non-wear time start and stop indexes.
-    nw_start_stop_indexes = []
 
     """
         FIND CANDIDATE NON-WEAR SEGMENTS ACTIGRAPH ACCELERATION DATA
@@ -533,8 +529,6 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
             if any(start_stop_label):
                 # true non-wear time, record start and stop in nw-vector
                 nw_vector[start_index:stop_index] = nwt_encoding
-                # add start and stop to nw_data (this is the human readable start and stop)
-                nw_start_stop_indexes.append([start_index, stop_index])
                 # verbose
                 if verbose:
                     logging.info(f'Found non-wear time: start_index: {start_index}, Stop_index: {stop_index}')
@@ -545,8 +539,6 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
             if all(start_stop_label):
                 # true non-wear time, record start and stop in nw-vector
                 nw_vector[start_index:stop_index] = nwt_encoding
-                # add start and stop to nw_data
-                nw_start_stop_indexes.append([start_index, stop_index])
                 # verbose
                 if verbose:
                     logging.info(f'Found non-wear time: start_index: {start_index}, Stop_index: {stop_index}')
@@ -555,7 +547,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
             logging.error(f'Start/Stop decision unknown, can only use or/and, given: {start_stop_label_decision}')
             exit(1)
 
-    return nw_vector, nw_start_stop_indexes
+    return nw_vector
 
 
 def detect_non_wear_time_hees2013(data, hz=100, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,

@@ -55,8 +55,8 @@ estimates for hip-worn ActiGraph acceleration.
 .. code-block:: python
 
     >>> from paat import wear_time
-    >>> nw_vector, nw_data = wear_time.detect_non_wear_time_syed2021(acceleration,
-    ...                                                              hz=meta['Sample_Rate'])
+    >>> nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration,
+    ...                                                     hz=meta['Sample_Rate'])
 
 But there are also other non-wear time algorithm implemented in the :mod:`paat.wear_time`
 module. For wrist-worn accelerometer data, the method developed by [...] might be more

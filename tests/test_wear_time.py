@@ -19,14 +19,12 @@ def testing_data():
 def test_detect_non_wear_time_syed2021(testing_data):
     time, acceleration, meta = testing_data
 
-    nw_vector, nw_data = wear_time.detect_non_wear_time_syed2021(acceleration,
-                									             hz=meta['Sample_Rate'])
+    nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration,
+                									    hz=meta['Sample_Rate'])
 
     nw_vector_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/nw_vector.pkl"), "rb"))
-    nw_data_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/nw_data.pkl"), "rb"))
 
     assert np.all(nw_vector == nw_vector_ref)
-    assert np.all(nw_data == nw_data_ref)
 
 
 def test_detect_non_wear_time_hees2013(testing_data):
