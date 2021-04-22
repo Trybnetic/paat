@@ -1,4 +1,7 @@
 import os
+import pickle
+
+import numpy as np
 
 from paat import io, wear_time
 
@@ -23,13 +26,19 @@ cnn_model_file = os.path.join('/home/msw/Documents/paat/paat/models/', f'cnn_v2_
 
 
 def test_non_wear_time_algorithm():
-    actigraph_acc, actigraph_time, meta_data = io.read_gt3x(FILE_PATH_SIMPLE)
+    time, acceleration, meta = io.read_gt3x(FILE_PATH_SIMPLE)
 
-    nw_vector, nw_data = wear_time.cnn_nw_algorithm(raw_acc = actigraph_acc,
-                									hz = int(meta_data['Sample_Rate']),
+    nw_vector, nw_data = wear_time.cnn_nw_algorithm(raw_acc = acceleration,
+                									hz = int(meta['Sample_Rate']),
                 									cnn_model_file = cnn_model_file,
                 									std_threshold = std_threshold,
                 									distance_in_min = distance_in_min,
                 									episode_window_sec = episode_window_sec,
                 									edge_true_or_false = edge_true_or_false,
                 									start_stop_label_decision = start_stop_label_decision)
+
+    nw_vector_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/nw_vector.pkl"), "rb"))
+    nw_data_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/nw_data.pkl"), "rb"))
+
+    assert np.all(nw_vector == nw_vector_ref)
+    assert np.all(nw_data == nw_data_ref)
