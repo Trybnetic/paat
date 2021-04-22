@@ -15,6 +15,7 @@ import tempfile
 
 import numpy as np
 from bitstring import Bits
+import h5py
 
 
 def _unzip_gt3x_file(file, save_location=None, delete_source_file=False):
@@ -390,7 +391,7 @@ def _create_time_array(time_data, hz=100):
 
 def _format_time(tstamp):
     tstamp = int(tstamp)//10000000 + np.datetime64('0001-01-01T00:00:00').astype(int)
-    return int(tstamp)
+    return int(tstamp) * 1000
 
 
 def _format_meta_data(meta):
@@ -431,6 +432,48 @@ def _format_meta_data(meta):
         new_meta[field] = format(meta[field])
 
     return new_meta
+
+
+def _create_time_vector(start, n_samples, hz):
+    """
+    Creates a time vector starting at point start until start + n_samples/hz
+    with a sampling frequency of hz
+
+    Parameters
+    ----------
+    start : int or np.datetime64
+        start point of the time vector at second precision level.
+    n_samples : int
+        number of samples
+    hz : int
+        sampling frequency
+
+    Returns
+    -------
+    time_data : np.array
+        a numpy array of np.datetime64 at nanosecond precision
+    """
+
+    n_sec = n_samples / hz
+
+    if not n_sec.is_integer():
+        logging.error('Actiwave time in seconds not a whole number: {}'.format(n_sec))
+        exit(1)
+
+    # declare how many nanoseconds in one second
+    ms_in_sec = 1e3
+
+    # check if the sampling frequenzy can fit into equal parts within a nanosecond window
+    if ms_in_sec % hz != 0:
+        logging.error('Sampling frequenzy {} cannot be split into equal parts within a 1s window'.format(hz))
+        exit(1)
+
+    step_size = ms_in_sec / hz
+
+    # convert the array to 64 bit nanoseconds (necessary to fit 128hz for instance) and add a time delta of a range nanoseconds in seconds * lenght_sec, with corresponding stepsize
+    time_data = np.asarray(start, dtype='datetime64[ms]') + np.asarray(np.arange(0, ms_in_sec * n_sec, step_size), dtype='timedelta64[ms]')
+
+    return time_data.flatten()
 
 
 def read_gt3x(file, rescale=True):
@@ -478,5 +521,73 @@ def read_gt3x(file, rescale=True):
 
         # create time array
         time = _create_time_array(time_data, hz=meta['Sample_Rate'])
+
+        # Add additional keys to meta (Note: they are important to later reconstruct the time vector)
+        meta["Number_Of_Samples"] = values.shape[0]
+        meta["Start_Time"] = time[0].astype(int)
+
+    return time, values, meta
+
+
+def save_dset(grp, field, time, values, meta):
+    """
+    Save a data set to an hdf5 file
+
+    Parameters
+    ----------
+    grp : h5py.Group
+        the group object of the hdf5 file
+    field : str
+        identifier of the field that should be extracted
+    time : np.array (n_samples x 1)
+        a numpy array with time stamps for the observations in values
+    values : np.array (n_samples x 3)
+        a numpy array with the tri-axial acceleration values. If rescale is true, data
+        is rescaled to units of g. Note, that this function returns the values in
+        the default order of ActiGraph which is ['Y','X','Z']. Depending on further
+        use, you might want to adjust that order.
+    meta : dict
+        a dict containing all meta data produced by ActiGraph
+        
+    """
+    dset = grp.create_dataset(field, data=values)
+
+    # Check if meta data is correct
+    assert meta["Number_Of_Samples"] == values.shape[0]
+    assert values.shape[0] == time.shape[0]
+    assert meta["Start_Time"] == time[0].astype(int)
+
+    # Save meta data
+    for key, value in meta.items():
+        dset.attrs[key] = value
+
+
+def load_dset(grp, field):
+    """
+    Load a data set to a hdf5 file
+
+    Parameters
+    ----------
+    grp : h5py.Group
+        the group object of the hdf5 file
+    field : str
+        identifier of the field that should be extracted
+
+    Returns
+    -------
+    time : np.array (n_samples x 1)
+        a numpy array with time stamps for the observations in values
+    values : np.array (n_samples x 3)
+        a numpy array with the tri-axial acceleration values. If rescale is true, data
+        is rescaled to units of g. Note, that this function returns the values in
+        the default order of ActiGraph which is ['Y','X','Z']. Depending on further
+        use, you might want to adjust that order.
+    meta : dict
+        a dict containing all meta data produced by ActiGraph
+
+    """
+    meta = dict(grp.attrs)
+    time = _create_time_vector(meta["Start_Time"], meta["Number_Of_Samples"], meta["Sample_Rate"])
+    values = grp[field]
 
     return time, values, meta

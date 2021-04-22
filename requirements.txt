@@ -7,3 +7,4 @@ resampy==0.2.2
 joblib==1.0.1
 numpy==1.19.5
 bitstring==3.1.7
+h5py
