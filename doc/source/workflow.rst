@@ -48,15 +48,25 @@ Detect non-wear periods
 
 Different methods to infer non-wear time from the raw acceleration signal are
 implemented in the :mod:`paat.wear_time` module. We suggest to use
-:meth:`paat.wear_time.cnn_nw_algorithm` as described in [...] as until know this
+:meth:`paat.wear_time.detect_non_wear_time_syed2021` as described in [...] as until know this
 algorithm has shown the most accurate
 estimates for hip-worn ActiGraph acceleration.
 
 .. code-block:: python
 
     >>> from paat import wear_time
-    >>> nw_vector, nw_data = wear_time.cnn_nw_algorithm(acceleration, hz=meta['Sample_Rate'])
+    >>> nw_vector, nw_data = wear_time.detect_non_wear_time_syed2021(acceleration,
+    ...                                                              hz=meta['Sample_Rate'])
 
+But there are also other non-wear time algorithm implemented in the :mod:`paat.wear_time`
+module. For wrist-worn accelerometer data, the method developed by [...] might be more
+appropriate and is implemented in :meth:`paat.wear_time.detect_non_wear_time_hees2013`:
+
+.. code-block:: python
+
+    >>> from paat import wear_time
+    >>> nw_vector = wear_time.detect_non_wear_time_hees2013(acceleration,
+    ...                                                     hz=meta['Sample_Rate'])
 
 
 Detect sleep periods

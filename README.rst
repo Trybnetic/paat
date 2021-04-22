@@ -40,7 +40,7 @@ Detect non-wear times
 .. code-block:: python
 
     >>> from paat import wear_time
-    >>> nw_vector, nw_data = wear_time.cnn_nw_algorithm(acceleration, hz=meta['Sample_Rate'])
+    >>> nw_vector, nw_data = wear_time.detect_non_wear_time_syed2021(acceleration, hz=meta['Sample_Rate'])
 
 
 Detect sleep periods

@@ -299,9 +299,9 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
     return grouped_episodes
 
 
-def cnn_nw_algorithm(raw_acc, hz, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
-                     start_stop_label_decision='and', nwt_encoding=1, wt_encoding=0,
-                     min_segment_length=1, sliding_window=1, verbose=False):
+def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
+             start_stop_label_decision='and', nwt_encoding=1, wt_encoding=0,
+             min_segment_length=1, sliding_window=1, verbose=False):
     """
     Infer non-wear time from raw 100Hz triaxial data. Data at different sample frequencies will be resampled to 100hz.
 
@@ -558,8 +558,8 @@ def cnn_nw_algorithm(raw_acc, hz, cnn_model_file=None, std_threshold=0.004, dist
     return nw_vector, nw_start_stop_indexes
 
 
-def hees_2013_calculate_non_wear_time(data, hz=100, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
-                                      value_range_mg_threshold=50.0, value_range_min_num_axes=2, nwt_encoding=0, wt_encoding=1):
+def detect_non_wear_time_hees2013(data, hz=100, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
+                                  value_range_mg_threshold=50.0, value_range_min_num_axes=2, nwt_encoding=0, wt_encoding=1):
     """
     Estimation of non-wear time periods based on Hees 2013 paper
 
@@ -660,7 +660,7 @@ def hees_2013_calculate_non_wear_time(data, hz=100, min_non_wear_time_window=60,
     return non_wear_vector
 
 
-def raw_baseline_calculate_non_wear_time(raw_acc, std_threshold, min_interval, hz, use_vmu=False, nwt_encoding=1, wt_encoding=0, min_segment_length=1, sliding_window=1):
+def detect_non_wear_time_naive(raw_acc, std_threshold, min_interval, hz, use_vmu=False, nwt_encoding=1, wt_encoding=0, min_segment_length=1, sliding_window=1):
     """
         Calculate non-wear time from raw acceleration data by finding intervals in which the acceleration standard deviation is below a std_threshold value
     """
