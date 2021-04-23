@@ -586,8 +586,9 @@ def load_dset(grp, field):
         a dict containing all meta data produced by ActiGraph
 
     """
-    meta = dict(grp.attrs)
+    dset = grp[field]
+    meta = dict(dset.attrs)
     time = _create_time_vector(meta["Start_Time"], meta["Number_Of_Samples"], meta["Sample_Rate"])
-    values = grp[field]
+    values = dset[:]
 
     return time, values, meta
