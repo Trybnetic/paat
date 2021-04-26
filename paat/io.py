@@ -17,6 +17,8 @@ import numpy as np
 from bitstring import Bits
 import h5py
 
+from . import preprocessing
+
 
 def _unzip_gt3x_file(file, save_location=None, delete_source_file=False):
     """
@@ -325,35 +327,6 @@ def _count_payload_size(log_bin, count_payload=0):
             return SIZE
 
 
-def _rescale_log_data(log_data, acceleration_scale=256.):
-    """
-    Rescale raw acceleration data to g values
-
-    Parameters
-    ----------
-    log_data : np.array()
-        array with YXZ acceleration data (in integers otherwise no scaling required)
-    acceleration_scale : float (optional)
-        value to scale the acceleration
-
-    Returns
-    -------
-    scaled_log_data : np.array()
-        log_data scaled by acceleration scale
-    """
-
-    try:
-
-        # calculate the scaling factor
-        scale_factor = 1. / float(acceleration_scale)
-
-        # apply scaling and return
-        return log_data * scale_factor
-
-    except Exception as e:
-        logging.error('Error rescaling log data: {}'.format(e))
-
-
 def _create_time_array(time_data, hz=100):
     """
     Create a time array by adding the miliseconds range of the sampling frequency
@@ -476,7 +449,7 @@ def _create_time_vector(start, n_samples, hz):
     return time_data.flatten()
 
 
-def read_gt3x(file, rescale=True):
+def read_gt3x(file, rescale=False):
     """
     Reads a .gt3x file and returns the tri-axial acceleration values together
     with the corresponding time stamps and all meta data.
@@ -515,7 +488,7 @@ def read_gt3x(file, rescale=True):
 
         # Rescale the data to g if wanted
         if rescale:
-            values = _rescale_log_data(log_data=log_data, acceleration_scale=meta['Acceleration_Scale'])
+            values = preprocessing.rescale(log_data, acceleration_scale=meta['Acceleration_Scale'])
         else:
             values = log_data
 

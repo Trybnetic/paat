@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 import pytest
 
-from paat import io, wear_time
+from paat import io, wear_time, preprocessing
 
 
 TEST_ROOT = os.path.join(os.path.pardir, os.path.dirname(__file__))
@@ -18,6 +18,8 @@ def testing_data():
 
 def test_detect_non_wear_time_syed2021(testing_data):
     time, acceleration, meta = testing_data
+
+    acceleration = preprocessing.rescale(acceleration, acceleration_scale=meta['Acceleration_Scale'])
 
     nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration,
                 									    hz=meta['Sample_Rate'])

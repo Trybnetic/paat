@@ -175,3 +175,32 @@ def resample(data, from_hz, to_hz, index, verbose):
         logging.debug('Processing axis {}'.format(index))
 
     return index, resampy.resample(data, from_hz, to_hz)
+
+
+def rescale(acceleration, acceleration_scale=256.):
+    """
+    Rescale raw acceleration data to g values
+
+    Parameters
+    ----------
+    acceleration : np.array()
+        array with YXZ acceleration data (in integers otherwise no scaling required)
+    acceleration_scale : float (optional)
+        value to scale the acceleration
+
+    Returns
+    -------
+    scaled_log_data : np.array()
+        log_data scaled by acceleration scale
+    """
+
+    try:
+
+        # calculate the scaling factor
+        scale_factor = 1. / float(acceleration_scale)
+
+        # apply scaling and return
+        return acceleration * scale_factor
+
+    except Exception as e:
+        logging.error('Error rescaling log data: {}'.format(e))
