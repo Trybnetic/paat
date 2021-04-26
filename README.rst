@@ -24,35 +24,25 @@ This also enables that all changes you make in the code become active immediatel
 Usage
 =====
 
-
-Load data from GT3X file
-------------------------
-
-.. code-block:: python
-
-    >>> from paat import io
-    >>> time, acceleration, meta = io.read_gt3x('path/to/gt3x/file')
-
-
-Detect non-wear times
----------------------
+For now, several functions to work with raw data from ActiGraph devices are
+implemented while others are still work in progress. The following code snippet
+should give you a brief overview and idea on how to use this package. Further
+examples and more information on the functions can be found in the documentation.
 
 .. code-block:: python
 
-    >>> from paat import wear_time
-    >>> nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration, hz=meta['Sample_Rate'])
+    from paat import io, preprocessing, wear_time
 
+    # Load data from file
+    time, acceleration, meta = io.read_gt3x('path/to/gt3x/file')
 
-Detect sleep periods
---------------------
+    # Rescaled to gravitational units g
+    acceleration = preprocessing.rescale(acceleration,
+                                         acceleration_scale=meta['Acceleration_Scale'])
 
-Will be implemented soon
+    # Infer non-wear time
+    nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration, hz=meta['Sample_Rate'])
 
-
-Detect activity periods
------------------------
-
-Will be implemented soon
 
 
 Getting involved
