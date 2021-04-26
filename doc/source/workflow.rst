@@ -24,7 +24,7 @@ Data can easily be saved to a HDF5 file
     >>> import h5py
     >>> with h5py.File('path/hdf5/file', 'a') as hdf5_file:
     ...     grp = hdf5_file.create_group(meta["Subject_Name"])
-    ...     io.save_dset(grp, "ActiGraph", time, acceleration, meta)
+    ...     io.save_dset(grp, "acceleration", time, acceleration, meta)
 
 
 and from there be loaded again
@@ -32,7 +32,7 @@ and from there be loaded again
 .. code-block:: python
 
     >>> with h5py.File('path/hdf5/file', 'r') as hdf5_file:
-    ...     time, acceleration, meta = io.load_dset(grp, "ActiGraph")
+    ...     time, acceleration, meta = io.load_dset(grp, "acceleration")
 
 
 .. note::
@@ -41,6 +41,27 @@ and from there be loaded again
     from the gt3x files every time. We therefore strongly recommend to process
     all gt3x files in a first step and after that only use hdf5 to access the
     data.
+
+
+Preprocessing
+-------------
+
+In the previous step, we saw different ways to load and store data. As pointed out,
+we strongly recommend to process all data first and save them into one hdf5 file.
+When you load the data from the gt3x files, this data is not scale to gravitational
+units g on default. When working with the original files, you have the option to
+set `rescale=True` in :meth:`paat.io.read_gt3x`. We do not recommend rescaling the
+data before saving it to the hdf5 file as the rescaled data takes a lot more space
+on the disk. Therefore, it is easier to rescale the data after loading:
+
+.. code-block:: python
+
+    >>> from paat import preprocessing
+    >>> acceleration = preprocessing.rescale(acceleration,
+    ...                                      acceleration_scale=meta['Acceleration_Scale'])
+
+Please note, that rescaling the data is required for all functions for further
+processing.
 
 
 Detect non-wear periods
