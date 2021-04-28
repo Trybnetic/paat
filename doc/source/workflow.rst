@@ -77,17 +77,17 @@ estimates for hip-worn ActiGraph acceleration.
 
     >>> from paat import wear_time
     >>> nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration,
-    ...                                                     hz=meta['Sample_Rate'])
+    ...                                                     meta['Sample_Rate'])
 
 But there are also other non-wear time algorithm implemented in the :mod:`paat.wear_time`
 module. For wrist-worn accelerometer data, the method developed by [...] might be more
-appropriate and is implemented in :meth:`paat.wear_time.detect_non_wear_time_hees2013`:
+appropriate and is implemented in :meth:`paat.wear_time.detect_non_wear_time_hees2011`:
 
 .. code-block:: python
 
     >>> from paat import wear_time
-    >>> nw_vector = wear_time.detect_non_wear_time_hees2013(acceleration,
-    ...                                                     hz=meta['Sample_Rate'])
+    >>> nw_vector = wear_time.detect_non_wear_time_hees2011(acceleration,
+    ...                                                     meta['Sample_Rate'])
 
 
 Detect sleep periods

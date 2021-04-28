@@ -41,7 +41,7 @@ examples and more information on the functions can be found in the documentation
                                          acceleration_scale=meta['Acceleration_Scale'])
 
     # Infer non-wear time
-    nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration, hz=meta['Sample_Rate'])
+    nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration, meta['Sample_Rate'])
 
 
 

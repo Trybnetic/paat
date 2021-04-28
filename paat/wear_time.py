@@ -42,8 +42,8 @@ def _find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_
     min_segment_length *= hz * 60
 
     # define new non wear time vector that we initiale to all 1s, so we only have the change when we have non wear time as it is encoded as 0
-    non_wear_vector = np.ones((len(acc_data), 1), dtype=np.uint8)
-    non_wear_vector_final = np.ones((len(acc_data), 1), dtype=np.uint8)
+    nw_vector = np.ones((len(acc_data), 1), dtype=np.uint8)
+    nw_vector_final = np.ones((len(acc_data), 1), dtype=np.uint8)
 
     # loop over slices of the data
     for ii in range(0, len(acc_data), sliding_window):
@@ -63,10 +63,10 @@ def _find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_
         if np.all(std <= std_threshold):
 
             # add the non-wear time encoding to the non-wear-vector for the correct time slices
-            non_wear_vector[ii:ii+sliding_window] = 0
+            nw_vector[ii:ii+sliding_window] = 0
 
     # find all indexes of the numpy array that have been labeled non-wear time
-    non_wear_indexes = np.where(non_wear_vector == 0)[0]
+    non_wear_indexes = np.where(nw_vector == 0)[0]
 
     # find the min and max of those ranges, and increase incrementally to find the edges of the non-wear time
     for row in _find_consecutive_index_ranges(non_wear_indexes):
@@ -89,10 +89,10 @@ def _find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_
             if length_slice >= min_segment_length:
 
                 # update numpy array by setting the start and end of the slice to zero (this is a non-wear candidate)
-                non_wear_vector_final[start_slice:end_slice] = 0
+                nw_vector_final[start_slice:end_slice] = 0
 
     # return non wear vector with 0= non-wear and 1 = wear
-    return non_wear_vector_final
+    return nw_vector_final
 
 
 def _find_consecutive_index_ranges(vector, increment=1):
@@ -300,7 +300,7 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
 
 
 def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
-             start_stop_label_decision='and', nwt_encoding=1, wt_encoding=0,
+             start_stop_label_decision='and', nwt_encoding=True, wt_encoding=False,
              min_segment_length=1, sliding_window=1, verbose=False):
     """
     Infer non-wear time from raw 100Hz triaxial data. Data at different sample frequencies will be resampled to 100hz.
@@ -409,7 +409,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
         hz = 100
 
     # create new non-wear vector that is prepopulated with wear-time encoding. This way we only have to record the non-wear time
-    nw_vector = np.full(shape=[raw_acc.shape[0], 1], fill_value=wt_encoding, dtype='uint8')
+    nw_vector = np.full(shape=[raw_acc.shape[0], 1], fill_value=wt_encoding, dtype=bool)
 
     """
         FIND CANDIDATE NON-WEAR SEGMENTS ACTIGRAPH ACCELERATION DATA
@@ -550,8 +550,8 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
     return nw_vector
 
 
-def detect_non_wear_time_hees2013(data, hz=100, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
-                                  value_range_mg_threshold=50.0, value_range_min_num_axes=2, nwt_encoding=0, wt_encoding=1):
+def detect_non_wear_time_hees2011(raw_acc, hz, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
+                                  value_range_mg_threshold=50.0, value_range_min_num_axes=2, nwt_encoding=True, wt_encoding=False):
     """
     Estimation of non-wear time periods based on Hees 2013 paper
 
@@ -567,9 +567,9 @@ def detect_non_wear_time_hees2013(data, hz=100, min_non_wear_time_window=60, win
 
     Parameters
     ----------
-    data: np.array(n_samples, axes)
+    raw_acc: np.array(n_samples, axes)
         numpy array with acceleration data in g values. Each column represent a different axis, normally ordered YXZ
-    hz: int (optional)
+    hz: int
         sample frequency in hertz. Indicates the number of samples per 1 second. Default to 100 for 100hz. The sample frequency is necessary to
         know how many samples there are in a specific window. So let's say we have a window of 15 minutes, then there are hz * 60 * 15 samples
     min_non_wear_time_window: int (optional)
@@ -594,7 +594,7 @@ def detect_non_wear_time_hees2013(data, hz=100, min_non_wear_time_window=60, win
 
     Returns
     ---------
-    non_wear_vector: np.array((n_samples, 1))
+    nw_vector: np.array((n_samples, 1))
         numpy array with non wear time encoded as 'nwt_encoding', and wear time encoded as 'wt_encoding'.
     """
 
@@ -612,10 +612,10 @@ def detect_non_wear_time_hees2013(data, hz=100, min_non_wear_time_window=60, win
 
     # new array to record non-wear time. The default behavior is 0 = non-wear time, and 1 = wear time. Since we create a new array filled with wear time encoding, we only have to
     # deal with non-wear time, since everything else is already set as wear-time.
-    non_wear_vector = np.full(shape=[data.shape[0], 1], fill_value=wt_encoding, dtype='uint8')
+    nw_vector = np.full(shape=[raw_acc.shape[0], 1], fill_value=wt_encoding, dtype=bool)
 
     # loop over the data, start from the beginning with a step size of window overlap
-    for ii in range(0, len(data), window_overlap):
+    for ii in range(0, len(raw_acc), window_overlap):
 
         # define the start of the sequence
         start = ii
@@ -623,7 +623,7 @@ def detect_non_wear_time_hees2013(data, hz=100, min_non_wear_time_window=60, win
         end = ii + min_non_wear_time_window
 
         # slice the data from start to end
-        subset_data = data[start:end]
+        subset_data = raw_acc[start:end]
 
         # check if the data sequence has been exhausted, meaning that there are no full windows left in the data sequence (this happens at the end of the sequence)
         # comment out if you want to use all the data
@@ -638,7 +638,7 @@ def detect_non_wear_time_hees2013(data, hz=100, min_non_wear_time_window=60, win
 
             # at least 'std_min_num_axes' are below the standard deviation threshold of 'std_min_num_axes', now set this subset of the data to the non-wear time encoding.
             # Note that the full 'new_wear_vector' is pre-populated with the wear time encoding, so we only have to set the non-wear time.
-            non_wear_vector[start:end] = nwt_encoding
+            nw_vector[start:end] = nwt_encoding
 
         # calculate the value range (difference between the min and max) (here the point-to-point numpy method is used) for each column
         value_range = np.ptp(subset_data, axis=0)
@@ -647,21 +647,43 @@ def detect_non_wear_time_hees2013(data, hz=100, min_non_wear_time_window=60, win
         if (value_range < value_range_mg_threshold).sum() >= value_range_min_num_axes:
 
             # set the non wear vector to non-wear time for the start to end slice of the data
-            non_wear_vector[start:end] = nwt_encoding
+            nw_vector[start:end] = nwt_encoding
 
-    return non_wear_vector
+    return nw_vector
 
 
-def detect_non_wear_time_naive(raw_acc, std_threshold, min_interval, hz, use_vmu=False, nwt_encoding=1, wt_encoding=0, min_segment_length=1, sliding_window=1):
+def detect_non_wear_time_naive(raw_acc, hz, std_threshold, min_interval, use_vmu=False, nwt_encoding=True, wt_encoding=False, min_segment_length=1, sliding_window=1):
     """
-        Calculate non-wear time from raw acceleration data by finding intervals in which the acceleration standard deviation is below a std_threshold value
+        Calculate non-wear time from raw acceleration data by finding intervals in which
+        the acceleration standard deviation is below a std_threshold value
+
+        Parameters
+        ----------
+        raw_acc: np.array(n_samples, 3 axes)
+            numpy array that contains raw triaxial data. Size of the array should be (n_samples, 3)
+        hz: int
+            sample frequency of the data
+        std_threshold: int or float
+            the standard deviation threshold in g
+        min_interval: int or float
+            minimal interval to consider period as non-wear time
+        use_vmu: bool
+            indicates whether the algorithm should runon vector magnitude data
+        nwt_encoding: int
+            non-wear time encoding. Defaults to 0
+        wt_encoding: int
+            wear time encoding. Defaults to 1
+        min_segment_length: int (optional)
+            minimum length of the segment to be candidate for non-wear time (default 1 minutes, so any shorter segments will not be considered non-wear time)
+        sliding_window: int (optional)
+            sliding window in minutes that will go over the acceleration data to find candidate non-wear segments
     """
 
     # make sure hz is int
     hz = int(hz)
 
     # create an new non-wear vector that we propoulate with wear-time encoding. This way we only have to update the vector with non-wear time
-    nw_vector = np.full(shape=[raw_acc.shape[0], 1], fill_value=wt_encoding, dtype='uint8')
+    nw_vector = np.full(shape=[raw_acc.shape[0], 1], fill_value=wt_encoding, dtype=bool)
 
     """
         FIND CANDIDATE NON-WEAR SEGMENTS ACTIGRAPH ACCELERATION DATA
