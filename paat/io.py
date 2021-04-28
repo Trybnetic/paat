@@ -534,7 +534,7 @@ def save_dset(grp, field, time, values, meta):
         dset.attrs[key] = value
 
 
-def load_dset(grp, field):
+def load_dset(grp, field, rescale=False):
     """
     Load a data set to a hdf5 file
 
@@ -544,6 +544,8 @@ def load_dset(grp, field):
         the group object of the hdf5 file
     field : str
         identifier of the field that should be extracted
+    rescale : boolean (optional)
+        boolean indicating whether raw acceleration data should be rescaled to g values
 
     Returns
     -------
@@ -561,6 +563,11 @@ def load_dset(grp, field):
     dset = grp[field]
     meta = dict(dset.attrs)
     time = _create_time_vector(meta["Start_Time"], meta["Number_Of_Samples"], meta["Sample_Rate"])
-    values = dset[:]
+
+    # Rescale the data to g if wanted
+    if rescale:
+        values = preprocessing.rescale(dset[:], acceleration_scale=meta['Acceleration_Scale'])
+    else:
+        values = dset[:]
 
     return time, values, meta

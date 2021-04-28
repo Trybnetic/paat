@@ -5,7 +5,7 @@ import numpy as np
 import h5py
 import pytest
 
-from paat import io
+from paat import io, preprocessing
 
 TEST_ROOT = os.path.join(os.path.pardir, os.path.dirname(__file__))
 FILE_PATH_SIMPLE = os.path.join(TEST_ROOT, 'resources/test_file.gt3x')
@@ -25,11 +25,19 @@ def test_hdf5():
             grp = hdf5_file[grp_name]
             new_time, new_acceleration, new_meta = io.load_dset(grp, "acceleration")
 
+            new_time, scaled_acceleration, new_meta = io.load_dset(grp, "acceleration", rescale=True)
+
     assert np.all(time == new_time)
     assert np.all(acceleration == new_acceleration)
 
     for key, value in meta.items():
         assert meta[key] == new_meta[key]
+
+    # Test whether rescaled data on load is properly rescaled
+    new_scaled_acceleration = preprocessing.rescale(new_acceleration,
+                                                    acceleration_scale=meta['Acceleration_Scale'])
+
+    assert np.all(scaled_acceleration == new_scaled_acceleration)
 
 
 def test_exceptions():
