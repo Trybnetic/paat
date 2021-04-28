@@ -24,7 +24,7 @@ def test_detect_non_wear_time_syed2021(testing_data):
 
     nw_vector_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/nw_vector.pkl"), "rb"))
 
-    assert np.all(nw_vector == nw_vector_ref[:,0])
+    assert np.array_equal(nw_vector, nw_vector_ref[:,0])
 
 
 def test_detect_non_wear_time_hees2011(testing_data):

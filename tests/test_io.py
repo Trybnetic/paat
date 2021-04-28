@@ -27,8 +27,8 @@ def test_hdf5():
 
             new_time, scaled_acceleration, new_meta = io.load_dset(grp, "acceleration", rescale=True)
 
-    assert np.all(time == new_time)
-    assert np.all(acceleration == new_acceleration)
+    assert np.array_equal(time, new_time)
+    assert np.array_equal(acceleration, new_acceleration)
 
     for key, value in meta.items():
         assert meta[key] == new_meta[key]
@@ -37,7 +37,7 @@ def test_hdf5():
     new_scaled_acceleration = preprocessing.rescale(new_acceleration,
                                                     acceleration_scale=meta['Acceleration_Scale'])
 
-    assert np.all(scaled_acceleration == new_scaled_acceleration)
+    assert np.array_equal(scaled_acceleration, new_scaled_acceleration)
 
 
 def test_exceptions():
