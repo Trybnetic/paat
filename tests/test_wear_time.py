@@ -42,39 +42,3 @@ def test_detect_non_wear_time_naive(testing_data):
 
     nw_vector = wear_time.detect_non_wear_time_naive(acceleration, meta['Sample_Rate'],
                 									 std_threshold, min_interval)
-
-
-def test_backward_compatibility_syed2021(testing_data):
-    time, acceleration, meta = testing_data
-
-    nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration,
-                                                        meta['Sample_Rate'])
-
-    nw_vector_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/syed2021_old.pkl"), "rb"))
-
-    assert np.all(np.where(nw_vector,1,0) == nw_vector_ref[:,0])
-
-
-def test_backward_compatibility_hees2011(testing_data):
-    time, acceleration, meta = testing_data
-
-    nw_vector = wear_time.detect_non_wear_time_hees2011(acceleration,
-                                                        meta['Sample_Rate'])
-
-    nw_vector_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/hees2011_old.pkl"), "rb"))
-
-    assert np.all(np.where(nw_vector,0,1) == nw_vector_ref[:,0])
-
-
-def test_backward_compatibility_naive(testing_data):
-    time, acceleration, meta = testing_data
-
-    std_threshold = 0.004
-    min_interval = 60
-
-    nw_vector = wear_time.detect_non_wear_time_naive(acceleration, meta['Sample_Rate'],
-                                                     std_threshold, min_interval)
-
-    nw_vector_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/naive_old.pkl"), "rb"))
-
-    assert np.all(np.where(nw_vector,1,0) == nw_vector_ref[:,0])
