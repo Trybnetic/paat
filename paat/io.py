@@ -348,7 +348,7 @@ def _create_time_array(time_data, hz=100):
 
     # check if the sampling frequenzy can fit into equal parts within a 1000ms window
     if 1000 % hz != 0:
-        logging.error('Sampling frequenzy {} cannot be split into equal parts within a 1s window'.format(hz))
+        raise NotImplementedError("Creating time array does not support sampling frequencies other than 100hz yet. See https://github.com/Trybnetic/paat/issues/10")
 
     # calculate the step size of hz in 1s (so 100hz means 100 measurements in 1sec, so if we need to fill 1000ms then we need use a step size of 10)
     step_size = 1000 / hz
@@ -438,8 +438,7 @@ def _create_time_vector(start, n_samples, hz):
 
     # check if the sampling frequenzy can fit into equal parts within a nanosecond window
     if ms_in_sec % hz != 0:
-        logging.error('Sampling frequenzy {} cannot be split into equal parts within a 1s window'.format(hz))
-        exit(1)
+        raise NotImplementedError("Creating time vector does not support sampling frequencies other than 100hz yet. See https://github.com/Trybnetic/paat/issues/10")
 
     step_size = ms_in_sec / hz
 

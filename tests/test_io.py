@@ -3,6 +3,7 @@ import tempfile
 
 import numpy as np
 import h5py
+import pytest
 
 from paat import io
 
@@ -29,3 +30,18 @@ def test_hdf5():
 
     for key, value in meta.items():
         assert meta[key] == new_meta[key]
+
+
+def test_exceptions():
+    with pytest.raises(NotImplementedError) as e_info:
+        time_data = np.arange(10)
+        hz = 33
+        io._create_time_array(time_data, hz)
+        assert e_info
+
+    with pytest.raises(NotImplementedError) as e_info:
+        start = np.asarray(np.datetime64('today'), dtype='datetime64[ms]')
+        n_samples = 330
+        hz = 33
+        io._create_time_vector(start, n_samples, hz)
+        assert e_info
