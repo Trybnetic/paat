@@ -344,6 +344,11 @@ def _create_time_array(time_data, hz=100):
     --------
     time_data : np.array
         numpy array with correct number of time series (so now the sampling frequency is added within the original data which only contained seconds and not miliseconds)
+
+    Raises
+    ------
+    NotImplementedError
+        If the sampling frequency does not fit on milisecond precision
     """
 
     # check if the sampling frequenzy can fit into equal parts within a 1000ms window
@@ -425,6 +430,11 @@ def _create_time_vector(start, n_samples, hz):
     -------
     time_data : np.array
         a numpy array of np.datetime64 at nanosecond precision
+
+    Raises
+    ------
+    NotImplementedError
+        If the sampling frequency does not fit on milisecond precision
     """
 
     n_sec = n_samples / hz

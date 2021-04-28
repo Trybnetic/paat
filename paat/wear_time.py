@@ -22,18 +22,23 @@ def _find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_
 
     Parameters
     ----------
-    acc_data: np.array(samples, axes)
+    acc_data : np.array(samples, axes)
         numpy array with acceleration data (typically YXZ)
-    std_threshold: int or float
+    std_threshold : int or float
         the standard deviation threshold in g
-    hz: int
+    hz : int
         sample frequency of the acceleration data (could be 32hz or 100hz for example)
-    min_segment_length: int (optional)
+    min_segment_length : int (optional)
         minimum length of the segment to be candidate for non-wear time (default 1 minutes, so any shorter segments will not be considered non-wear time)
-    hz: int (optional)
-        sample frequency of the data (necessary so we know how many data samples we have in a second window)
-    sliding_window: int (optional)
+    sliding_window : int (optional)
         sliding window in minutes that will go over the acceleration data to find candidate non-wear segments
+    use_vmu : bool
+        indicates whether the algorithm should runon vector magnitude data
+
+    Returns
+    -------
+    nw_vector_final: array_like
+        a numpy array with candidate non-wear time periods
     """
 
     # adjust the sliding window to match the samples per second (this is encoded in the samplign frequency)
@@ -101,7 +106,7 @@ def _find_consecutive_index_ranges(vector, increment=1):
 
     Parameters
     ----------
-    data: numpy vector
+    vector: numpy vector
         numpy vector of integer values
     increment: int (optional)
         difference between two values (typically 1)
@@ -129,8 +134,15 @@ def _forward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, tim
         end of known non-wear time range
     std_max: int or float
         the standard deviation threshold in g
+    hz : int
+        sample frequency of the data (necessary when working with indexes)
     time_step: int (optional)
         value to add (or subtract in the backwards search) to find more non-wear time
+
+    Returns
+    -------
+    end_slice: int
+        index of the end of the non-wear time period
     """
 
     # adjust time step on number of samples per time step window
@@ -170,8 +182,15 @@ def _backward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, ti
         end of known non-wear time range
     std_max: int or float
         the standard deviation threshold in g
+    hz : int
+        sample frequency of the data (necessary when working with indexes)
     time_step: int (optional)
         value to add (or subtract in the backwards search) to find more non-wear time
+
+    Returns
+    -------
+    start_slice: int
+        index of the start of the non-wear time period
     """
 
     # adjust time step on number of samples per time step window
@@ -202,13 +221,13 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
 
     Parameters
     -----------
-    episodes: pd.DataFrame()
+    episodes : pd.DataFrame()
         dataframe with episodes that need to be grouped
-    distance_in_min = int
+    distance_in_min : int
         maximum distance two episodes can be apart and need to be grouped together
-    correction = int
+    correction : int
         due to changing from 100hz to 32hz we need to allow for a small correction to capture full minutes
-    hz = int
+    hz : int
         sample frequency of the data (necessary when working with indexes)
 
     Returns

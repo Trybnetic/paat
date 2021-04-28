@@ -22,8 +22,29 @@ except ImportError:
 
 
 def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=False, dtype=np.float32):
-    r"""Calculate the vector magnitude of the acceleration data.
+    r"""
+    Calculate the vector magnitude of the acceleration data.
 
+    Parameters
+    ----------
+    data : array_like
+        numpy array with acceleration data
+    minus_one : Boolean (optional)
+        If set to True, the calculate the vector magnitude minus one, also known as the ENMO (Euclidian Norm Minus One)
+    round_negative_to_zero : Boolean (optional)
+        If set to True, round negative values to zero
+    dtype : np.dtype (optional)
+        set the data type of the return array. Standard float 16, but can be set to better precision
+
+
+    Returns
+    -------
+    vector_magnitude : np.array (acceleration values, 1)(np.float)
+       numpy array with vector magnitude of the acceleration
+
+
+    Notes
+    -----
     The vector magnitude of the acceleration is calculated as the Euclidian Norm.
 
     .. math:: \sqrt{y^2 + x^2 + z^2}
@@ -34,21 +55,6 @@ def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=Fal
 
     if round_negative_to_zero all negative values are clipped.
 
-    Parameters
-    ----------
-    data: np.array (acceleration values, axes)
-       numpy array with acceleration data
-    minus_one: Boolean (optional)
-       If set to True, the calculate the vector magnitude minus one, also known as the ENMO (Euclidian Norm Minus One)
-    round_negative_to_zero: Boolean (optional)
-       If set to True, round negative values to zero
-    dtype: np.dtype (optional)
-       set the data type of the return array. Standard float 16, but can be set to better precision
-
-    Returns
-    -------
-    vector_magnitude: np.array (acceleration values, 1)(np.float)
-       numpy array with vector magnitude of the acceleration
     """
 
     # change dtype of array to float32 (also to hold scaled data correctly). The original unscaled data is stored as int16, but when we want to calculate the vector we exceed the values that can be stored in 16 bit
@@ -89,25 +95,26 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel=False, num_jobs=cpu
 
     Parameters
     ----------
-    data: np.array
+    data : np.array
         numpy array with acceleration data, can be more than one dimension
-    from_hz: int
+    from_hz : int
         original sample frequency of the data (this is usually the frequency the device was set to during initialization)
-    to_hz: int
+    to_hz : int
         the sampling frequency to convert to.
-    use_parallel: Bool (optional)
+    use_parallel : Bool (optional)
         if set to True, then individual axis will be processed in parallel to speed up computational time. Defaults to False
-    num_jobs: int (optional)
+    num_jobs : int (optional)
         if 'use_parallel' is set to True, then 'num_jobs' defines how many parallel jobs are executed at the same time. This typically is the number of
         hyperthreads. Also note that for triaxial data, even if n_jobs > 3 axes, it can only process 3 at the same time.
-    verbose: bool (optional)
+    verbose : bool (optional)
         if set to True, then output debug messages to console and log file.
 
 
     Returns
     --------
-    new_data: np.array
+    new_data : np.array
         new numpy array with resampled acceleration data
+
     """
 
     logging.info('Start {}'.format(sys._getframe().f_code.co_name))
@@ -154,6 +161,8 @@ def resample(data, from_hz, to_hz, index, verbose):
     """
     Resample data from_hz to to_hz
 
+    Parameters
+    ----------
     data: np.array(n_samples, 1)
         numpy array with single column
     from_hz: int
@@ -162,6 +171,8 @@ def resample(data, from_hz, to_hz, index, verbose):
         the sampling frequency to convert to.
     index: int
         column index. Is used when use_parallel is set to True and the index is then used to know which column index is being returned.
+    verbose : bool (optional)
+        if set to True, then output debug messages to console and log file.
 
     Returns
     -------
@@ -169,6 +180,7 @@ def resample(data, from_hz, to_hz, index, verbose):
         column index, see above
     new_data: np.array(n_samples, 1)
         new numpy array with resampled acceleration data
+
     """
 
     if verbose:
@@ -192,6 +204,7 @@ def rescale(acceleration, acceleration_scale=256.):
     -------
     scaled_log_data : np.array()
         log_data scaled by acceleration scale
+
     """
 
     try:
