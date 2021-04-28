@@ -371,8 +371,8 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
 
     Returns
     ---------
-    nw_vector: np.array(n_samples, 1)
-        non-wear vector which has the same number of samples as 'raw_acc'. Every element is True if non-wear-time was detected or False if wear-time was detected.
+    nw_vector: np.array(n_samples,)
+        a numpy array indicating whether the values of the acceleration data are non-wear time
 
     Notes
     -----
@@ -399,7 +399,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
         hz = 100
 
     # create new non-wear vector that is prepopulated with wear-time encoding. This way we only have to record the non-wear time
-    nw_vector = np.zeros([raw_acc.shape[0], 1], dtype=bool)
+    nw_vector = np.zeros(raw_acc.shape[0], dtype=bool)
 
     """
         FIND CANDIDATE NON-WEAR SEGMENTS ACTIGRAPH ACCELERATION DATA
@@ -580,8 +580,8 @@ def detect_non_wear_time_hees2011(raw_acc, hz, min_non_wear_time_window=60, wind
 
     Returns
     ---------
-    nw_vector: np.array(n_samples, 1)
-        non-wear vector which has the same number of samples as 'raw_acc'. Every element is True if non-wear-time was detected or False if wear-time was detected.
+    nw_vector: np.array(n_samples,)
+        a numpy array indicating whether the values of the acceleration data are non-wear time
     """
 
     # number of data samples in 1 minute
@@ -598,7 +598,7 @@ def detect_non_wear_time_hees2011(raw_acc, hz, min_non_wear_time_window=60, wind
 
     # new array to record non-wear time. The default behavior is 0 = non-wear time, and 1 = wear time. Since we create a new array filled with wear time encoding, we only have to
     # deal with non-wear time, since everything else is already set as wear-time.
-    nw_vector = np.zeros([raw_acc.shape[0], 1], dtype=bool)
+    nw_vector = np.zeros(raw_acc.shape[0], dtype=bool)
 
     # loop over the data, start from the beginning with a step size of window overlap
     for ii in range(0, len(raw_acc), window_overlap):
@@ -662,15 +662,15 @@ def detect_non_wear_time_naive(raw_acc, hz, std_threshold, min_interval, use_vmu
 
         Returns
         ---------
-        nw_vector: np.array(n_samples, 1)
-            non-wear vector which has the same number of samples as 'raw_acc'. Every element is True if non-wear-time was detected or False if wear-time was detected.
+        nw_vector: np.array(n_samples,)
+            a numpy array indicating whether the values of the acceleration data are non-wear time
     """
 
     # make sure hz is int
     hz = int(hz)
 
     # create an new non-wear vector that we propoulate with wear-time encoding. This way we only have to update the vector with non-wear time
-    nw_vector = np.zeros([raw_acc.shape[0], 1], dtype=bool)
+    nw_vector = np.zeros(raw_acc.shape[0], dtype=bool)
 
     """
         FIND CANDIDATE NON-WEAR SEGMENTS ACTIGRAPH ACCELERATION DATA
