@@ -11,6 +11,8 @@ import os
 import sys
 from pip._vendor import pkg_resources
 
+from . import io, preprocessing, wear_time, sleep
+
 
 __author__ = ('Marc Weitz, Shaheen Syed, Alexander Horsch')
 __author_email__ = 'marc.weitz@uit.no'
