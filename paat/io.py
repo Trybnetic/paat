@@ -544,7 +544,8 @@ def save_dset(grp, field, time, values, meta):
         dset.attrs[key] = value
 
 
-def load_dset(grp, field, rescale=False):
+def load_dset(grp, field, rescale=False, start_id="Start_Time",
+              n_samples_id="Number_Of_Samples", sample_rate_id="Sample_Rate"):
     """
     Load a data set to a hdf5 file
 
@@ -556,6 +557,10 @@ def load_dset(grp, field, rescale=False):
         identifier of the field that should be extracted
     rescale : boolean (optional)
         boolean indicating whether raw acceleration data should be rescaled to g values
+    start_id, n_samples_id, sample_rate_id : str (optional)
+        identifiers of the meta dictionary for the start time, number of samples and
+        sampling rate information. Default values refer to the values of the ActiGraph
+        design, but can also adapted to other devices
 
     Returns
     -------
@@ -572,7 +577,7 @@ def load_dset(grp, field, rescale=False):
     """
     dset = grp[field]
     meta = dict(dset.attrs)
-    time = _create_time_vector(meta["Start_Time"], meta["Number_Of_Samples"], meta["Sample_Rate"])
+    time = _create_time_vector(meta[start_id], meta[n_samples_id], meta[sample_rate_id])
 
     # Rescale the data to g if wanted
     if rescale:
