@@ -16,7 +16,7 @@ from . import io, preprocessing, wear_time, sleep
 
 __author__ = ('Marc Weitz, Shaheen Syed, Alexander Horsch')
 __author_email__ = 'marc.weitz@uit.no'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 __license__ = 'MIT'
 __description__ = ('A comprehensive toolbox to analyse and model physical '
                    'activity data')
