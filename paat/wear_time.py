@@ -502,7 +502,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
             start_episode = start_episode.reshape(1, start_episode.shape[0], start_episode.shape[1])
 
             # get binary class from model
-            start_label = cnn_model.predict_classes(start_episode).squeeze()
+            start_label = (cnn_model.predict(start_episode) > 0.5).astype("int32")
 
             # if the start label is 1, this means that it is wear time, and we set the first start_stop_label to 1
             if start_label == 1:
@@ -522,7 +522,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
             stop_episode = stop_episode.reshape(1, stop_episode.shape[0], stop_episode.shape[1])
 
             # get binary class from model
-            stop_label = cnn_model.predict_classes(stop_episode).squeeze()
+            stop_label = (cnn_model.predict(stop_episode) > 0.5).astype("int32")
 
             # if the start label is 1, this means that it is wear time, and we set the first start_stop_label to 1
             if stop_label == 1:
