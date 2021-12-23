@@ -59,7 +59,7 @@ def _find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_
         # calculate VMU if set to true
         if use_vmu:
             # calculate the VMU of XYZ
-            data = preprocessing.calculate_vector_magnitude(data)
+            data = features.calculate_vector_magnitude(data)
 
         # calculate the standard deviation of each column (YXZ)
         std = np.std(data, axis=0)
