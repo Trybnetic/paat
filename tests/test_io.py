@@ -8,7 +8,7 @@ import pytest
 from paat import io, preprocessing
 
 TEST_ROOT = os.path.join(os.path.pardir, os.path.dirname(__file__))
-FILE_PATH_SIMPLE = os.path.join(TEST_ROOT, 'resources/test_file.gt3x')
+FILE_PATH_SIMPLE = os.path.join(TEST_ROOT, 'resources/10min_recording.gt3x')
 
 
 def test_hdf5():

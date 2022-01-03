@@ -4,10 +4,11 @@ paat/__pycache__
 paat.egg-info
 
 # Pytest
-tests/resources/
 tests/__pycache__
 .pytest_cache
 
 # Documentation
 doc/build/
 doc/source/_static/copybutton.js
+
+.ipynb_checkpoints/
