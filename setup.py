@@ -3,13 +3,14 @@ import sys
 
 pkg = __import__('paat')
 
-author =  pkg.__author__
+author = pkg.__author__
 email = pkg.__author_email__
 
 version = pkg.__version__
 classifiers = pkg.__classifiers__
 
 description = pkg.__description__
+
 
 def load_requirements(fn):
     """Read a requirements file and create a list that can be used in setup."""
@@ -29,7 +30,7 @@ setup(
     classifiers=classifiers,
     platforms='Linux',
     packages=['paat'],
-    package_data = {
+    package_data={
         'paat': ['models/*.h5'],
     },
     setup_requires=['numpy'],
