@@ -12,10 +12,10 @@ import logging
 import zipfile
 from struct import unpack
 import tempfile
+import sys
 
 import numpy as np
 from bitstring import Bits
-import h5py
 
 from . import preprocessing
 
@@ -59,8 +59,8 @@ def _unzip_gt3x_file(file, save_location=None, delete_source_file=False):
 
                 myzip.extractall(save_location)
 
-        except Exception as e:
-            logging.error('Error unpacked file: {}'.format(e))
+        except Exception as msg:
+            logging.error('Error unpacked file: %s', msg)
             return None, None
 
         finally:
@@ -68,7 +68,7 @@ def _unzip_gt3x_file(file, save_location=None, delete_source_file=False):
             if delete_source_file:
                 os.remove(file)
     else:
-        logging.debug('file already unpacked: {}'.format(file))
+        logging.debug('file already unpacked: %s', file)
 
     # create the path locations where the log.bin and info.txt files are stored
     log_bin = os.path.join(save_location, 'log.bin')
@@ -113,8 +113,8 @@ def _extract_info(info_txt):
                 key, value = line.split(': ')
                 # add to dictionary and replace key values with space in key with underscore
                 info_data[key.replace(' ', '_')] = value
-    except Exception as e:
-        logging.error('Error extracting data from info.txt file: {}'.format(e))
+    except Exception as msg:
+        logging.error('Error extracting data from info.txt file: %s', msg)
 
     # return dictionary
     return info_data
@@ -217,7 +217,7 @@ def _extract_log(log_bin, acceleration_scale, sample_rate, use_scaling=False):
                     for ii in range(0, len(payload_bits), 12):
 
                         # extract the 12 bit as a string
-                        bitstring = payload_bits[ii:ii+12]
+                        bitstring = payload_bits[ii:ii + 12]
 
                         # convert to 12bit two's complement to signed integer value: also store values in dictionary for faster reading if not already present (the Bits function is not as fast as reading it from a dictionary)
                         if bitstring not in bit12_to_int:
@@ -266,8 +266,8 @@ def _extract_log(log_bin, acceleration_scale, sample_rate, use_scaling=False):
                     logging.info('Finished processing activity data')
                     break
 
-        except Exception as e:
-            logging.error('Unpacking GTX3 exception: {}'.format(e))
+        except Exception as msg:
+            logging.error('Unpacking GTX3 exception: %s', msg)
             return None, None
 
         # return acceleration data + time data
@@ -320,8 +320,8 @@ def _count_payload_size(log_bin, count_payload=0):
                 # skip the 1-byte checksum value
                 file.seek(1, 1)
 
-        except Exception as e:
-            logging.info('Counted payload size: {}'.format(SIZE))
+        except Exception:
+            logging.info('Counted payload size: %s', SIZE)
 
             # return the value
             return SIZE
@@ -368,7 +368,7 @@ def _create_time_array(time_data, hz=100):
 
 
 def _format_time(tstamp):
-    tstamp = int(tstamp)//10000000 + np.datetime64('0001-01-01T00:00:00').astype(int)
+    tstamp = int(tstamp) // 10000000 + np.datetime64('0001-01-01T00:00:00').astype(int)
     return int(tstamp) * 1000
 
 
@@ -395,10 +395,10 @@ def _format_meta_data(meta):
                           'Battery_Voltage': str,
                           'Sample_Rate': int,
                           'Start_Date': _format_time,
-                          'Stop_Date':  _format_time,
-                          'Last_Sample_Time':  _format_time,
+                          'Stop_Date': _format_time,
+                          'Last_Sample_Time': _format_time,
                           'TimeZone': str,
-                          'Download_Date':  _format_time,
+                          'Download_Date': _format_time,
                           'Board_Revision': int,
                           'Unexpected_Resets': int,
                           'Acceleration_Scale': float,
@@ -406,9 +406,9 @@ def _format_meta_data(meta):
                           'Acceleration_Max': float,
                           'Subject_Name': str}
 
-    for field, format in fields_and_formats.items():
+    for field, dtype in fields_and_formats.items():
         try:
-            new_meta[field] = format(meta[field])
+            new_meta[field] = dtype(meta[field])
         except KeyError as msg:
             logging.info(msg)
 
@@ -443,8 +443,8 @@ def _create_time_vector(start, n_samples, hz):
     n_sec = n_samples / hz
 
     if not n_sec.is_integer():
-        logging.error('Actiwave time in seconds not a whole number: {}'.format(n_sec))
-        exit(1)
+        logging.error('Actiwave time in seconds not a whole number: %s', n_sec)
+        sys.exit()
 
     # declare how many nanoseconds in one second
     ms_in_sec = 1e3

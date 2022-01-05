@@ -56,7 +56,7 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel=False, num_jobs=cpu
 
     """
 
-    logging.info('Start {}'.format(sys._getframe().f_code.co_name))
+    logging.info('Start %s', sys._getframe().f_code.co_name)
 
     # calculate number of 1 sec samples (note that hz is the frequency per second)
     num_seconds = len(data) // from_hz
@@ -80,20 +80,14 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel=False, num_jobs=cpu
 
         # execute tasks in parallel. It returns the resampled columns and column index i
         for ii, column_data in executor(tasks):
-
-            # add column data to correct column index
             new_data[:, ii] = column_data
-
-        # finished and return new data
-        return new_data
 
     else:
         # loop over each of the columns of the original data, resample, and then add to the new_data array
         for ii in range(axes):
-
             _, new_data[:, ii] = resample(data[:, ii], from_hz, to_hz, ii, verbose)
 
-        return new_data
+    return new_data
 
 
 def resample(data, from_hz, to_hz, index, verbose):
@@ -123,7 +117,7 @@ def resample(data, from_hz, to_hz, index, verbose):
     """
 
     if verbose:
-        logging.debug('Processing axis {}'.format(index))
+        logging.debug('Processing axis %s', index)
 
     return index, resampy.resample(data, from_hz, to_hz)
 
@@ -154,5 +148,5 @@ def rescale(acceleration, acceleration_scale=256.):
         # apply scaling and return
         return acceleration * scale_factor
 
-    except Exception as e:
-        logging.error('Error rescaling log data: {}'.format(e))
+    except Exception as msg:
+        logging.error('Error rescaling log data: %s', msg)

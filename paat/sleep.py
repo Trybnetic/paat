@@ -6,9 +6,6 @@ Sleep Module
 acceleration signals.
 
 """
-import os
-
-import numpy as np
 import pandas as pd
 from torch import nn
 import torch
@@ -34,9 +31,12 @@ class _SleepModel(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, X, lens):
+        """
+        Performs model's forward pass
+        """
 
         packed_input = nn.utils.rnn.pack_padded_sequence(X, lens.to('cpu'), batch_first=True, enforce_sorted=False)
-        packed_output, (hidden, cell) = self.rnn(packed_input)
+        packed_output, _ = self.rnn(packed_input)
         output, lens = nn.utils.rnn.pad_packed_sequence(packed_output, batch_first=True)
 
         return self.sigmoid(self.fc_out(output))
@@ -155,14 +155,11 @@ def detect_time_in_bed_weitz2022(time, acceleration, resampled_frequency="1min",
         model.load_state_dict(torch.load(model_path))
         model.eval()
 
-    #predicted_time_in_bed = model(X, lengths) >= .5
-    #return predicted_time_in_bed.squeeze().numpy()
-
     data.loc[:, 'Time in Bed'] = (model(X, lengths) >= .5).squeeze().numpy()
     data.loc[:, 'Time'] = data.index
     data = data[['Time', 'Time in Bed']]
 
-    data = pd.merge_asof(pd.DataFrame({'Time' : time}), data, on="Time")
+    data = pd.merge_asof(pd.DataFrame({'Time': time}), data, on="Time")
     predicted_time_in_bed = data['Time in Bed'].values
 
     return predicted_time_in_bed

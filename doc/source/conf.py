@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Physical Activity Analysis Toolbox'
-copyright = '2021 Marc Weitz, Shaheen Syed & Alexander Horsch'
-author = 'Marc Weitz, Shaheen Syed & Alexander Horsch'
+copyright = '2021 Marc Weitz & Shaheen Syed'
+author = 'Marc Weitz & Shaheen Syed'
 
 
 # -- General configuration ---------------------------------------------------
@@ -61,7 +61,7 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_context = {"display_github": True, # Add 'Edit on Github' link instead of 'View page source'
+html_context = {"display_github": True,  # Add 'Edit on Github' link instead of 'View page source'
                 "github_user": 'trybnetic',
                 "github_repo": 'paat',
                 "github_version": 'master',

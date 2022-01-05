@@ -20,7 +20,7 @@ def test_detect_non_wear_time_syed2021(testing_data):
     time, acceleration, meta = testing_data
 
     nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration,
-                									    meta['Sample_Rate'])
+                                                        meta['Sample_Rate'])
 
     nw_vector_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/nw_vector.pkl"), "rb"))
 
@@ -31,7 +31,7 @@ def test_detect_non_wear_time_hees2011(testing_data):
     time, acceleration, meta = testing_data
 
     nw_vector = wear_time.detect_non_wear_time_hees2011(acceleration,
-                									    meta['Sample_Rate'])
+                                                        meta['Sample_Rate'])
 
 
 def test_detect_non_wear_time_naive(testing_data):
@@ -41,4 +41,4 @@ def test_detect_non_wear_time_naive(testing_data):
     min_interval = 60
 
     nw_vector = wear_time.detect_non_wear_time_naive(acceleration, meta['Sample_Rate'],
-                									 std_threshold, min_interval)
+                                                     std_threshold, min_interval)

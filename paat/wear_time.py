@@ -8,12 +8,13 @@ raw acceleration signals.
 """
 import logging
 import os
+import sys
 
 import numpy as np
 import pandas as pd
 from tensorflow.keras import models
 
-from . import preprocessing
+from . import preprocessing, features
 
 
 def _find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_segment_length=1, sliding_window=1, use_vmu=False):
@@ -68,7 +69,7 @@ def _find_candidate_non_wear_segments_from_raw(acc_data, std_threshold, hz, min_
         if np.all(std <= std_threshold):
 
             # add the non-wear time encoding to the non-wear-vector for the correct time slices
-            nw_vector[ii:ii+sliding_window] = 0
+            nw_vector[ii:ii + sliding_window] = 0
 
     # find all indexes of the numpy array that have been labeled non-wear time
     non_wear_indexes = np.where(nw_vector == 0)[0]
@@ -117,7 +118,7 @@ def _find_consecutive_index_ranges(vector, increment=1):
         list of ranges, for instance [1,2,3,4],[8,9,10], [44]
     """
 
-    return np.split(vector, np.where(np.diff(vector) != increment)[0]+1)
+    return np.split(vector, np.where(np.diff(vector) != increment)[0] + 1)
 
 
 def _forward_search_non_wear_time(data, start_slice, end_slice, std_max, hz, time_step=60):
@@ -319,7 +320,7 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
 
 
 def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
-             start_stop_label_decision='and', min_segment_length=1, sliding_window=1, verbose=False):
+                                  start_stop_label_decision='and', min_segment_length=1, sliding_window=1, verbose=False):
     """
     Infer non-wear time from raw 100Hz triaxial data. Data at different sample frequencies will be resampled to 100hz.
 
@@ -405,12 +406,12 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
 
     # check if data is triaxial
     if raw_acc.shape[1] != 3:
-        logging.error(f'Acceleration data should be triaxial/3 axes. Number of axes found is {raw_acc.shape[1]}')
-        exit(1)
+        logging.error('Acceleration data should be triaxial/3 axes. Number of axes found is %s', raw_acc.shape[1])
+        sys.exit()
 
     # check if data needs to be resampled to 100hz
     if hz != 100:
-        logging.info(f'Sampling frequency of the data is {hz}Hz, should be 100Hz, starting resampling....')
+        logging.info('Sampling frequency of the data is %s Hz, should be 100Hz, starting resampling....', hz)
         # call resampling function
         raw_acc = preprocessing.resample_acceleration(data=raw_acc, from_hz=hz, to_hz=100, verbose=verbose)
         logging.info('Data resampled to 100hz')
@@ -420,18 +421,10 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
     # create new non-wear vector that is prepopulated with wear-time encoding. This way we only have to record the non-wear time
     nw_vector = np.zeros(raw_acc.shape[0], dtype=bool)
 
-    """
-        FIND CANDIDATE NON-WEAR SEGMENTS ACTIGRAPH ACCELERATION DATA
-    """
-
     # get candidate non-wear episodes (note that these are on a minute resolution). Also note that it returns wear time as 1 and non-wear time as 0
     nw_episodes = _find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold,
-                                                            min_segment_length=min_segment_length,
-                                                            sliding_window=sliding_window, hz=hz)
-
-    """
-        GET START AND END TIME OF NON WEAR SEGMENTS
-    """
+                                                             min_segment_length=min_segment_length,
+                                                             sliding_window=sliding_window, hz=hz)
 
     # find all indexes of the numpy array that have been labeled non-wear time
     nw_indexes = np.where(nw_episodes == 0)[0]
@@ -456,28 +449,20 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
     # create dataframe from segments
     episodes = pd.DataFrame.from_dict(dic_segments)
 
-    """
-        MERGE EPISODES THAT ARE CLOSE TO EACH OTHER
-    """
+    # Merge episodes that are close to each other
     grouped_episodes = _group_episodes(episodes=episodes.T, distance_in_min=distance_in_min, correction=3, hz=hz, training=False).T
-
-    """
-        LOAD CNN MODEL
-    """
 
     # load CNN model
     cnn_model = models.load_model(cnn_model_file)
 
-    """
-        FOR EACH EPISODE, EXTEND THE EDGES, CREATE FEATURES, AND INFER LABEL
-    """
+    # For each episode, extend the edges, create features and infer label
     for _, row in grouped_episodes.iterrows():
 
         start_index = int(row.loc['start_index'])
         stop_index = int(row.loc['stop_index'])
 
         if verbose:
-            logging.debug(f'Processing episode start_index: {start_index}, stop_index: {stop_index}')
+            logging.debug('Processing episode start_index: %s, stop_index: %s', start_index, stop_index)
 
         # forward search to extend stop index
         stop_index = _forward_search_episode(raw_acc, stop_index, hz=hz, max_search_min=5, std_threshold=std_threshold, verbose=verbose)
@@ -493,9 +478,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
         # second False when the end is inferred as non-weaer time
         start_stop_label = [False, False]
 
-        """
-            START EPISODE
-        """
+        # Start episode
         if start_episode.shape[0] == episode_window_sec * hz:
 
             # reshape into num feature x time x axes
@@ -513,9 +496,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
             # here we say that True for nw-time and False for wear time
             start_stop_label[0] = edge_true_or_false
 
-        """
-            STOP EPISODE
-        """
+        # Stop episode
         if stop_episode.shape[0] == episode_window_sec * hz:
 
             # reshape into num feature x time x axes
@@ -540,7 +521,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
                 nw_vector[start_index:stop_index] = True
                 # verbose
                 if verbose:
-                    logging.info(f'Found non-wear time: start_index: {start_index}, Stop_index: {stop_index}')
+                    logging.info('Found non-wear time: start_index: %s, Stop_index: %s', start_index, stop_index)
 
         elif start_stop_label_decision == 'and':
 
@@ -550,11 +531,11 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
                 nw_vector[start_index:stop_index] = True
                 # verbose
                 if verbose:
-                    logging.info(f'Found non-wear time: start_index: {start_index}, Stop_index: {stop_index}')
+                    logging.info('Found non-wear time: start_index: %s, Stop_index: %s', start_index, stop_index)
 
         else:
-            logging.error(f'Start/Stop decision unknown, can only use or/and, given: {start_stop_label_decision}')
-            exit(1)
+            logging.error('Start/Stop decision unknown, can only use or/and, given: %s', start_stop_label_decision)
+            sys.exit()
 
     return nw_vector
 
@@ -744,12 +725,12 @@ def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, 
         new_stop_slice = index + hz
 
         if verbose:
-            logging.info(f'i: {ii}, new_start_slice: {new_start_slice}, new_stop_slice: {new_stop_slice}')
+            logging.info('i: %s, new_start_slice: %s, new_stop_slice: %s', ii, new_start_slice, new_stop_slice)
 
         # check if the new stop slice exceeds the max_slice_index
         if new_stop_slice > max_slice_index:
             if verbose:
-                logging.info(f'Max slice index reached: {max_slice_index}')
+                logging.info('Max slice index reached: %s', max_slice_index)
             break
 
         # slice out new activity data
@@ -767,7 +748,7 @@ def _forward_search_episode(acc_data, index, hz, max_search_min, std_threshold, 
             break
 
     if verbose:
-        logging.info(f'New index: {index}, number of loops: {ii}')
+        logging.info('New index: %s, number of loops: %s', index, ii)
 
     return index
 
@@ -787,12 +768,12 @@ def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold,
         new_stop_slice = index
 
         if verbose:
-            logging.info(f'i: {ii}, new_start_slice: {new_start_slice}, new_stop_slice: {new_stop_slice}')
+            logging.info('i: %s, new_start_slice: %s, new_stop_slice: %s', ii, new_start_slice, new_stop_slice)
 
         # check if the new start slice exceeds the max_slice_index
         if new_start_slice < min_slice_index:
             if verbose:
-                logging.debug(f'Minimum slice index reached: {min_slice_index}')
+                logging.debug('Minimum slice index reached: %s', min_slice_index)
             break
 
         # slice out new activity data
@@ -801,7 +782,7 @@ def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold,
         # calculate the standard deviation of each column (YXZ)
         std = np.std(slice_data, axis=0)
 
-        # check if all of the standard deviations are below the standard deviation threshold
+        # check if all of the standard deviations are belowii the standard deviation threshold
         if np.all(std <= std_threshold):
 
             # update index
@@ -810,5 +791,5 @@ def _backward_search_episode(acc_data, index, hz, max_search_min, std_threshold,
             break
 
     if verbose:
-        logging.info(f'New index: {index}, number of loops: {ii}')
+        logging.info('New index: %s, number of loops: %s', index, ii)
     return index

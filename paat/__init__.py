@@ -22,21 +22,20 @@ __version__ = '0.2.0'
 __license__ = 'MIT'
 __description__ = ('A comprehensive toolbox to analyse and model physical '
                    'activity data')
-__classifiers__ = [
-    'Development Status :: 3 - Alpha',
-    'Environment :: Console',
-    'Intended Audience :: Science/Research',
-    'License :: OSI Approved :: MIT License',
-    'Operating System :: POSIX :: Linux',
-    'Programming Language :: Python',
-    'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.7',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3 :: Only',
-    'Topic :: Scientific/Engineering',
-    'Topic :: Scientific/Engineering :: Artificial Intelligence',
-    'Topic :: Scientific/Engineering :: Information Analysis',
-    ]
+__classifiers__ = ['Development Status :: 3 - Alpha',
+                   'Environment :: Console',
+                   'Intended Audience :: Science/Research',
+                   'License :: OSI Approved :: MIT License',
+                   'Operating System :: POSIX :: Linux',
+                   'Programming Language :: Python',
+                   'Programming Language :: Python :: 3.6',
+                   'Programming Language :: Python :: 3.7',
+                   'Programming Language :: Python :: 3.8',
+                   'Programming Language :: Python :: 3 :: Only',
+                   'Topic :: Scientific/Engineering',
+                   'Topic :: Scientific/Engineering :: Artificial Intelligence',
+                   'Topic :: Scientific/Engineering :: Information Analysis',
+                   ]
 
 
 def sysinfo():
@@ -51,8 +50,8 @@ def sysinfo():
 
     general = ("General Information\n"
                "-------------------\n"
-               "Python version: {}\n"
-               "PAAT version: {}\n\n").format(sys.version.split()[0], __version__)
+               f"Python version: {sys.version.split()[0]}\n"
+               f"PAAT version: {__version__}\n\n")
 
     uname = os.uname()
     osinfo = ("Operating System\n"
@@ -68,7 +67,7 @@ def sysinfo():
                 _, total, used, *_ = memory[0].split()
             else:
                 total, used = '?', '?'
-            osinfo += "{} {}MiB/{}MiB\n".format(identifier, used, total)
+            osinfo += f"{identifier} {used}MiB/{total}MiB\n"
 
     osinfo += "\n"
 
