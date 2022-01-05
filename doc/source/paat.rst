@@ -21,6 +21,11 @@ This toolbox is divided into different modules:
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: paat.features
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 .. automodule:: paat.wear_time
     :members:
     :undoc-members:

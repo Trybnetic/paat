@@ -16,7 +16,7 @@ import torch
 from . import features
 
 
-class SleepModel(nn.Module):
+class _SleepModel(nn.Module):
     def __init__(self, input_dim, hid_dim, output_dim, n_layers, dropout, batch_first=False):
         super().__init__()
 
@@ -83,7 +83,7 @@ def detect_sleep_weitz2022(time, acceleration, means=None, stds=None):
     lengths = torch.Tensor([X.shape[1]])
 
     # Load model hard coded. Should later be changed to ONNX or similar
-    model = SleepModel(160, 32, 1, 1, dropout=0, batch_first=True)
+    model = _SleepModel(160, 32, 1, 1, dropout=0, batch_first=True)
     model_path = '/home/msw/Documents/PhD/Discrimination of sleep and wake periods/source/experiments/exp03_models/18_best_1l_LSTM32_model_fold_5.pt'
     model.load_state_dict(torch.load(model_path))
     model.eval()
@@ -150,8 +150,8 @@ def detect_time_in_bed_weitz2022(time, acceleration, resampled_frequency="1min",
 
     # Load model if not specified
     if not model_path:
-        model = SleepModel(3, 2, 1, 1, dropout=0, batch_first=True)
-        model_path = '/home/msw/Documents/TU7-TiB-study-data-preprocessing/source/experiments/exp02_models/06_best_1l_LSTM2_model_fold_6.pt'
+        model = _SleepModel(3, 2, 1, 1, dropout=0, batch_first=True)
+        model_path = '/home/msw/Documents/PhD/Discrimination of sleep and wake periods/source/experiments/exp02_models/06_best_1l_LSTM2_model_fold_6.pt'
         model.load_state_dict(torch.load(model_path))
         model.eval()
 

@@ -1,20 +1,16 @@
 Examples
 ========
 
-Save a whole batch of gt3x files to hdf5
-----------------------------------------
+To ease working with PAAT and to make you able to analyze your GT3X files as soon
+as possible, we made a collection of code snippets and jupyter notebooks. Feel
+free to copy paste the things you need and adapt them to your needs. If you have
+an example usage you think others might benefit from, let us know or open a
+`Pull Request <https://github.com/trybnetic/paat/pulls>`_.
 
-.. code-block:: python
+.. toctree::
+   :maxdepth: 1
+   :caption: Code snippets, tutorials, and examples
 
-    import h5py
-    from paat import io
-
-    hdf5_file_path = 'path/to/hdf5/file'
-    files = ['path/to/file1.gt3x', 'path/to/file2.gt3x', ...]
-
-    for file in files:
-        time, acceleration, meta = io.read_gt3x(file)
-
-        with h5py.File(hdf5_file_path, 'a') as hdf5_file:
-            grp = hdf5_file.create_group(meta["Subject_Name"])
-            io.save_dset(grp, "ActiGraph", time, acceleration, meta)
+   io
+   save_to_hdf5
+   analyze_data

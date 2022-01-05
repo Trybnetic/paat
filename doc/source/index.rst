@@ -1,4 +1,5 @@
 .. automodule:: paat
+  :noindex:
 
 
 .. toctree::
@@ -6,7 +7,6 @@
    :caption: Contents:
 
    quickstart
-   workflow
    examples
    paat
    development

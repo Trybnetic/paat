@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Physical Activity Analysis Toolbox'
-copyright = '2021 Marc Weitz & Shaheen Syed'
-author = 'Marc Weitz & Shaheen Syed'
+copyright = '2021 Marc Weitz, Shaheen Syed & Alexander Horsch'
+author = 'Marc Weitz, Shaheen Syed & Alexander Horsch'
 
 
 # -- General configuration ---------------------------------------------------
@@ -37,6 +37,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'numpydoc',
               'easydev.copybutton',
+              'nbsphinx',
               ]
 
 # Add any paths that contain templates here, relative to this directory.

@@ -407,7 +407,10 @@ def _format_meta_data(meta):
                           'Subject_Name': str}
 
     for field, format in fields_and_formats.items():
-        new_meta[field] = format(meta[field])
+        try:
+            new_meta[field] = format(meta[field])
+        except KeyError as msg:
+            logging.info(msg)
 
     return new_meta
 

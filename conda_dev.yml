@@ -1,15 +1,18 @@
 name: paat-dev
 dependencies:
   - python=3.8
+  - jupyter=1.0.0
+  - matplotlib=3.3.4
+  - seaborn=0.11.1
   - ipython
   - pip
   - pip:
-    - -r file:requirements.txt
-    # Development tools
     - pylint
     - pytest
+    - pytest-cov
     - pycodestyle
     - sphinx
+    - nbsphinx
     - vulture
     - numpydoc
     - easydev
