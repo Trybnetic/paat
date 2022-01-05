@@ -3,7 +3,12 @@ Physical Activity Analysis Toolbox (PAAT)
 =========================================
 
 The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to
-analyse raw acceleration data.
+analyze raw acceleration data. We developed all code mainly for analyzing
+ActiGraph data (GT3X files) in large sample study settings where manual annotation
+and analysis is not feasible. Most functions come along with scientific papers
+describing the methodology in detail. Even though, the package was and is primarily
+develop for analyzing ActiGraph data, we warmly welcome contributions for other
+clinical sensors as well! 
 
 
 Installation
@@ -31,17 +36,22 @@ examples and more information on the functions can be found in the documentation
 
 .. code-block:: python
 
-    from paat import io, preprocessing, wear_time
+    import paat
 
     # Load data from file
-    time, acceleration, meta = io.read_gt3x('path/to/gt3x/file')
+    time, acceleration, meta = paat.io.read_gt3x('path/to/gt3x/file', rescale=True)
 
-    # Rescaled to gravitational units g
-    acceleration = preprocessing.rescale(acceleration,
-                                         acceleration_scale=meta['Acceleration_Scale'])
+    # Detect non-wear time
+    nw_vector = paat.wear_time.detect_non_wear_time_syed2021(acceleration, meta['Sample_Rate'])
 
-    # Infer non-wear time
-    nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration, meta['Sample_Rate'])
+    # Detect sleep episodes
+    sleep_vector = paat.sleep.detect_sleep_weitz2022(time, acceleration)
+
+    # Classify moderate-to-vigorous and sedentary behavior
+    mvpa_vector, sedentary_vector = paat.estimates.calculate_pa_levels(time, acceleration,
+                                                                       mvpa_cutpoint=.069,
+                                                                       sb_cutpoint=.015,
+                                                                       interval="1s")
 
 
 
