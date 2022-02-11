@@ -6,6 +6,8 @@ Sleep Module
 acceleration signals.
 
 """
+import os
+
 import pandas as pd
 from torch import nn
 import torch
@@ -83,8 +85,8 @@ def detect_sleep_weitz2022(time, acceleration, means=None, stds=None):
     lengths = torch.Tensor([X.shape[1]])
 
     # Load model hard coded. Should later be changed to ONNX or similar
-    model = _SleepModel(160, 32, 1, 1, dropout=0, batch_first=True)
-    model_path = '/home/msw/Documents/PhD/Discrimination of sleep and wake periods/source/experiments/exp03_models/18_best_1l_LSTM32_model_fold_5.pt'
+    model = _SleepModel(160, 4, 1, 1, dropout=0, batch_first=True)
+    model_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'models', 'SleepModel.pt')
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
