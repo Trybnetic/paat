@@ -39,7 +39,7 @@ def calculate_pa_levels(time, acceleration, mvpa_cutpoint=.069, sb_cutpoint=.015
         a str indicating at what frequency the cutpoints are calculated
 
     Returns
-    ---------
+    -------
     pa_levels : np.array (n_samples, 2)
         a numpy array indicating whether the values of the acceleration data are
         moderate-to-vigourous physical activity (first column) or sedentary

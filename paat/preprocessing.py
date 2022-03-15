@@ -50,7 +50,7 @@ def resample_acceleration(data, from_hz, to_hz, use_parallel=False, num_jobs=cpu
 
 
     Returns
-    --------
+    -------
     new_data : np.array
         new numpy array with resampled acceleration data
 
