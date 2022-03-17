@@ -15,6 +15,7 @@ import tempfile
 import sys
 
 import numpy as np
+import pandas as pd
 from bitstring import Bits
 
 from . import preprocessing
@@ -461,7 +462,7 @@ def _create_time_vector(start, n_samples, hz):
     return time_data.flatten()
 
 
-def read_gt3x(file, rescale=False):
+def read_gt3x(file, rescale=False, pandas=False):
     """
     Reads a .gt3x file and returns the tri-axial acceleration values together
     with the corresponding time stamps and all meta data.
@@ -511,81 +512,9 @@ def read_gt3x(file, rescale=False):
         meta["Number_Of_Samples"] = values.shape[0]
         meta["Start_Time"] = time[0].astype(int)
 
-    return time, values, meta
-
-
-def save_dset(grp, field, time, values, meta):
-    """
-    Save a data set to an hdf5 file
-
-    Parameters
-    ----------
-    grp : h5py.Group
-        the group object of the hdf5 file
-    field : str
-        identifier of the field that should be extracted
-    time : np.array (n_samples x 1)
-        a numpy array with time stamps for the observations in values
-    values : np.array (n_samples x 3)
-        a numpy array with the tri-axial acceleration values. If rescale is true, data
-        is rescaled to units of g. Note, that this function returns the values in
-        the default order of ActiGraph which is ['Y','X','Z']. Depending on further
-        use, you might want to adjust that order.
-    meta : dict
-        a dict containing all meta data produced by ActiGraph
-
-    """
-    dset = grp.create_dataset(field, data=values)
-
-    # Check if meta data is correct
-    assert meta["Number_Of_Samples"] == values.shape[0]
-    assert values.shape[0] == time.shape[0]
-    assert meta["Start_Time"] == time[0].astype(int)
-
-    # Save meta data
-    for key, value in meta.items():
-        dset.attrs[key] = value
-
-
-def load_dset(grp, field, rescale=False, start_id="Start_Time",
-              n_samples_id="Number_Of_Samples", sample_rate_id="Sample_Rate"):
-    """
-    Load a data set to a hdf5 file
-
-    Parameters
-    ----------
-    grp : h5py.Group
-        the group object of the hdf5 file
-    field : str
-        identifier of the field that should be extracted
-    rescale : boolean (optional)
-        boolean indicating whether raw acceleration data should be rescaled to g values
-    start_id, n_samples_id, sample_rate_id : str (optional)
-        identifiers of the meta dictionary for the start time, number of samples and
-        sampling rate information. Default values refer to the values of the ActiGraph
-        design, but can also adapted to other devices
-
-    Returns
-    -------
-    time : np.array (n_samples x 1)
-        a numpy array with time stamps for the observations in values
-    values : np.array (n_samples x 3)
-        a numpy array with the tri-axial acceleration values. If rescale is true, data
-        is rescaled to units of g. Note, that this function returns the values in
-        the default order of ActiGraph which is ['Y','X','Z']. Depending on further
-        use, you might want to adjust that order.
-    meta : dict
-        a dict containing all meta data produced by ActiGraph
-
-    """
-    dset = grp[field]
-    meta = dict(dset.attrs)
-    time = _create_time_vector(meta[start_id], meta[n_samples_id], meta[sample_rate_id])
-
-    # Rescale the data to g if wanted
-    if rescale:
-        values = preprocessing.rescale(dset[:], acceleration_scale=meta['Acceleration_Scale'])
+    if pandas:
+        data = pd.DataFrame(values, columns=["Y", "X", "Z"], index=time)
+        data = data[["X", "Y", "Z"]]
+        return data
     else:
-        values = dset[:]
-
-    return time, values, meta
+        return time, values, meta
