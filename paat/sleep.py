@@ -63,7 +63,7 @@ def detect_sleep_weitz2022(time, acceleration, means=None, stds=None):
         if not specified
 
     Returns
-    ---------
+    -------
     is_sleep : np.array (n_samples,)
         a numpy array indicating whether the values of the acceleration data is
         sleep on minute resolution
@@ -120,7 +120,7 @@ def detect_time_in_bed_weitz2022(time, acceleration, resampled_frequency="1min",
         an optional path to a custom model.
 
     Returns
-    ---------
+    -------
     predicted_time_in_bed : np.array (n_samples,)
         a numpy array indicating whether the values of the acceleration data were spent in bed
 

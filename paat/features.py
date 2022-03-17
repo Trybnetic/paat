@@ -8,6 +8,17 @@ acceleration signal.
 """
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
+from scipy import signal
+import resampy
+
+
+BROND_COEFF_A = np.array([1, -4.1637, 7.5712, -7.9805, 5.385, -2.4636, 0.89238, 0.06361,
+                          -1.3481, 2.4734, -2.9257, 2.9298, -2.7816, 2.4777, -1.6847,
+                          0.46483, 0.46565, -0.67312, 0.4162, -0.13832, 0.019852])
+BROND_COEFF_B = np.array([0.049109, -0.12284, 0.14356, -0.11269, 0.053804, -0.02023,
+                          0.0063778, 0.018513, -0.038154, 0.048727, -0.052577, 0.047847,
+                          -0.046015, 0.036283, -0.012977, -0.0046262, 0.012835, -0.0093762,
+                          0.0034485, -0.00080972, -0.00019623])
 
 
 def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=False, dtype=np.float32):
@@ -87,7 +98,7 @@ def calculate_frequency_features(time, acceleration, win_len=60, win_step=60, sa
         an int indicating the number of triangular filters to use
 
     Returns
-    ---------
+    -------
     time : np.array (n_samples x 1)
         a numpy array with time stamps for the observations in values
     features : np.array (n_samples x 160)
@@ -158,3 +169,63 @@ def _calculate_filter_banks(signal, sample_rate, win_len, win_step, nfft=512, nf
     filter_banks = 20 * np.log10(filter_banks)  # dB
 
     return hz_points, filter_banks
+
+
+def brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, adcResolution=0.0164, A=BROND_COEFF_A, B=BROND_COEFF_B):
+    """
+    Create Brønd counts from uniaxial acceleration data. The algorithm was described in
+
+    Brønd, J. C., Andersen, L. B., & Arvidsson, D. (2017). Generating ActiGraph Counts
+    from Raw Acceleration Recorded by an Alternative Monitor, Medicine & Science in
+    Sports & Exercise, doi: 10.1249/MSS.0000000000001344
+
+    Parameters
+    ----------
+    data: array_like
+        a numpy array containing the uniaxial acceleration data
+    hz: int
+        an int indicating at which sampling frequency the data was recorded
+    epoch_length: int
+        an int indicating the length of the epochs to calculate in seconds
+    deadband: float (optional)
+        a float indicating the threshold that counts are being calculated. The
+        dead band threshold for newer ActiGraph models (GT3X+ and newer models)
+        is specified at 0.05g
+    peak: float
+        a float indicating the upper limit of recording. ActiLife truncates values
+        above 2.13g to ensure compatibility with the 8-bit analog to digital
+        conversion
+    adcResolution: float
+        a float indicating the conversion factor for 8bit
+    A, B: array_like
+        arrays with the filter's nominator and denominator
+    """
+
+    # Step 0: Downsample to 30hz if not already
+    target_hz = 30
+    if hz != target_hz:
+        data = resampy.resample(np.asarray(data), hz, target_hz)
+
+    # Step 1: Aliasing filter (0.01-7hz)
+    B2, A2 = signal.butter(4, np.array([0.01, 7])/(target_hz/2), btype='bandpass')
+    dataf = signal.filtfilt(B2, A2, data)
+
+    # Step 2: ActiGraph filter
+    filtered = signal.lfilter(0.965 * B, A, dataf)
+
+    # Step 3, 4 & 5: Downsample to 10hz, clip at peak (2.13g) and rectify
+    rectified = np.abs(np.clip(filtered[::3], a_min=-1*peak, a_max=peak))
+
+    # Step 6 & 7: Dead-band and convert to 8bit resolution
+    downsampled = np.where(rectified < deadband, 0, rectified) // adcResolution
+
+    # If last epoch was not fully recorded, pad with zeros
+    values_per_epoch = 10 * epoch_length
+    missing_values = int(np.ceil(len(downsampled) / values_per_epoch) * values_per_epoch) - len(downsampled)
+    downsampled = np.pad(downsampled, (0, missing_values), 'constant', constant_values=0)
+
+    # Step 8: Accumulate
+    downsampled = downsampled.reshape([-1, 10*epoch_length])
+    counts = np.where(downsampled >= 0, downsampled, 0).sum(axis=1)
+
+    return counts

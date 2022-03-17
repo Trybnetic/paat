@@ -16,28 +16,6 @@ from pip._vendor import pkg_resources
 from . import io, preprocessing, wear_time, sleep
 
 
-__author__ = ('Marc Weitz, Shaheen Syed, Alexander Horsch')
-__author_email__ = 'marc.weitz@uit.no'
-__version__ = '0.2.0'
-__license__ = 'MIT'
-__description__ = ('A comprehensive toolbox to analyse and model physical '
-                   'activity data')
-__classifiers__ = ['Development Status :: 3 - Alpha',
-                   'Environment :: Console',
-                   'Intended Audience :: Science/Research',
-                   'License :: OSI Approved :: MIT License',
-                   'Operating System :: POSIX :: Linux',
-                   'Programming Language :: Python',
-                   'Programming Language :: Python :: 3.6',
-                   'Programming Language :: Python :: 3.7',
-                   'Programming Language :: Python :: 3.8',
-                   'Programming Language :: Python :: 3 :: Only',
-                   'Topic :: Scientific/Engineering',
-                   'Topic :: Scientific/Engineering :: Artificial Intelligence',
-                   'Topic :: Scientific/Engineering :: Information Analysis',
-                   ]
-
-
 def sysinfo():
     """
     Prints system the dependency information

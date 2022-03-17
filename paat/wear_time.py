@@ -232,7 +232,7 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
         sample frequency of the data (necessary when working with indexes)
 
     Returns
-    --------
+    -------
     grouped_episodes: pd.DataFrame()
         dataframe with grouped episodes
     """
@@ -390,7 +390,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
         set to True if debug messages should be printed to the console and log file. Default False.
 
     Returns
-    ---------
+    -------
     nw_vector: np.array(n_samples,)
         a numpy array indicating whether the values of the acceleration data are non-wear time
 
@@ -579,7 +579,7 @@ def detect_non_wear_time_hees2011(raw_acc, hz, min_non_wear_time_window=60, wind
         minimum numer of axes used to check if acceleration values range are below the value_range_mg_threshold value. Defaults to 2 axes; meaning that at least 2 axes need to have a value range below a threshold value to be considered non wear time
 
     Returns
-    ---------
+    -------
     nw_vector: np.array(n_samples,)
         a numpy array indicating whether the values of the acceleration data are non-wear time
     """
@@ -661,7 +661,7 @@ def detect_non_wear_time_naive(raw_acc, hz, std_threshold, min_interval, use_vmu
             sliding window in minutes that will go over the acceleration data to find candidate non-wear segments
 
         Returns
-        ---------
+        -------
         nw_vector: np.array(n_samples,)
             a numpy array indicating whether the values of the acceleration data are non-wear time
     """

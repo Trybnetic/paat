@@ -35,7 +35,7 @@ def _unzip_gt3x_file(file, save_location=None, delete_source_file=False):
         if True, then the original .gt3x file will be deleted after it is unzipped
 
     Returns
-    ---------
+    -------
     log_bin : string
         location where the log.bin file is stored
     info_txt : string
@@ -95,7 +95,7 @@ def _extract_info(info_txt):
         location of the info.txt file on disk
 
     Returns
-    ---------
+    -------
     info_data : dictionary
         dictionary of key, value pairs as extracted from the info file
     """
@@ -289,7 +289,7 @@ def _count_payload_size(log_bin, count_payload=0):
         the payload type that we want to count. default is 0, which is the acceleration data.
 
     Returns
-    ---------
+    -------
     SIZE : int
         the size (as in count) of the payload
     """
@@ -342,7 +342,7 @@ def _create_time_array(time_data, hz=100):
         sampling frequency of the acceleration data (this is to know how many miliseconds we need to add to the time series)
 
     Returns
-    --------
+    -------
     time_data : np.array
         numpy array with correct number of time series (so now the sampling frequency is added within the original data which only contained seconds and not miliseconds)
 
