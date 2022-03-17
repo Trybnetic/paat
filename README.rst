@@ -2,6 +2,9 @@
 Physical Activity Analysis Toolbox (PAAT)
 =========================================
 
+    **Note:** This package is currently work in progress and the API might change
+    anytime!
+
 The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to
 analyze raw acceleration data. We developed all code mainly for analyzing
 ActiGraph data (GT3X files) in large sample study settings where manual annotation
