@@ -13,7 +13,13 @@ import os
 import sys
 from pip._vendor import pkg_resources
 
-from . import io, preprocessing, wear_time, sleep
+from importlib import metadata
+import toml
+
+try:
+    __version__ = metadata.version(__package__)
+except metadata.PackageNotFoundError:
+    __version__ = toml.load("pyproject.toml")["tool"]["poetry"]["version"] + "dev"
 
 
 def sysinfo():
