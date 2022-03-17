@@ -17,9 +17,9 @@ def data():
 
 
 def test_actigraph_counts(data):
-    counts_1s = features.actigraph_counts(data, 100, 1)
-    counts_10s = features.actigraph_counts(data, 100, 10)
-    counts_1min = features.actigraph_counts(data, 100, 60)
+    counts_1s = features.actigraph_counts(data[["Y", "X", "Z"]].values, 100, 1)
+    counts_10s = features.actigraph_counts(data[["Y", "X", "Z"]].values, 100, 10)
+    counts_1min = features.actigraph_counts(data[["Y", "X", "Z"]].values, 100, 60)
 
 
 def test_brond_counts(data):

@@ -10,7 +10,7 @@ import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
 from scipy import signal
 import resampy
-import agcounts
+from agcounts.extract import get_counts
 
 
 BROND_COEFF_A = np.array([1, -4.1637, 7.5712, -7.9805, 5.385, -2.4636, 0.89238, 0.06361,
@@ -231,7 +231,7 @@ def brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, adcResolutio
     downsampled = np.pad(downsampled, (0, missing_values), 'constant', constant_values=0)
 
     # Step 8: Accumulate
-    downsampled = downsampled.reshape([-1, 10*epoch_length])
+    downsampled = downsampled.reshape([-1, 10 * epoch_length])
     counts = np.where(downsampled >= 0, downsampled, 0).sum(axis=1)
 
     return counts
@@ -255,4 +255,4 @@ def actigraph_counts(data, hz, epoch_length):
     counts: array_like
         a numpy array containg the ActiGraph counts
     """
-    return agcounts.extract.get_counts(data, hz, epoch_length)
+    return get_counts(data, hz, epoch_length)
