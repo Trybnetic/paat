@@ -10,6 +10,7 @@ import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
 from scipy import signal
 import resampy
+import agcounts
 
 
 BROND_COEFF_A = np.array([1, -4.1637, 7.5712, -7.9805, 5.385, -2.4636, 0.89238, 0.06361,
@@ -199,6 +200,11 @@ def brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, adcResolutio
         a float indicating the conversion factor for 8bit
     A, B: array_like
         arrays with the filter's nominator and denominator
+
+    Returns
+    -------
+    counts: array_like
+        a numpy array containg the Brønd counts
     """
 
     # Step 0: Downsample to 30hz if not already
@@ -229,3 +235,24 @@ def brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, adcResolutio
     counts = np.where(downsampled >= 0, downsampled, 0).sum(axis=1)
 
     return counts
+
+
+def actigraph_counts(data, hz, epoch_length):
+    """
+    Wrapper function to create ActiGraph counts
+
+    Parameters
+    ----------
+    data: array_like
+        a numpy array containing the uniaxial acceleration data
+    hz: int
+        an int indicating at which sampling frequency the data was recorded
+    epoch_length: int
+        an int indicating the length of the epochs to calculate in seconds
+
+    Returns
+    -------
+    counts: array_like
+        a numpy array containg the ActiGraph counts
+    """
+    return agcounts.extract.get_counts(data, hz, epoch_length)
