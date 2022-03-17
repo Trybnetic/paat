@@ -16,6 +16,8 @@ from pip._vendor import pkg_resources
 from importlib import metadata
 import toml
 
+from . import estimates, features, io, preprocessing, sleep, wear_time
+
 try:
     __version__ = metadata.version(__package__)
 except metadata.PackageNotFoundError:

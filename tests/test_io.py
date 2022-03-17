@@ -2,21 +2,38 @@ import os
 import tempfile
 
 import numpy as np
-import h5py
+import numpy.testing as npt
 import pytest
+from pygt3x.reader import FileReader
+from pygt3x.calibrated_reader import CalibratedReader
 
 from paat import io, preprocessing
 
 TEST_ROOT = os.path.join(os.path.pardir, os.path.dirname(__file__))
 FILE_PATH_SIMPLE = os.path.join(TEST_ROOT, 'resources/10min_recording.gt3x')
 
+@pytest.fixture
+def data():
+    return io.read_gt3x(FILE_PATH_SIMPLE, rescale=True, pandas=True)
 
-def test_loading_data():
+
+@pytest.fixture
+def unscaled_data():
+    return io.read_gt3x(FILE_PATH_SIMPLE, rescale=False, pandas=True)
+
+
+def test_loading_data(data):
     _, acceleration, _ = io.read_gt3x(FILE_PATH_SIMPLE, rescale=True)
 
-    data = io.read_gt3x(FILE_PATH_SIMPLE, rescale=True, pandas=True)
-
     assert np.array_equal(acceleration, data[["Y", "X", "Z"]].values)
+
+
+def test_against_actigraph_implementation(unscaled_data):
+    with FileReader(FILE_PATH_SIMPLE) as reader:
+        ref = reader.to_pandas()
+
+    npt.assert_almost_equal(unscaled_data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)
+    #assert np.allclose(data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)
 
 
 def test_exceptions():

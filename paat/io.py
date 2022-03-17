@@ -152,10 +152,10 @@ def _extract_log(log_bin, acceleration_scale, sample_rate, use_scaling=False):
         log time contains the timestamps of measurements
     """
 
-    # define the size of the payload. This is necessary because we need to define the size of the numpy array before we populate it. -1 because we start counting from 0
-    SIZE = _count_payload_size(log_bin) - 1
+    # define the size of the payload. This is necessary because we need to define the size of the numpy array before we populate it.
+    SIZE = _count_payload_size(log_bin)
     # raw data values are stored in ints, to obtain values in G, we need to scale them by a factor found in the acceleration_scale parameter within the info.txt file. For example, 256.0
-    SCALING = 1 / acceleration_scale
+    SCALING = 1. / acceleration_scale
     # counter so we can keep track of how many acceleration values we have processed
     COUNTER = 0
     # number of axes, the GTX3 is tri-axial, so we hard code it here.
@@ -175,7 +175,7 @@ def _extract_log(log_bin, acceleration_scale, sample_rate, use_scaling=False):
     acc_data_type = np.int16
     if use_scaling:
         # use float when we want to store the acceleration data in G, meaning that we the scaling factor to recalculate the signed int into decimal values
-        acc_data_type = np.float
+        acc_data_type = float
     # create empty array for the acceleration data
     log_data = np.empty((sample_rate * SIZE, NUM_AXES), dtype=acc_data_type)
     # empty numpy array to store the timestamps
@@ -497,13 +497,7 @@ def read_gt3x(file, rescale=False, pandas=False):
         meta = _format_meta_data(meta)
 
         # extract acceleration data from the log file
-        log_data, time_data = _extract_log(log_bin, meta['Acceleration_Scale'], meta['Sample_Rate'])
-
-        # Rescale the data to g if wanted
-        if rescale:
-            values = preprocessing.rescale(log_data, acceleration_scale=meta['Acceleration_Scale'])
-        else:
-            values = log_data
+        values, time_data = _extract_log(log_bin, meta['Acceleration_Scale'], meta['Sample_Rate'], use_scaling=rescale)
 
         # create time array
         time = _create_time_array(time_data, hz=meta['Sample_Rate'])

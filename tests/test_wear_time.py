@@ -21,6 +21,7 @@ def test_detect_non_wear_time_syed2021(testing_data):
 
     nw_vector = wear_time.detect_non_wear_time_syed2021(acceleration,
                                                         meta['Sample_Rate'])
+    nw_vector = nw_vector[:-100]  # Test reference was created with old version which skipped the last second
 
     nw_vector_ref = pickle.load(open(os.path.join(TEST_ROOT, "resources/nw_vector.pkl"), "rb"))
 
