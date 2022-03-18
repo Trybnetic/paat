@@ -28,6 +28,7 @@ def test_loading_data(data):
     assert np.array_equal(acceleration, data[["Y", "X", "Z"]].values)
 
 
+@pytest.mark.slow
 def test_against_actigraph_implementation(unscaled_data):
     with FileReader(FILE_PATH_SIMPLE) as reader:
         ref = reader.to_pandas()
