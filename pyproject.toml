@@ -50,3 +50,9 @@ pylint = "^2.0.0"
 nbsphinx = "0.8.8"
 vulture = "^2.3"
 pygt3x = "^0.1.1"
+
+
+[tool.pylint]
+max-line-length = 120
+good-names = nn, ii, _, jj, df, X, hz, mm, kk
+disable=E1101
