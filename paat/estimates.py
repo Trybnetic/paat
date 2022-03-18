@@ -1,6 +1,6 @@
 import pandas as pd
 
-from . import preprocessing
+from . import features
 
 
 def calculate_pa_levels(time, acceleration, mvpa_cutpoint=.069, sb_cutpoint=.015, interval="1s"):
@@ -48,7 +48,7 @@ def calculate_pa_levels(time, acceleration, mvpa_cutpoint=.069, sb_cutpoint=.015
     """
     data = pd.DataFrame(acceleration, columns=["Y", "X", "Z"])
     data.loc[:, "Time"] = time
-    data.loc[:, "EMNO"] = preprocessing.calculate_vector_magnitude(acceleration,
+    data.loc[:, "EMNO"] = features.calculate_vector_magnitude(acceleration,
                                                                    minus_one=True,
                                                                    round_negative_to_zero=True)
 
