@@ -7,6 +7,7 @@ acceleration signal.
 
 """
 import numpy as np
+import pandas as pd
 from numpy.lib.stride_tricks import sliding_window_view
 from scipy import signal
 import resampy
@@ -21,6 +22,7 @@ BROND_COEFF_B = np.array([0.049109, -0.12284, 0.14356, -0.11269, 0.053804, -0.02
                           -0.046015, 0.036283, -0.012977, -0.0046262, 0.012835, -0.0093762,
                           0.0034485, -0.00080972, -0.00019623])
 
+["Y", "X", "Z"]
 
 def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=False, dtype=np.float32):
     r"""
@@ -255,4 +257,7 @@ def actigraph_counts(data, hz, epoch_length):
     counts: array_like
         a numpy array containg the ActiGraph counts
     """
-    return get_counts(data, hz, epoch_length)
+
+    counts = get_counts(data[["Y", "X", "Z"]].values, hz, epoch_length)
+    counts = pd.DataFrame(counts, columns=["Y", "X", "Z"])
+    return counts
