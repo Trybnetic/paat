@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "paat"
-version = "0.8.0"
-description = "A comprehensive toolbox to analyse and model physical activity data"
+version = "0.8.1"
+description = "A comprehensive toolbox to analyse and model raw physical activity data"
 
 license = "MIT"
 
