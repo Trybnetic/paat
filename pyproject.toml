@@ -53,6 +53,11 @@ pygt3x = "^0.1.1"
 
 
 [tool.pylint]
-max-line-length = 120
-good-names = nn, ii, _, jj, df, X, hz, mm, kk
-disable=E1101
+  [tool.pylint.basic]
+  good-names = ["nn", "ii", "_", "jj", "df", "X", "hz", "mm", "kk"]
+
+  [tool.pylint.format]
+  max-line-length = 120
+
+  [tool.pylint.message_control]
+  disable = "E1101"
