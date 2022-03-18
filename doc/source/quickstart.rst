@@ -4,12 +4,11 @@ Quickstart
 Installation
 ------------
 
-First, you need to install *paat*. The easiest way to do this is using
-`pip <https://pip.pypa.io/en/stable/>`_:
+At the moment, the easiest way to install *paat* directly from GitHub by running:
 
 .. code:: bash
 
-    pip install --user paat
+    pip install git+https://github.com/Trybnetic/paat.git
 
 
 Usage

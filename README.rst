@@ -11,22 +11,17 @@ ActiGraph data (GT3X files) in large sample study settings where manual annotati
 and analysis is not feasible. Most functions come along with scientific papers
 describing the methodology in detail. Even though, the package was and is primarily
 develop for analyzing ActiGraph data, we warmly welcome contributions for other
-clinical sensors as well! 
+clinical sensors as well!
 
 
 Installation
 ============
 
-For now, the easiest way to install *paat* is to install it in development mode
-by running:
+At the moment, the easiest way to install *paat* directly from GitHub by running:
 
 .. code:: bash
 
-    git clone https://github.com/trybnetic/paat.git
-    cd paat
-    python setup.py develop --user
-
-This also enables that all changes you make in the code become active immediately.
+    pip install git+https://github.com/Trybnetic/paat.git
 
 
 Usage

@@ -24,14 +24,14 @@ Workflow
 1. Fork this repository on Github. From here on we assume you successfully
    forked this repository to https://github.com/yourname/paat.git
 
-2. Get a local copy of your fork and install the package in 'development'
-   mode, which will make changes in the source code active immediately, by running
+2. Get a local copy of your fork and install the package with
+`Python Poetry <https://python-poetry.org/>` by running
 
    .. code:: bash
 
        git clone https://github.com/yourname/paat.git
        cd paat
-       python setup.py develop --user
+       poetry install
 
 3. Add code, tests or documentation.
 
@@ -39,8 +39,7 @@ Workflow
 
    .. code:: bash
 
-       make checkstyle
-       make test
+       poetry run pytest --cov=paat
 
 5. Add and commit your changes after tests run through without complaints.
 
@@ -62,17 +61,6 @@ Workflow
 7. Open the Pull Requests page at https://github.com/yourname/paat/pulls and
    click "New pull request" to submit your Pull Request to
    https://github.com/trybnetic/paat.
-
-.. note::
-
-    To ease development, there is a ``conda_dev.yml`` which sets up the whole
-    developing environment if you use conda:
-
-    .. code:: bash
-
-        conda create -f conda_dev.yml
-        conda activate paat-dev
-
 
 
 Licensing

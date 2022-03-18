@@ -7,8 +7,10 @@ This toolbox is divided into different modules:
 
 - Input & Output Module (:mod:`paat.io`)
 - Preprocessing Module (:mod:`paat.preprocessing`)
+- Features Module (:mod:`paat.features`)
 - Wear Time Module (:mod:`paat.wear_time`)
 - Sleep Module (:mod:`paat.sleep`)
+- Estimates Module (:mod:`paat.estimates`)
 
 
 .. automodule:: paat.io
@@ -32,6 +34,11 @@ This toolbox is divided into different modules:
     :show-inheritance:
 
 .. automodule:: paat.sleep
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: paat.estimates
     :members:
     :undoc-members:
     :show-inheritance:
