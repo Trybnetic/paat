@@ -9,28 +9,22 @@ from pygt3x.calibrated_reader import CalibratedReader
 
 from paat import io, preprocessing
 
-TEST_ROOT = os.path.join(os.path.pardir, os.path.dirname(__file__))
-FILE_PATH_SIMPLE = os.path.join(TEST_ROOT, 'resources/10min_recording.gt3x')
 
 @pytest.fixture
-def data():
-    return io.read_gt3x(FILE_PATH_SIMPLE, rescale=True, pandas=True)
+def unscaled_data(file_path):
+    return io.read_gt3x(file_path, rescale=False, pandas=True)
 
 
-@pytest.fixture
-def unscaled_data():
-    return io.read_gt3x(FILE_PATH_SIMPLE, rescale=False, pandas=True)
-
-
-def test_loading_data(data):
-    _, acceleration, _ = io.read_gt3x(FILE_PATH_SIMPLE, rescale=True)
+def test_loading_data(file_path, load_gt3x_file):
+    data, _ = load_gt3x_file
+    _, acceleration, _ = io.read_gt3x(file_path, rescale=True, pandas=False)
 
     assert np.array_equal(acceleration, data[["Y", "X", "Z"]].values)
 
 
 @pytest.mark.slow
-def test_against_actigraph_implementation(unscaled_data):
-    with FileReader(FILE_PATH_SIMPLE) as reader:
+def test_against_actigraph_implementation(file_path, unscaled_data):
+    with FileReader(file_path) as reader:
         ref = reader.to_pandas()
 
     npt.assert_almost_equal(unscaled_data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)

@@ -1,9 +1,10 @@
 import pandas as pd
+import numpy as np
 
 from . import features
 
 
-def calculate_pa_levels(time, acceleration, mvpa_cutpoint=.069, sb_cutpoint=.015, interval="1s"):
+def calculate_pa_levels(data, sample_freq, mvpa_cutpoint=.069, sb_cutpoint=.015, interval="1s"):
     """
     Calculate moderate to vigourous physical activity (MVPA) and sedentary behavior
     based on cutpoints (mvpa_cutpoint and sb_cutpoint). On default, this procedure
@@ -46,20 +47,29 @@ def calculate_pa_levels(time, acceleration, mvpa_cutpoint=.069, sb_cutpoint=.015
         behavior (second column)
 
     """
-    data = pd.DataFrame(acceleration, columns=["Y", "X", "Z"])
-    data.loc[:, "Time"] = time
-    data.loc[:, "EMNO"] = features.calculate_vector_magnitude(acceleration,
-                                                                   minus_one=True,
-                                                                   round_negative_to_zero=True)
+    data.loc[:, "EMNO"] = features.calculate_vector_magnitude(data[["Y", "X", "Z"]].values,
+                                                              minus_one=True,
+                                                              round_negative_to_zero=True)
 
     if interval:
-        tmp = data.set_index("Time").resample(interval).mean().reset_index()
+        tmp = data.resample(interval).mean()
     else:
         tmp = data
 
     tmp.loc[:, "MVPA"] = (tmp["EMNO"].values >= mvpa_cutpoint)
     tmp.loc[:, "SB"] = (tmp["EMNO"].values <= sb_cutpoint)
 
-    data = pd.merge_asof(data, tmp[["Time", "MVPA", "SB"]], on="Time")
+    seconds = pd.Timedelta(interval).seconds
+    mvpa_vec = np.repeat(tmp["MVPA"].values, seconds * sample_freq)
+    sb_vec = np.repeat(tmp["SB"].values, seconds * sample_freq)
 
-    return data[["MVPA", "SB"]].values
+    return np.stack((mvpa_vec, sb_vec), axis=1)
+
+
+def create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"]):
+    activity_vec = np.full(data.shape[0], "LPA")
+
+    for column in columns:
+        activity_vec[data[column]] = column
+
+    return activity_vec

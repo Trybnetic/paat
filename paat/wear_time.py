@@ -319,7 +319,7 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
     return grouped_episodes
 
 
-def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
+def detect_non_wear_time_syed2021(data, hz, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
                                   start_stop_label_decision='and', min_segment_length=1, sliding_window=1, verbose=False):
     """
     Infer non-wear time from raw 100Hz triaxial data. Data at different sample frequencies will be resampled to 100hz.
@@ -399,6 +399,8 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
     -    If the data is not 100hz, then it will be resampled to 100hz. However, how the inference of non-wear time is affected by this has not been investigated.
     -    CNN models were trained with a hip worn accelerometer.
     """
+
+    raw_acc = data[["X", "Y", "Z"]].values
 
     # use one of the default models if no model file is given
     if cnn_model_file is None:
@@ -540,7 +542,7 @@ def detect_non_wear_time_syed2021(raw_acc, hz, cnn_model_file=None, std_threshol
     return nw_vector
 
 
-def detect_non_wear_time_hees2011(raw_acc, hz, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
+def detect_non_wear_time_hees2011(data, hz, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
                                   value_range_mg_threshold=50.0, value_range_min_num_axes=2):
     """
     Estimation of non-wear time periods based on Hees 2013 paper
@@ -583,6 +585,8 @@ def detect_non_wear_time_hees2011(raw_acc, hz, min_non_wear_time_window=60, wind
     nw_vector: np.array(n_samples,)
         a numpy array indicating whether the values of the acceleration data are non-wear time
     """
+
+    raw_acc = data[["X", "Y", "Z"]].values
 
     # number of data samples in 1 minute
     num_samples_per_min = hz * 60
@@ -638,7 +642,7 @@ def detect_non_wear_time_hees2011(raw_acc, hz, min_non_wear_time_window=60, wind
     return nw_vector
 
 
-def detect_non_wear_time_naive(raw_acc, hz, std_threshold, min_interval, use_vmu=False, min_segment_length=1, sliding_window=1):
+def detect_non_wear_time_naive(data, hz, std_threshold, min_interval, use_vmu=False, min_segment_length=1, sliding_window=1):
     """
         Calculate non-wear time from raw acceleration data by finding intervals in which
         the acceleration standard deviation is below a std_threshold value
@@ -665,6 +669,8 @@ def detect_non_wear_time_naive(raw_acc, hz, std_threshold, min_interval, use_vmu
         nw_vector: np.array(n_samples,)
             a numpy array indicating whether the values of the acceleration data are non-wear time
     """
+
+    raw_acc = data[["X", "Y", "Z"]].values
 
     # make sure hz is int
     hz = int(hz)

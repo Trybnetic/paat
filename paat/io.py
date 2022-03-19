@@ -462,7 +462,7 @@ def _create_time_vector(start, n_samples, hz):
     return time_data.flatten()
 
 
-def read_gt3x(file, rescale=False, pandas=False):
+def read_gt3x(file, rescale=True, pandas=True):
     """
     Reads a .gt3x file and returns the tri-axial acceleration values together
     with the corresponding time stamps and all meta data.
@@ -509,6 +509,6 @@ def read_gt3x(file, rescale=False, pandas=False):
     if pandas:
         data = pd.DataFrame(values, columns=["Y", "X", "Z"], index=time)
         data = data[["X", "Y", "Z"]]
-        return data
+        return data, meta['Sample_Rate']
     else:
         return time, values, meta

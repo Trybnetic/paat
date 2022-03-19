@@ -9,6 +9,7 @@ acceleration signals.
 import os
 
 import pandas as pd
+import numpy as np
 from torch import nn
 import torch
 
@@ -44,7 +45,7 @@ class _SleepModel(nn.Module):
         return self.sigmoid(self.fc_out(output))
 
 
-def detect_sleep_weitz2022(time, acceleration, means=None, stds=None):
+def detect_sleep_weitz2022(data, sample_freq, means=None, stds=None):
     """
     Infer time in bed from raw acceleration signal.
 
@@ -70,7 +71,7 @@ def detect_sleep_weitz2022(time, acceleration, means=None, stds=None):
 
     """
 
-    time, feature_vec = features.calculate_frequency_features(time, acceleration)
+    feature_vec = features.calculate_frequency_features(data)
 
     X = torch.from_numpy(feature_vec).float()
 
@@ -91,12 +92,13 @@ def detect_sleep_weitz2022(time, acceleration, means=None, stds=None):
     model.eval()
 
     # Predict sleep periods
-    is_sleep = (model(X, lengths) >= .5).squeeze().numpy()
+    predictions = (model(X, lengths) >= .5).squeeze().numpy()
+    predictions = np.repeat(predictions, 60 * sample_freq)
 
-    return is_sleep
+    return predictions
 
 
-def detect_time_in_bed_weitz2022(time, acceleration, resampled_frequency="1min", means=None, stds=None, model_path=None):
+def detect_time_in_bed_weitz2022(data, sample_freq, resampled_frequency="1min", means=None, stds=None, model_path=None):
     """
     Infer time in bed from raw acceleration signal.
 
@@ -126,12 +128,9 @@ def detect_time_in_bed_weitz2022(time, acceleration, resampled_frequency="1min",
 
     """
     if resampled_frequency:
-        data = pd.DataFrame(acceleration, columns=['Y', 'X', 'Z'])
-        data = data.set_index(time)
         data = data.resample(resampled_frequency).mean()
-        X = torch.from_numpy(data[['Y', 'X', 'Z']].values)
-    else:
-        X = torch.from_numpy(acceleration)
+
+    X = torch.from_numpy(data[['Y', 'X', 'Z']].values)
 
     # The models were trained with XYZ axis ordering while the standard ordering is YXZ
     # Therefore, we have to switch X and Y axis
@@ -157,11 +156,8 @@ def detect_time_in_bed_weitz2022(time, acceleration, resampled_frequency="1min",
         model.load_state_dict(torch.load(model_path))
         model.eval()
 
-    data.loc[:, 'Time in Bed'] = (model(X, lengths) >= .5).squeeze().numpy()
-    data.loc[:, 'Time'] = data.index
-    data = data[['Time', 'Time in Bed']]
+    predictions = (model(X, lengths) >= .5).squeeze().numpy()
+    seconds = pd.Timedelta(resampled_frequency).seconds
+    predictions = np.repeat(predictions, seconds * sample_freq)
 
-    data = pd.merge_asof(pd.DataFrame({'Time': time}), data, on="Time")
-    predicted_time_in_bed = data['Time in Bed'].values
-
-    return predicted_time_in_bed
+    return predictions

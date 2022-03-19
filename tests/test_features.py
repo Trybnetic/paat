@@ -9,22 +9,16 @@ import pytest
 
 from paat import io, features
 
-TEST_ROOT = os.path.join(os.path.pardir, os.path.dirname(__file__))
-FILE_PATH_SIMPLE = os.path.join(TEST_ROOT, 'resources/10min_recording.gt3x')
 
+def test_calculate_actigraph_counts(load_gt3x_file, test_root_path):
+    data, sample_freq = load_gt3x_file
 
-@pytest.fixture
-def data():
-    return io.read_gt3x(FILE_PATH_SIMPLE, rescale=True, pandas=True)
+    counts_1s = features.calculate_actigraph_counts(data, sample_freq, 1)
+    counts_10s = features.calculate_actigraph_counts(data, sample_freq, 10)
 
-
-def test_actigraph_counts(data):
-    counts_1s = features.actigraph_counts(data, 100, 1)
-    counts_10s = features.actigraph_counts(data, 100, 10)
-
-    ref_1s = pd.read_csv(os.path.join(TEST_ROOT, 'resources/10min_recording1sec.csv'),
+    ref_1s = pd.read_csv(os.path.join(test_root_path, 'resources/10min_recording1sec.csv'),
                          skiprows=10, header=None, names=["Y", "X", "Z", "Steps"])
-    ref_10s = pd.read_csv(os.path.join(TEST_ROOT, 'resources/10min_recording10sec.csv'),
+    ref_10s = pd.read_csv(os.path.join(test_root_path, 'resources/10min_recording10sec.csv'),
                           skiprows=10, header=None, names=["Y", "X", "Z", "Steps"])
 
     npt.assert_almost_equal(counts_1s[["X", "Y", "Z"]].values, ref_1s[["X", "Y", "Z"]].values)
@@ -32,5 +26,6 @@ def test_actigraph_counts(data):
     npt.assert_almost_equal(counts_10s[["X", "Y", "Z"]].values, ref_10s[["X", "Y", "Z"]].values)
 
 
-def test_brond_counts(data):
-    brond_counts = features.brond_counts(data[["Y", "X", "Z"]].values.T, 100, 1)
+def test_calculate_brond_counts(load_gt3x_file):
+    data, sample_freq = load_gt3x_file
+    brond_counts = features.calculate_brond_counts(data[["Y", "X", "Z"]].values.T, sample_freq, 1)

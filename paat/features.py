@@ -78,7 +78,7 @@ def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=Fal
     return vector_magnitude.reshape(data.shape[0], 1)
 
 
-def calculate_frequency_features(time, acceleration, win_len=60, win_step=60, sample_rate=100, nfft=512, nfilt=40):
+def calculate_frequency_features(data, win_len=60, win_step=60, sample_rate=100, nfft=512, nfilt=40):
     """
     Calculate frequency features from raw acceleration signal.
 
@@ -109,6 +109,8 @@ def calculate_frequency_features(time, acceleration, win_len=60, win_step=60, sa
 
     """
 
+    acceleration = data[["Y", "X", "Z"]].values
+
     # Calculate Euclidian Norm Minus One for the three axis
     emno = calculate_vector_magnitude(acceleration, minus_one=True).squeeze()
 
@@ -121,7 +123,7 @@ def calculate_frequency_features(time, acceleration, win_len=60, win_step=60, sa
     # Create feature vector
     features = np.hstack([fbanks_x, fbanks_y, fbanks_z, fbanks_emno])
 
-    return time, features
+    return features
 
 
 def _hz_to_mel(hz):
@@ -174,7 +176,7 @@ def _calculate_filter_banks(signal, sample_rate, win_len, win_step, nfft=512, nf
     return hz_points, filter_banks
 
 
-def brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, adcResolution=0.0164, A=BROND_COEFF_A, B=BROND_COEFF_B):
+def calculate_brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, adcResolution=0.0164, A=BROND_COEFF_A, B=BROND_COEFF_B):
     """
     Create Brønd counts from uniaxial acceleration data. The algorithm was described in
 
@@ -239,7 +241,7 @@ def brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, adcResolutio
     return counts
 
 
-def actigraph_counts(data, hz, epoch_length):
+def calculate_actigraph_counts(data, hz, epoch_length):
     """
     Wrapper function to create ActiGraph counts
 
@@ -257,6 +259,8 @@ def actigraph_counts(data, hz, epoch_length):
     counts: array_like
         a numpy array containg the ActiGraph counts
     """
+    if isinstance(epoch_length, str):
+        epoch_length = pd.Timedelta(epoch_length).seconds
 
     counts = get_counts(data[["Y", "X", "Z"]].values, hz, epoch_length)
     counts = pd.DataFrame(counts, columns=["Y", "X", "Z"])
