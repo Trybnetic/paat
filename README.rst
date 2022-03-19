@@ -46,8 +46,10 @@ examples and more information on the functions can be found in the documentation
     # Classify moderate-to-vigorous and sedentary behavior
     data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(data, sample_freq)
 
+    # Merge the activity columns into one labelled column
     data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"])
 
+    # Remove the other columns after merging
     data =  data[["X", "Y", "Z", "Activity"]]
 
 
