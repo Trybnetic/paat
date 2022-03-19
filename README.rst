@@ -35,7 +35,7 @@ examples and more information on the functions can be found in the documentation
 .. code-block:: python
 
     # Load data from file
-    data, sample_freq = paat.read_gt3x(FILE_PATH_SIMPLE)
+    data, sample_freq = paat.read_gt3x('path/to/gt3x/file')
 
     # Detect non-wear time
     data.loc[:, "Non Wear Time"] = paat.detect_non_wear_time_syed2021(data, sample_freq)
