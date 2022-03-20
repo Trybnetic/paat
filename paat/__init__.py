@@ -11,15 +11,10 @@ and analysis is not feasible.
 
 import os
 import sys
-from pip._vendor import pkg_resources
-
 from importlib import metadata
-import toml
 
-try:
-    __version__ = metadata.version(__package__)
-except metadata.PackageNotFoundError:
-    __version__ = toml.load("pyproject.toml")["tool"]["poetry"]["version"] + "dev"
+from pip._vendor import pkg_resources
+import toml
 
 from . import estimates, features, io, preprocessing, sleep, wear_time
 
@@ -29,6 +24,12 @@ from .features import calculate_actigraph_counts, calculate_vector_magnitude, ca
 from .io import read_gt3x
 from .sleep import detect_sleep_weitz2022, detect_time_in_bed_weitz2022
 from .wear_time import detect_non_wear_time_naive, detect_non_wear_time_hees2011, detect_non_wear_time_syed2021
+
+try:
+    __version__ = metadata.version(__package__)
+except metadata.PackageNotFoundError:
+    __version__ = toml.load("pyproject.toml")["tool"]["poetry"]["version"] + "dev"
+
 
 
 def sysinfo():

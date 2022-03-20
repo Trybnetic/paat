@@ -1,3 +1,11 @@
+"""
+Estimates Module
+---------------
+
+*paat.estimates* provides functions to compute physical activity estimates from
+the raw acceleration signal.
+
+"""
 import pandas as pd
 import numpy as np
 
