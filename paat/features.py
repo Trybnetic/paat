@@ -84,11 +84,8 @@ def calculate_frequency_features(data, win_len=60, win_step=60, sample_rate=100,
 
     Parameters
     ----------
-    time : np.array (n_samples x 1)
-        a numpy array with time stamps for the observations in values
-    acceleration : np.array (n_samples x 3)
-        a numpy array with the tri-axial acceleration values in
-        the default order of ActiGraph which is ['Y','X','Z'].
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
     win_len : int (optional)
         an int indicating the window length in seconds
     win_step : int (optional)
@@ -176,7 +173,7 @@ def _calculate_filter_banks(signal, sample_rate, win_len, win_step, nfft=512, nf
     return hz_points, filter_banks
 
 
-def calculate_brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, adcResolution=0.0164, A=BROND_COEFF_A, B=BROND_COEFF_B):
+def calculate_brond_counts(data, sample_freq, epoch_length, deadband=0.068, peak=2.13, adcResolution=0.0164, A=BROND_COEFF_A, B=BROND_COEFF_B):
     """
     Create Brønd counts from uniaxial acceleration data. The algorithm was described in
 
@@ -186,9 +183,9 @@ def calculate_brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, ad
 
     Parameters
     ----------
-    data: array_like
-        a numpy array containing the uniaxial acceleration data
-    hz: int
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
         an int indicating at which sampling frequency the data was recorded
     epoch_length: int
         an int indicating the length of the epochs to calculate in seconds
@@ -213,8 +210,8 @@ def calculate_brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, ad
 
     # Step 0: Downsample to 30hz if not already
     target_hz = 30
-    if hz != target_hz:
-        data = resampy.resample(np.asarray(data), hz, target_hz)
+    if sample_freq != target_hz:
+        data = resampy.resample(np.asarray(data), sample_freq, target_hz)
 
     # Step 1: Aliasing filter (0.01-7hz)
     B2, A2 = signal.butter(4, np.array([0.01, 7])/(target_hz/2), btype='bandpass')
@@ -241,7 +238,7 @@ def calculate_brond_counts(data, hz, epoch_length, deadband=0.068, peak=2.13, ad
     return counts
 
 
-def calculate_actigraph_counts(data, hz, epoch_length):
+def calculate_actigraph_counts(data, sample_freq, epoch_length):
     """
     Wrapper function to create ActiGraph counts
 
@@ -249,7 +246,7 @@ def calculate_actigraph_counts(data, hz, epoch_length):
     ----------
     data: array_like
         a numpy array containing the uniaxial acceleration data
-    hz: int
+    sample_freq: int
         an int indicating at which sampling frequency the data was recorded
     epoch_length: int
         an int indicating the length of the epochs to calculate in seconds
@@ -262,6 +259,6 @@ def calculate_actigraph_counts(data, hz, epoch_length):
     if isinstance(epoch_length, str):
         epoch_length = pd.Timedelta(epoch_length).seconds
 
-    counts = get_counts(data[["Y", "X", "Z"]].values, hz, epoch_length)
+    counts = get_counts(data[["Y", "X", "Z"]].values, sample_freq, epoch_length)
     counts = pd.DataFrame(counts, columns=["Y", "X", "Z"])
     return counts

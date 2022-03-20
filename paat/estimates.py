@@ -25,11 +25,10 @@ def calculate_pa_levels(data, sample_freq, mvpa_cutpoint=.069, sb_cutpoint=.015,
 
     Parameters
     ----------
-    time : np.array (n_samples x 1)
-        a numpy array with time stamps for the observations in values
-    acceleration : np.array (n_samples x 3)
-        a numpy array with the tri-axial acceleration values in
-        the default order of ActiGraph which is ['Y','X','Z']
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
+        the sampling frequency in which the data was recorded
     mvpa_cutpoint : float (optional)
         a float indicating the cutpoint between light physical activity and
         moderate-to-vigourous activity
@@ -67,6 +66,23 @@ def calculate_pa_levels(data, sample_freq, mvpa_cutpoint=.069, sb_cutpoint=.015,
 
 
 def create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"]):
+    """
+    Merge the different activity columns into one label column.
+
+    Parameters
+    ----------
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    columns : array_like
+        a list of activity columns in descending order of importance. The order
+        of the list implies which activity overrides which. E.g. the first entry
+        would override the second in cases of doubt, etc.
+
+    Returns
+    -------
+    activity_vec : array_like
+        the merged activity vector with the names of columns as entries
+    """
     activity_vec = np.full(data.shape[0], "LPA")
 
     for column in columns:

@@ -319,7 +319,7 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
     return grouped_episodes
 
 
-def detect_non_wear_time_syed2021(data, hz, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
+def detect_non_wear_time_syed2021(data, sample_freq, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
                                   start_stop_label_decision='and', min_segment_length=1, sliding_window=1, verbose=False):
     """
     Infer non-wear time from raw 100Hz triaxial data. Data at different sample frequencies will be resampled to 100hz.
@@ -358,9 +358,9 @@ def detect_non_wear_time_syed2021(data, hz, cnn_model_file=None, std_threshold=0
 
     Parameters
     ----------
-    raw_acc: np.array(n_samples, 3 axes)
-        numpy array that contains raw triaxial data at 100hz. Size of the array should be (n_samples, 3)
-    hz: int
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
         sample frequency of the data. The CNN model was trained for 100Hz of data. If the data is at a different sampling frequency it will be resampled to 100Hz
     cnn_model_file: os.path (optional)
         file location of the trained CNN model. On default, the corresponding pretrained model is used.
@@ -412,13 +412,13 @@ def detect_non_wear_time_syed2021(data, hz, cnn_model_file=None, std_threshold=0
         sys.exit()
 
     # check if data needs to be resampled to 100hz
-    if hz != 100:
-        logging.info('Sampling frequency of the data is %s Hz, should be 100Hz, starting resampling....', hz)
+    if sample_freq != 100:
+        logging.info('Sampling frequency of the data is %s Hz, should be 100Hz, starting resampling....', sample_freq)
         # call resampling function
-        raw_acc = preprocessing.resample_acceleration(data=raw_acc, from_hz=hz, to_hz=100, verbose=verbose)
+        raw_acc = preprocessing.resample_acceleration(data=raw_acc, from_hz=sample_freq, to_hz=100, verbose=verbose)
         logging.info('Data resampled to 100hz')
         # set sampling frequency to 100hz
-        hz = 100
+        sample_freq = 100
 
     # create new non-wear vector that is prepopulated with wear-time encoding. This way we only have to record the non-wear time
     nw_vector = np.zeros(raw_acc.shape[0], dtype=bool)
@@ -426,7 +426,7 @@ def detect_non_wear_time_syed2021(data, hz, cnn_model_file=None, std_threshold=0
     # get candidate non-wear episodes (note that these are on a minute resolution). Also note that it returns wear time as 1 and non-wear time as 0
     nw_episodes = _find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold,
                                                              min_segment_length=min_segment_length,
-                                                             sliding_window=sliding_window, hz=hz)
+                                                             sliding_window=sliding_window, hz=sample_freq)
 
     # find all indexes of the numpy array that have been labeled non-wear time
     nw_indexes = np.where(nw_episodes == 0)[0]
@@ -452,7 +452,7 @@ def detect_non_wear_time_syed2021(data, hz, cnn_model_file=None, std_threshold=0
     episodes = pd.DataFrame.from_dict(dic_segments)
 
     # Merge episodes that are close to each other
-    grouped_episodes = _group_episodes(episodes=episodes.T, distance_in_min=distance_in_min, correction=3, hz=hz, training=False).T
+    grouped_episodes = _group_episodes(episodes=episodes.T, distance_in_min=distance_in_min, correction=3, hz=sample_freq, training=False).T
 
     # load CNN model
     cnn_model = models.load_model(cnn_model_file)
@@ -467,21 +467,21 @@ def detect_non_wear_time_syed2021(data, hz, cnn_model_file=None, std_threshold=0
             logging.debug('Processing episode start_index: %s, stop_index: %s', start_index, stop_index)
 
         # forward search to extend stop index
-        stop_index = _forward_search_episode(raw_acc, stop_index, hz=hz, max_search_min=5, std_threshold=std_threshold, verbose=verbose)
+        stop_index = _forward_search_episode(raw_acc, stop_index, hz=sample_freq, max_search_min=5, std_threshold=std_threshold, verbose=verbose)
         # backwar search to extend start index
-        start_index = _backward_search_episode(raw_acc, start_index, hz=hz, max_search_min=5, std_threshold=std_threshold, verbose=verbose)
+        start_index = _backward_search_episode(raw_acc, start_index, hz=sample_freq, max_search_min=5, std_threshold=std_threshold, verbose=verbose)
 
         # get start episode
-        start_episode = raw_acc[start_index - (episode_window_sec * hz): start_index]
+        start_episode = raw_acc[start_index - (episode_window_sec * sample_freq): start_index]
         # get stop episode
-        stop_episode = raw_acc[stop_index: stop_index + (episode_window_sec * hz)]
+        stop_episode = raw_acc[stop_index: stop_index + (episode_window_sec * sample_freq)]
 
         # default label for start and stop combined. The first False will turn into True if the start of the episode is inferred as non-wear time. The same happens to the
         # second False when the end is inferred as non-weaer time
         start_stop_label = [False, False]
 
         # Start episode
-        if start_episode.shape[0] == episode_window_sec * hz:
+        if start_episode.shape[0] == episode_window_sec * sample_freq:
 
             # reshape into num feature x time x axes
             start_episode = start_episode.reshape(1, start_episode.shape[0], start_episode.shape[1])
@@ -499,7 +499,7 @@ def detect_non_wear_time_syed2021(data, hz, cnn_model_file=None, std_threshold=0
             start_stop_label[0] = edge_true_or_false
 
         # Stop episode
-        if stop_episode.shape[0] == episode_window_sec * hz:
+        if stop_episode.shape[0] == episode_window_sec * sample_freq:
 
             # reshape into num feature x time x axes
             stop_episode = stop_episode.reshape(1, stop_episode.shape[0], stop_episode.shape[1])
@@ -542,7 +542,7 @@ def detect_non_wear_time_syed2021(data, hz, cnn_model_file=None, std_threshold=0
     return nw_vector
 
 
-def detect_non_wear_time_hees2011(data, hz, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
+def detect_non_wear_time_hees2011(data, sample_freq, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
                                   value_range_mg_threshold=50.0, value_range_min_num_axes=2):
     """
     Estimation of non-wear time periods based on Hees 2013 paper
@@ -559,9 +559,9 @@ def detect_non_wear_time_hees2011(data, hz, min_non_wear_time_window=60, window_
 
     Parameters
     ----------
-    raw_acc: np.array(n_samples, axes)
-        numpy array with acceleration data in g values. Each column represent a different axis, normally ordered YXZ
-    hz: int
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
         sample frequency in hertz. Indicates the number of samples per 1 second. Default to 100 for 100hz. The sample frequency is necessary to
         know how many samples there are in a specific window. So let's say we have a window of 15 minutes, then there are hz * 60 * 15 samples
     min_non_wear_time_window: int (optional)
@@ -589,7 +589,7 @@ def detect_non_wear_time_hees2011(data, hz, min_non_wear_time_window=60, window_
     raw_acc = data[["X", "Y", "Z"]].values
 
     # number of data samples in 1 minute
-    num_samples_per_min = hz * 60
+    num_samples_per_min = sample_freq * 60
 
     # define the correct number of samples for the window and window overlap
     min_non_wear_time_window *= num_samples_per_min
@@ -642,16 +642,16 @@ def detect_non_wear_time_hees2011(data, hz, min_non_wear_time_window=60, window_
     return nw_vector
 
 
-def detect_non_wear_time_naive(data, hz, std_threshold, min_interval, use_vmu=False, min_segment_length=1, sliding_window=1):
+def detect_non_wear_time_naive(data, sample_freq, std_threshold, min_interval, use_vmu=False, min_segment_length=1, sliding_window=1):
     """
         Calculate non-wear time from raw acceleration data by finding intervals in which
         the acceleration standard deviation is below a std_threshold value
 
         Parameters
         ----------
-        raw_acc: np.array(n_samples, 3 axes)
-            numpy array that contains raw triaxial data. Size of the array should be (n_samples, 3)
-        hz: int
+        data : DataFrame
+            a DataFrame containg the raw acceleration data
+        sample_freq : int
             sample frequency of the data
         std_threshold: int or float
             the standard deviation threshold in g
@@ -673,7 +673,7 @@ def detect_non_wear_time_naive(data, hz, std_threshold, min_interval, use_vmu=Fa
     raw_acc = data[["X", "Y", "Z"]].values
 
     # make sure hz is int
-    hz = int(hz)
+    sample_freq = int(sample_freq)
 
     # create an new non-wear vector that we propoulate with wear-time encoding. This way we only have to update the vector with non-wear time
     nw_vector = np.zeros(raw_acc.shape[0], dtype=bool)
@@ -683,7 +683,7 @@ def detect_non_wear_time_naive(data, hz, std_threshold, min_interval, use_vmu=Fa
     """
 
     # get candidate non-wear episodes (note that these are on a minute resolution)
-    nw_episodes = _find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold, min_segment_length=min_segment_length, sliding_window=sliding_window, hz=hz, use_vmu=use_vmu)
+    nw_episodes = _find_candidate_non_wear_segments_from_raw(acc_data=raw_acc, std_threshold=std_threshold, min_segment_length=min_segment_length, sliding_window=sliding_window, hz=sample_freq, use_vmu=use_vmu)
 
     """
         GET START AND END TIME OF NON WEAR SEGMENTS
@@ -705,7 +705,7 @@ def detect_non_wear_time_naive(data, hz, std_threshold, min_interval, use_vmu=Fa
             start, stop = np.min(row), np.max(row)
 
             # calculate lenght of episode in minutes
-            length = int((stop - start) / hz / 60)
+            length = int((stop - start) / sample_freq / 60)
 
             # check if length exceeds threshold, if so, then this is non-wear time
             if length >= min_interval:

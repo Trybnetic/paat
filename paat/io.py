@@ -473,9 +473,15 @@ def read_gt3x(file, rescale=True, pandas=True):
         file location of the .gt3x file
     rescale : boolean (optional)
         boolean indicating whether raw acceleration data should be rescaled to g values
+    pandas : boolean (optional)
+        boolean indicating whether the data should be returned as a pandas DataFrame
 
     Returns
     -------
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
+        the sampling frequency in which the data was recorded
     time : np.array (n_samples x 1)
         a numpy array with time stamps for the observations in values
     values : np.array (n_samples x 3)

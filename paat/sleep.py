@@ -51,11 +51,10 @@ def detect_sleep_weitz2022(data, sample_freq, means=None, stds=None):
 
     Parameters
     ----------
-    time : np.array (n_samples x 1)
-        a numpy array with time stamps for the observations in values
-    acceleration : np.array (n_samples x 3)
-        a numpy array with the tri-axial acceleration values in
-        the default order of ActiGraph which is ['Y','X','Z'].
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
+        the sampling frequency in which the data was recorded
     means : array_like (optional)
         a numpy array with the channel means, will be calculated for the sample
         if not specified
@@ -104,11 +103,10 @@ def detect_time_in_bed_weitz2022(data, sample_freq, resampled_frequency="1min", 
 
     Parameters
     ----------
-    time : np.array (n_samples x 1)
-        a numpy array with time stamps for the observations in values
-    acceleration : np.array (n_samples x 3)
-        a numpy array with the tri-axial acceleration values in
-        the default order of ActiGraph which is ['Y','X','Z'].
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
+        the sampling frequency in which the data was recorded
     resampled_frequency : str (optional)
         a str indicating to what frequency the data should be resampled. This depends
         on the model used to predict, defaults to 1min.
