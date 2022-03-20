@@ -8,19 +8,15 @@ is a file format specifically designed to handle large amounts of data. When you
 process GT3X files, especially if they contain multi-day recordings, it takes a
 considerable amount of time to read these files due to their binary nature. HDF5
 significantly reduces data loading time, but only makes sense if the data is used
-frequently. In the case only one analysis is performed it might be quicker to
+multiple times. In the case only one analysis is performed it might be quicker to
 analyze the data directly.
 
-One option is to use the `Pandas <https://pandas.pydata.org/>`_ library to
-handle the data. Using pandas has multiple advantages: Pandas has become the
-defacto standard for data processing and analysis in Python. It offers a lot of
-functionality and has a great community. For most real-life problems solutions
-can easily be found on the web and it works amazingly well together with plotting
-libraries like Matplotlib and Seaborn. 
+The following example illustrates how to create a HDF5 file from a list of GT3X
+files. If you don't know how to get this list have a look at the
+`Read GT3X Files with PAAT` tutorial.
 
 .. code-block:: python
 
-    import pandas as pd
     import h5py
     import paat
 
@@ -33,10 +29,7 @@ libraries like Matplotlib and Seaborn.
     for file in files:
 
       # Load the data
-      time, acceleration, meta = paat.io.read_gt3x(file, rescale=True)
-
-      # Create pandas DataFrame
-      data = pd.DataFrame(acceleration, columns=['Y', 'X', 'Z'], index=time)
+      data, sample_freq = paat.read_gt3x(file)
 
       # Save data to HDF5 file
-      data.to_hdf(hdf5_file, key=meta["Subject_Name"])
+      data.to_hdf(hdf5_file, key=file)

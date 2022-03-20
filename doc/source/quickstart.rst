@@ -21,23 +21,29 @@ examples and more information on the functions can be found in the documentation
 
 .. code-block:: python
 
-    import paat
-
     # Load data from file
-    time, acceleration, meta = paat.io.read_gt3x('path/to/gt3x/file', rescale=True)
+    data, sample_freq = paat.read_gt3x('path/to/gt3x/file')
 
     # Detect non-wear time
-    nw_vector = paat.wear_time.detect_non_wear_time_syed2021(acceleration, meta['Sample_Rate'])
+    data.loc[:, "Non Wear Time"] = paat.detect_non_wear_time_syed2021(data, sample_freq)
 
     # Detect sleep episodes
-    sleep_vector = paat.sleep.detect_sleep_weitz2022(time, acceleration)
+    data.loc[:, "Sleep"] = paat.detect_sleep_weitz2022(data, sample_freq)
 
     # Classify moderate-to-vigorous and sedentary behavior
-    mvpa_vector, sedentary_vector = paat.estimates.calculate_pa_levels(time, acceleration,
-                                                                       mvpa_cutpoint=.069,
-                                                                       sb_cutpoint=.015,
-                                                                       interval="1s")
+    data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(data, sample_freq)
 
+    # Merge the activity columns into one labelled column
+    data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"])
 
-For a more detailed description of the workflow see our examples on how to analyze
-data.
+    # Remove the other columns after merging
+    data =  data[["X", "Y", "Z", "Activity"]]
+
+.. note::
+
+    In this example, methods of `Syed et al. (2021) <https://doi.org/10.1038/s41598-021-87757-z>`_
+    and `Weitz et al. (2022) <https://www.medrxiv.org/content/10.1101/2022.03.07.22270992>`_ and activity
+    thresholds of `Sanders et al. (2019) <https://doi.org/10.1080/02640414.2018.1555904>`_.
+    However, these are only examples. There are multiple methods implemented in PAAT
+    and the processing pipeline can easily be adjusted to individual needs. More examples
+    can be found in the examples section.

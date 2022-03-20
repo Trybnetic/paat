@@ -11,6 +11,6 @@ an example usage you think others might benefit from, let us know or open a
    :maxdepth: 1
    :caption: Code snippets, tutorials, and examples
 
-   io
-   save_to_hdf5
-   analyze_data
+   example_notebooks/read_gt3x_files
+   example_notebooks/save_to_hdf5
+   example_notebooks/analyze_data
