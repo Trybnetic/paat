@@ -2,7 +2,7 @@
 Physical Activity Analysis Toolbox (PAAT)
 =========================================
 
-    **Note:** This package is currently work in progress and the API might change
+    **Note:** This package is currently under development and the API might change
     anytime!
 
 The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to
