@@ -7,6 +7,14 @@ analyze raw acceleration data. We developed all code mainly for analyzing
 ActiGraph data (GT3X files) in large sample study settings where manual annotation
 and analysis is not feasible.
 
+This package has been developed and is maintained by researchers at UiT - the
+arctic university of Norway and was supported by the High Northern
+Population Studies, an interdisciplinary initiative to improve the health of
+future generations. The purpose of this package is to make our research on raw
+accelerometry easier accessible to other researchers. Most methods implemented
+in this package have been described in scientific papers which are usually
+cited in the function's description. If you are using any of these methods in
+your research, we would be grateful if you cite the corresponding original paper(s).
 """
 
 import os

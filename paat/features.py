@@ -273,7 +273,8 @@ def calculate_brond_counts(data, sample_freq, epoch_length):
 
 def calculate_actigraph_counts(data, sample_freq, epoch_length):
     """
-    Wrapper function to create ActiGraph counts
+    Wrapper function to create ActiGraph counts. A companion paper has been
+    submitted by ActiGraph and will be referenced here as soon as it is published.
 
     Parameters
     ----------
