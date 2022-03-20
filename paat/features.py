@@ -173,18 +173,14 @@ def _calculate_filter_banks(signal, sample_rate, win_len, win_step, nfft=512, nf
     return hz_points, filter_banks
 
 
-def calculate_brond_counts(data, sample_freq, epoch_length, deadband=0.068, peak=2.13, adcResolution=0.0164, A=BROND_COEFF_A, B=BROND_COEFF_B):
+def _calc_one_axis_brond_counts(acc, sample_freq, epoch_length, deadband=0.068, peak=2.13, adcResolution=0.0164, A=BROND_COEFF_A, B=BROND_COEFF_B):
     """
-    Create Brønd counts from uniaxial acceleration data. The algorithm was described in
-
-    Brønd, J. C., Andersen, L. B., & Arvidsson, D. (2017). Generating ActiGraph Counts
-    from Raw Acceleration Recorded by an Alternative Monitor, Medicine & Science in
-    Sports & Exercise, doi: 10.1249/MSS.0000000000001344
+    Helper function to process one axis with the Brond algorithm.
 
     Parameters
     ----------
-    data : DataFrame
-        a DataFrame containg the raw acceleration data
+    acc : array_like
+        a numpy containg one axis of the raw acceleration data
     sample_freq : int
         an int indicating at which sampling frequency the data was recorded
     epoch_length: int
@@ -211,11 +207,11 @@ def calculate_brond_counts(data, sample_freq, epoch_length, deadband=0.068, peak
     # Step 0: Downsample to 30hz if not already
     target_hz = 30
     if sample_freq != target_hz:
-        data = resampy.resample(np.asarray(data), sample_freq, target_hz)
+        resampled_data = resampy.resample(acc, sample_freq, target_hz)
 
     # Step 1: Aliasing filter (0.01-7hz)
     B2, A2 = signal.butter(4, np.array([0.01, 7])/(target_hz/2), btype='bandpass')
-    dataf = signal.filtfilt(B2, A2, data)
+    dataf = signal.filtfilt(B2, A2, resampled_data)
 
     # Step 2: ActiGraph filter
     filtered = signal.lfilter(0.965 * B, A, dataf)
@@ -235,6 +231,43 @@ def calculate_brond_counts(data, sample_freq, epoch_length, deadband=0.068, peak
     downsampled = downsampled.reshape([-1, 10 * epoch_length])
     counts = np.where(downsampled >= 0, downsampled, 0).sum(axis=1)
 
+    return counts.astype(int)
+
+
+def calculate_brond_counts(data, sample_freq, epoch_length):
+    """
+    Create Brønd counts from uniaxial acceleration data. The algorithm was described in
+
+    Brønd, J. C., Andersen, L. B., & Arvidsson, D. (2017). Generating ActiGraph Counts
+    from Raw Acceleration Recorded by an Alternative Monitor, Medicine & Science in
+    Sports & Exercise, doi: 10.1249/MSS.0000000000001344
+
+    Parameters
+    ----------
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
+        an int indicating at which sampling frequency the data was recorded
+    epoch_length: int
+        an int indicating the length of the epochs to calculate in seconds
+
+    Returns
+    -------
+    counts: DataFrame
+        a DataFrame containg the Brønd counts
+    """
+
+    timestamps = data.resample(epoch_length).mean().index
+
+    if isinstance(epoch_length, str):
+        epoch_length = pd.Timedelta(epoch_length).seconds
+
+
+    counts = pd.DataFrame({"Y": _calc_one_axis_brond_counts(data["Y"].values, sample_freq, epoch_length),
+                           "X": _calc_one_axis_brond_counts(data["X"].values, sample_freq, epoch_length),
+                           "Z": _calc_one_axis_brond_counts(data["Z"].values, sample_freq, epoch_length)},
+                           index=timestamps)
+
     return counts
 
 
@@ -248,17 +281,17 @@ def calculate_actigraph_counts(data, sample_freq, epoch_length):
         a numpy array containing the uniaxial acceleration data
     sample_freq: int
         an int indicating at which sampling frequency the data was recorded
-    epoch_length: int
-        an int indicating the length of the epochs to calculate in seconds
+    epoch_length: str
+        a string indicating the length of the epochs to calculate
 
     Returns
     -------
     counts: array_like
         a numpy array containg the ActiGraph counts
     """
-    if isinstance(epoch_length, str):
-        epoch_length = pd.Timedelta(epoch_length).seconds
+    sec_per_epoch = pd.Timedelta(epoch_length).seconds
 
-    counts = get_counts(data[["Y", "X", "Z"]].values, sample_freq, epoch_length)
-    counts = pd.DataFrame(counts, columns=["Y", "X", "Z"])
+    counts = get_counts(data[["Y", "X", "Z"]].values, sample_freq, sec_per_epoch)
+    index = data.resample(epoch_length).mean().index
+    counts = pd.DataFrame(counts, columns=["Y", "X", "Z"], index=index)
     return counts
