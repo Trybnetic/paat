@@ -46,7 +46,7 @@ def sysinfo():
     Prints system the dependency information
     """
     paat = pkg_resources.working_set.by_key["paat"]
-    dependencies = [r.project_name for r in paat.requires()]
+    dependencies = [requirement.project_name for requirement in paat.requires()]
 
     header = ("PAAT Information\n"
               "=================\n\n")
@@ -75,7 +75,7 @@ def sysinfo():
     osinfo += "\n"
 
     deps = ("Dependencies\n"
-            "------------\n")
+            "------------")
 
     for dep in dependencies:
         deps += f"\n{dep}: {metadata.version(dep)}"
