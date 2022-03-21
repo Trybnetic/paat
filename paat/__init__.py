@@ -19,6 +19,7 @@ your research, we would be grateful if you cite the corresponding original paper
 
 import os
 import sys
+import platform
 from importlib import metadata
 
 from pip._vendor import pkg_resources
@@ -55,13 +56,13 @@ def sysinfo():
                f"Python version: {sys.version.split()[0]}\n"
                f"PAAT version: {__version__}\n\n")
 
-    uname = os.uname()
+    uname = platform.uname()
     osinfo = ("Operating System\n"
               "----------------\n"
-              "OS: {s.sysname} {s.machine}\n"
+              "OS: {s.system} {s.machine}\n"
               "Kernel: {s.release}\n").format(s=uname)
 
-    if uname.sysname == "Linux":
+    if uname.system == "Linux":
         _, *lines = os.popen("free -m").readlines()
         for identifier in ("Mem:", "Swap:"):
             memory = [line for line in lines if identifier in line]
