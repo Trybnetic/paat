@@ -76,7 +76,7 @@ def sysinfo():
     deps = ("Dependencies\n"
             "------------\n")
 
-    deps += "\n".join("{pkg.__name__}: {pkg.__version__}".format(pkg=__import__(dep))
-                      for dep in dependencies)
+    for dep in dependencies:
+        deps += f"\n{dep}: {metadata.version(dep)}"
 
     print(header + general + osinfo + deps)
