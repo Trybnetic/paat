@@ -12,6 +12,7 @@ an example usage you think others might benefit from, let us know or open a
    :caption: Code snippets, tutorials, and examples
 
    example_notebooks/read_gt3x_files
+   example_notebooks/save_data_in_different_format
    example_notebooks/save_to_hdf5
    example_notebooks/analyze_data
    example_notebooks/create_actigraph_counts
