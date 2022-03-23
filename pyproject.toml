@@ -54,6 +54,9 @@ nbsphinx = "0.8.8"
 vulture = "^2.3"
 pygt3x = "^0.1.1"
 
+[tool.poetry.extras]
+docs = ["sphinx", "sphinx_rtd_theme", "numpydoc", "easydev", "nbsphinx"]
+
 
 [tool.pylint]
   [tool.pylint.basic]
