@@ -9,13 +9,13 @@ on:
       - main
 
 jobs:
-    ci:
+    build:
+      name: ${{ matrix.os }} ${{ matrix.python-version }}
       strategy:
-        fail-fast: true
         matrix:
+          os: [ubuntu-latest, windows-latest, macOS-latest]
           python-version: [3.8, 3.9]
           poetry-version: [1.1.13]
-          os: [ubuntu-latest, windows-latest, macOS-latest]
       runs-on: ${{ matrix.os }}
       steps:
           uses: actions/checkout@v2
