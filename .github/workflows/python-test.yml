@@ -61,7 +61,7 @@ jobs:
         run: poetry install
 
       - name: Run tests
-        run: poetry run pytest --cov=paat --cov-report=xml --remote-data --disable-pytest-warnings
+        run: poetry run pytest --cov=paat --cov-report=xml --disable-pytest-warnings
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
