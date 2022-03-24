@@ -10,6 +10,10 @@ Physical Activity Analysis Toolbox (PAAT)
  :target: https://github.com/Trybnetic/paat/actions/workflows/python-test.yml
  :alt: Tests
 
+.. image:: https://codecov.io/gh/Trybnetic/paat/branch/main/graph/badge.svg
+  :target: https://codecov.io/gh/Trybnetic/paat
+  :alt: Coverage
+
 .. image:: https://readthedocs.org/projects/paat/badge/?version=latest
  :target: https://paat.readthedocs.io/en/latest/?badge=latest
  :alt: Documentation Status
@@ -17,7 +21,7 @@ Physical Activity Analysis Toolbox (PAAT)
 .. image:: https://img.shields.io/github/license/trybnetic/paat.svg
  :target: https://github.com/trybnetic/paat/blob/master/LICENSE.txt
  :alt: License
- 
+
 
 The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to
 analyze raw acceleration data. We developed all code mainly for analyzing
