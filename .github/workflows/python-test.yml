@@ -52,4 +52,11 @@ jobs:
         run: poetry install
 
       - name: Run tests
-        run: poetry run pytest --cov=paat --disable-pytest-warnings
+        run: poetry run pytest --cov=paat --cov-report=xml --remote-data --disable-pytest-warnings
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          env_vars: OS,PYTHON
