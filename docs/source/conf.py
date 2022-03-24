@@ -10,9 +10,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
 
 
 # -- Project information -----------------------------------------------------
@@ -68,5 +68,5 @@ html_context = {"display_github": True,  # Add 'Edit on Github' link instead of 
                 "github_user": 'trybnetic',
                 "github_repo": 'paat',
                 "github_version": 'master',
-                "conf_py_path": '/doc/source/'
+                "conf_py_path": '/docs/source/'
                 }
