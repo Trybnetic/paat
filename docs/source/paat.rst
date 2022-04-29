@@ -12,6 +12,9 @@ This toolbox is divided into different modules:
 - Sleep Module (:mod:`paat.sleep`)
 - Estimates Module (:mod:`paat.estimates`)
 
+The most important functions are also directly call-able from the module's top
+level to increase usability. However, when designing applications based on PAAT,
+it might be cleaner to call the functions directly from the module.
 
 .. automodule:: paat.io
     :members:
