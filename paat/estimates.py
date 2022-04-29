@@ -73,7 +73,7 @@ def calculate_pa_levels(data, sample_freq, mvpa_cutpoint=.069, sb_cutpoint=.015,
     return np.stack((mvpa_vec, sb_vec), axis=1)
 
 
-def create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"]):
+def create_activity_column(data, columns=["SB", "MVPA", "Sleep", "Non Wear Time"]):
     """
     Merge the different activity columns into one label column.
 
@@ -82,7 +82,7 @@ def create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"
     data : DataFrame
         a DataFrame containg the raw acceleration data
     columns : array_like
-        a list of activity columns in descending order of importance. The order
+        a list of activity columns in ascending order of importance. The order
         of the list implies which activity overrides which. E.g. the first entry
         would override the second in cases of doubt, etc.
 
@@ -91,7 +91,8 @@ def create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"
     activity_vec : array_like
         the merged activity vector with the names of columns as entries
     """
-    activity_vec = np.full(data.shape[0], "LPA")
+    max_chars = max(len(column) for column in columns) + 1
+    activity_vec = np.full(data.shape[0], "LPA", dtype=f"<U{max_chars}")
 
     for column in columns:
         activity_vec[data[column]] = column

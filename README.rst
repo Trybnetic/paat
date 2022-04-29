@@ -5,6 +5,24 @@ Physical Activity Analysis Toolbox (PAAT)
     **Note:** This package is currently under development and the API might change
     anytime!
 
+
+.. image:: https://github.com/Trybnetic/paat/actions/workflows/python-test.yml/badge.svg
+ :target: https://github.com/Trybnetic/paat/actions/workflows/python-test.yml
+ :alt: Tests
+
+.. image:: https://codecov.io/gh/Trybnetic/paat/branch/main/graph/badge.svg
+  :target: https://codecov.io/gh/Trybnetic/paat
+  :alt: Coverage
+
+.. image:: https://readthedocs.org/projects/paat/badge/?version=latest
+ :target: https://paat.readthedocs.io/en/latest/?badge=latest
+ :alt: Documentation Status
+
+.. image:: https://img.shields.io/github/license/trybnetic/paat.svg
+ :target: https://github.com/trybnetic/paat/blob/master/LICENSE.txt
+ :alt: License
+
+
 The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to
 analyze raw acceleration data. We developed all code mainly for analyzing
 ActiGraph data (GT3X files) in large sample study settings where manual annotation
@@ -46,8 +64,9 @@ examples and more information on the functions can be found in the documentation
     # Classify moderate-to-vigorous and sedentary behavior
     data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(data, sample_freq)
 
-    # Merge the activity columns into one labelled column
-    data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"])
+    # Merge the activity columns into one labelled column. columns indicates the
+    # importance of the columns, later names are more important and will be kept
+    data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["SB", "MVPA", "Sleep", "Non Wear Time"])
 
     # Remove the other columns after merging
     data =  data[["X", "Y", "Z", "Activity"]]

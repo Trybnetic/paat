@@ -47,7 +47,7 @@ class _SleepModel(nn.Module):
 
 def detect_sleep_weitz2022(data, sample_freq, means=None, stds=None):
     """
-    Infer time in bed from raw acceleration signal.
+    Infer time in bed from raw acceleration signal using frequency features.
 
     Parameters
     ----------
@@ -97,7 +97,7 @@ def detect_sleep_weitz2022(data, sample_freq, means=None, stds=None):
     return predictions
 
 
-def detect_time_in_bed_weitz2022(data, sample_freq, resampled_frequency="1min", means=None, stds=None, model_path=None):
+def detect_sleep_triaxial_weitz2022(data, sample_freq, resampled_frequency="1min", means=None, stds=None, model=None):
     """
     Infer time in bed from raw acceleration signal.
 
@@ -116,8 +116,8 @@ def detect_time_in_bed_weitz2022(data, sample_freq, resampled_frequency="1min", 
     stds : array_like (optional)
         a numpy array with the channel stds, will be calculated for the sample
         if not specified
-    model_path : str (optional)
-        an optional path to a custom model.
+    model : nn.Module (optional)
+        a loaded pytorch custom model.
 
     Returns
     -------
@@ -126,14 +126,9 @@ def detect_time_in_bed_weitz2022(data, sample_freq, resampled_frequency="1min", 
 
     """
     if resampled_frequency:
-        data = data.resample(resampled_frequency).mean()
+        data = data[['X', 'Y', 'Z']].resample(resampled_frequency).mean()
 
-    X = torch.from_numpy(data[['Y', 'X', 'Z']].values)
-
-    # The models were trained with XYZ axis ordering while the standard ordering is YXZ
-    # Therefore, we have to switch X and Y axis
-    X = X[:, [1, 0, 2]]
-    X = X.float()
+    X = torch.from_numpy(data[['X', 'Y', 'Z']].values).float()
 
     # If no means and stds are given, calculate subject's mean and std
     # to normalize by this
@@ -148,9 +143,9 @@ def detect_time_in_bed_weitz2022(data, sample_freq, resampled_frequency="1min", 
     lengths = torch.Tensor([X.shape[1]])
 
     # Load model if not specified
-    if not model_path:
+    if not model:
         model = _SleepModel(3, 2, 1, 1, dropout=0, batch_first=True)
-        model_path = '/home/msw/Documents/PhD/Discrimination of sleep and wake periods/source/experiments/exp02_models/06_best_1l_LSTM2_model_fold_6.pt'
+        model_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'models', 'SleepModel_triaxial.pt')
         model.load_state_dict(torch.load(model_path))
         model.eval()
 

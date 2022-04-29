@@ -9,10 +9,11 @@ tests/__pycache__
 .pytest_cache
 
 # Documentation
-doc/build/
-doc/source/_static/copybutton.js
+docs/build/
+docs/source/_static/copybutton.js
 
 .ipynb_checkpoints/
 
 poetry.lock
 .coverage
+coverage.xml
