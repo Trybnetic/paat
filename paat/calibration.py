@@ -23,7 +23,7 @@ def calibrate(acc, hz, std_threshold=0.013, sliding_window=10, save_diagnostic_p
 
     Parameters
 	---------
-	acc : np.array(samples, 3)
+	acc : np.array(samples, 3) or pd.DataFrame
 		acceleration data
     hz : int
         sample frequency of the data
@@ -40,6 +40,15 @@ def calibrate(acc, hz, std_threshold=0.013, sliding_window=10, save_diagnostic_p
 	acc_tranformed : np.array(samples, 3)
 		a numpy array of the same shape as acc with the transformed data
     """
+
+    if isinstance(acc, pd.DataFrame):
+        if len(acc.columns) != 3:
+            raise ValueError("DataFrame should only contain the accelerometer data.")
+
+        if all([col in data.columns for col in ["X","Y", "Z"]]):
+            acc = acc.values
+        else:
+            raise ValueError('DataFrame does not contain "X", "Y" and "Z" data.')
 
     sliding_window_sec = sliding_window * hz
 
