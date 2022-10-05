@@ -462,7 +462,7 @@ def _create_time_vector(start, n_samples, hz):
     return time_data.flatten()
 
 
-def read_gt3x(file, rescale=True, pandas=True):
+def read_gt3x(file, rescale=True, pandas=True, calibrate=False):
     """
     Reads a .gt3x file and returns the tri-axial acceleration values together
     with the corresponding time stamps and all meta data.
@@ -475,6 +475,8 @@ def read_gt3x(file, rescale=True, pandas=True):
         boolean indicating whether raw acceleration data should be rescaled to g values
     pandas : boolean (optional)
         boolean indicating whether the data should be returned as a pandas DataFrame
+    calibrate : boolean (optional)
+        boolean indicating whether raw acceleration data should be automatically calibrated
 
     Returns
     -------
@@ -493,6 +495,10 @@ def read_gt3x(file, rescale=True, pandas=True):
         a dict containing all meta data produced by ActiGraph
 
     """
+    if calibrate and not rescale:
+        raise ValueError("Can only calibrate data with rescaled values. " \
+                         "Set rescaled=True to rescale while reading the file.")
+
     with tempfile.TemporaryDirectory() as tmpdirname:
         # unzip .gt3x file and get the file location of the binary log.bin (which contains the raw data) and the info.txt which contains the meta-data
         log_bin, info_txt = _unzip_gt3x_file(file=file, save_location=tmpdirname)
@@ -511,6 +517,9 @@ def read_gt3x(file, rescale=True, pandas=True):
         # Add additional keys to meta (Note: they are important to later reconstruct the time vector)
         meta["Number_Of_Samples"] = values.shape[0]
         meta["Start_Time"] = time[0].astype(int)
+
+    if calibrate:
+        values = preprocessing.calibrate(values, meta["Sample_Rate"])
 
     if pandas:
         data = pd.DataFrame(values, columns=["Y", "X", "Z"], index=time)
