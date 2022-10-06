@@ -5,7 +5,6 @@ import numpy as np
 import numpy.testing as npt
 import pytest
 from pygt3x.reader import FileReader
-from pygt3x.calibrated_reader import CalibratedReader
 
 from paat import io, preprocessing
 
