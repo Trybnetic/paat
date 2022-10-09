@@ -4,6 +4,22 @@ from .wear_time import etect_non_wear_time_syed2021
 
 
 def annotate(data, sample_freq):
+    """
+    Function to annotate the raw acceleration data. Performs the standard
+    pipeline of paat's functions.
+
+    Parameters
+    ----------
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
+        the sampling frequency in which the data was recorded
+
+    Returns
+    -------
+    data : DataFrame
+        the raw acceleration data plus a new column holding the activity labels
+    """
 
     # Detect non-wear time
     data.loc[:, "Non Wear Time"] = detect_non_wear_time_syed2021(data, sample_freq)
@@ -18,7 +34,5 @@ def annotate(data, sample_freq):
     # importance of the columns, later names are more important and will be kept
     data.loc[:, "Activity"] = create_activity_column(data, columns=["SB", "MVPA", "Time in bed", "Non Wear Time"])
 
-    #data = data.resample("1min").mean()
-    
     # Remove the other columns after merging
     return data[["X", "Y", "Z", "Activity"]]

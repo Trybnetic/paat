@@ -40,7 +40,6 @@ except metadata.PackageNotFoundError:
     __version__ = toml.load("pyproject.toml")["tool"]["poetry"]["version"] + "dev"
 
 
-
 def sysinfo():
     """
     Prints system the dependency information

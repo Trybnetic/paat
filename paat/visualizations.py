@@ -9,15 +9,15 @@ COLOR = {'Non Wear Time': "white", 'Time in bed': "blue", 'SB': "green", 'LPA': 
 
 
 def visualize(data, show_date=False, file_path=None):
-    
+
     data["ENMO"] = calculate_enmo(data).copy()
     data = data.resample("1min").apply({"X": "mean", "Y": "mean", "Z": "mean", "ENMO": "mean", "Activity": lambda x: x.value_counts().idxmax()})
-    
+
     n_days = len(data.groupby(data.index.day))
     ymax = data["ENMO"].max() * 1.05
-    
-    fig = plt.figure(figsize=(10,n_days * 2))
-    axes = fig.subplots(n_days,1)
+
+    fig = plt.figure(figsize=(10, n_days * 2))
+    axes = fig.subplots(n_days, 1)
 
     for ii, (_, day) in enumerate(data.groupby(data.index.day)):
 
@@ -32,16 +32,15 @@ def visualize(data, show_date=False, file_path=None):
         ax.set_xticks(ticks)
 
         ax.set_ylim((0, ymax))
-        
+
         if show_date:
             ax.set_title(day.index[0].strftime('%d.%m.%Y'))
 
         ymin, ymax = ax.get_ylim()
         height = ymax - ymin
 
-        for _, row in day.iterrows():  
+        for _, row in day.iterrows():
             ax.add_patch(Rectangle((row["Time"], ymin), 1, height, alpha=.1, facecolor=COLOR[row["Activity"]]))
-
 
         if ii == n_days - 1:
             ax.set_xticklabels(labels)
@@ -49,14 +48,14 @@ def visualize(data, show_date=False, file_path=None):
 
             fig.subplots_adjust(bottom=0.5, wspace=0.33)
             handles = [Patch(color=value, label=key, alpha=.1) for key, value in COLOR.items()]
-            ax.legend(handles=handles,loc='upper center', 
-                      bbox_to_anchor=(0.5, -0.4),fancybox=False, shadow=False, ncol=5)
+            ax.legend(handles=handles, loc='upper center',
+                      bbox_to_anchor=(0.5, -0.4), fancybox=False, shadow=False, ncol=5)
         else:
             ax.set_xticklabels("")
             ax.set_xlabel("")
 
     plt.tight_layout()
-    
+
     if file_path:
         plt.savefig(file_path)
     else:

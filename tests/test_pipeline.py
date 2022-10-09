@@ -28,7 +28,7 @@ def test_pipeline():
     data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"])
 
     # Remove the other columns after merging
-    data =  data[["X", "Y", "Z", "Activity"]]
+    data = data[["X", "Y", "Z", "Activity"]]
 
     # Get ActiLife counts
     counts = paat.calculate_actigraph_counts(data, sample_freq, "10s")

@@ -233,14 +233,14 @@ def _calc_one_axis_brond_counts(acc, sample_freq, epoch_length, deadband=0.068, 
         resampled_data = resampy.resample(acc, sample_freq, target_hz)
 
     # Step 1: Aliasing filter (0.01-7hz)
-    B2, A2 = signal.butter(4, np.array([0.01, 7])/(target_hz/2), btype='bandpass')
+    B2, A2 = signal.butter(4, np.array([0.01, 7]) / (target_hz / 2), btype='bandpass')
     dataf = signal.filtfilt(B2, A2, resampled_data)
 
     # Step 2: ActiGraph filter
     filtered = signal.lfilter(0.965 * B, A, dataf)
 
     # Step 3, 4 & 5: Downsample to 10hz, clip at peak (2.13g) and rectify
-    rectified = np.abs(np.clip(filtered[::3], a_min=-1*peak, a_max=peak))
+    rectified = np.abs(np.clip(filtered[::3], a_min=-1 * peak, a_max=peak))
 
     # Step 6 & 7: Dead-band and convert to 8bit resolution
     downsampled = np.where(rectified < deadband, 0, rectified) // adcResolution
@@ -284,7 +284,6 @@ def calculate_brond_counts(data, sample_freq, epoch_length):
 
     if isinstance(epoch_length, str):
         epoch_length = pd.Timedelta(epoch_length).seconds
-
 
     counts = pd.DataFrame({"Y": _calc_one_axis_brond_counts(data["Y"].values, sample_freq, epoch_length),
                            "X": _calc_one_axis_brond_counts(data["X"].values, sample_freq, epoch_length),
