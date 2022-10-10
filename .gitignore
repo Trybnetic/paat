@@ -17,3 +17,5 @@ docs/source/_static/copybutton.js
 poetry.lock
 .coverage
 coverage.xml
+
+*.backup
