@@ -22,7 +22,7 @@ import sys
 import platform
 from importlib import metadata
 
-from pip._vendor import pkg_resources
+import pkg_resources
 import toml
 
 from . import estimates, features, io, preprocessing, sleep, wear_time
