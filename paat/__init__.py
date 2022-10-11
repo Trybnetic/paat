@@ -25,7 +25,7 @@ from importlib import metadata
 from pip._vendor import pkg_resources
 import toml
 
-from . import estimates, features, io, preprocessing, sleep, wear_time
+from . import estimates, features, io, preprocessing, sleep, wear_time, calibration
 
 # Expose API functions
 from .estimates import calculate_pa_levels, create_activity_column

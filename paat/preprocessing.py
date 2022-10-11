@@ -194,7 +194,7 @@ def calibrate(acc, hz, std_threshold=0.013, sliding_window=10, save_diagnostic_p
         if len(acc.columns) != 3:
             raise ValueError("DataFrame should only contain the accelerometer data.")
 
-        if all([col in data.columns for col in ["X","Y", "Z"]]):
+        if all([col in acc.columns for col in ["X","Y", "Z"]]):
             acc = acc.values
         else:
             raise ValueError('DataFrame does not contain "X", "Y" and "Z" data.')
@@ -207,6 +207,7 @@ def calibrate(acc, hz, std_threshold=0.013, sliding_window=10, save_diagnostic_p
 
     X = segments[is_below_threshold].mean(axis=1)
 
+    error_start = abs(np.linalg.norm(X, axis=1) - 1).mean()
 
     has_values_over_300mg = ((X > .300).sum(axis=0) > 0).all()
     has_values_under_minus_300mg = ((X < -.300).sum(axis=0) > 0).all()
@@ -214,7 +215,7 @@ def calibrate(acc, hz, std_threshold=0.013, sliding_window=10, save_diagnostic_p
     # Only autocalibrate if each axis has values above 300mg and below -300mg
     if not (has_values_over_300mg and has_values_under_minus_300mg):
         logging.warn("No autocalibration performed due to too sparse data.")
-        return acc
+        return acc, (1, 1, 1), (0, 0, 0), error_start, None
 
     if save_diagnostic_plot_to:
         autocalibration_plots(X, file_path=save_diagnostic_plot_to)
@@ -231,10 +232,16 @@ def calibrate(acc, hz, std_threshold=0.013, sliding_window=10, save_diagnostic_p
     acc_tranformed[:, 1] = model_Y.predict(acc[:, 1, np.newaxis]).squeeze()
     acc_tranformed[:, 2] = model_Z.predict(acc[:, 2, np.newaxis]).squeeze()
 
-    d_x, d_y, d_z = model_X.intercept_.squeeze(), model_Y.intercept_.squeeze(), model_Z.intercept_.squeeze()
-    a_x, a_y, a_z = model_X.coef_.squeeze(), model_Y.coef_.squeeze(), model_Z.coef_.squeeze()
+    X_transformed = X.copy()
+    X_transformed[:, 0] = model_X.predict(X[:, 0, np.newaxis]).squeeze()
+    X_transformed[:, 1] = model_Y.predict(X[:, 1, np.newaxis]).squeeze()
+    X_transformed[:, 2] = model_Z.predict(X[:, 2, np.newaxis]).squeeze()
 
-    logging.info(f"Data autocalibrated with d_x = {d_x:.5f}, d_y = {d_y:.5f}, d_z = {d_z:.5f}, " \
-                 f"a_x = {a_x:.5f}, a_y = {a_y:.5f}, a_z = {a_z:.5f}.")
+    error_end = abs(np.linalg.norm(X_transformed, axis=1) - 1).mean()
 
-    return acc_tranformed
+    scale = tuple(np.concatenate((model_X.coef_[0], model_Y.coef_[0], model_Z.coef_[0])))
+    offset = tuple(np.concatenate((model_X.intercept_, model_Y.intercept_, model_Z.intercept_)))
+
+    logging.info(f"Data autocalibrated with scale = {scale}, offset = {offset}")
+
+    return acc_tranformed, scale, offset, error_start, error_end
