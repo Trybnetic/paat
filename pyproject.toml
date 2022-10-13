@@ -36,6 +36,8 @@ torch = "^1.10.1"
 agcounts = "^0.1.1"
 toml = "^0.10.2"
 tables = "^3.7.0"
+matplotlib = "^3.6.1"
+seaborn = "^0.12.0"
 
 
 [tool.poetry.dev-dependencies]
@@ -46,7 +48,6 @@ flake8 = "^4.0.1"
 sphinx = "^1.4"
 sphinx_rtd_theme = "1.0.0"
 notebook = "^6.4.10"
-seaborn = "^0.11.2"
 numpydoc = "1.2"
 easydev = "0.9.35"
 pylint = "^2.0.0"
