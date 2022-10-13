@@ -53,7 +53,7 @@ examples and more information on the functions can be found in the documentation
 .. code-block:: python
 
     # Load data from file
-    data, sample_freq = paat.read_gt3x(FILE_PATH_SIMPLE)
+    data, sample_freq = paat.read_gt3x('path/to/gt3x/file')
 
     # Annotate the acceleration data
     data = paat.annotate(data, sample_freq)
