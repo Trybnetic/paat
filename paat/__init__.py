@@ -34,7 +34,7 @@ from .io import read_gt3x
 from .sleep import detect_sleep_weitz2022, detect_sleep_triaxial_weitz2022
 from .wear_time import detect_non_wear_time_naive, detect_non_wear_time_hees2011, detect_non_wear_time_syed2021
 from .visualizations import visualize
-from .analysis import annotate
+from .analysis import annotate, summary
 
 try:
     __version__ = metadata.version(__package__)

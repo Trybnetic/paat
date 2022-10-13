@@ -36,3 +36,24 @@ def annotate(data, sample_freq):
 
     # Remove the other columns after merging
     return data[["X", "Y", "Z", "Activity"]]
+
+
+def summary(data, sample_freq):
+    """
+    Create a daily summary of the DataFrame
+
+    Parameters
+    ----------
+    data : DataFrame
+        a DataFrame containg the raw acceleration data
+    sample_freq : int
+        the sampling frequency in which the data was recorded
+    level : str
+        a string indicating to which level the data should be aggregated
+
+    Returns
+    -------
+    agg : DataFrame
+        the aggregated data holding the minutes spend in each activity
+    """
+    return pd.get_dummies(data["Activity"]).resample("D").sum() / (sample_freq * 60)
