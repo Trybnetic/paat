@@ -1,3 +1,5 @@
+import pandas as pd 
+
 from .estimates import calculate_pa_levels, create_activity_column
 from .sleep import detect_sleep_weitz2022, detect_sleep_triaxial_weitz2022
 from .wear_time import detect_non_wear_time_syed2021
