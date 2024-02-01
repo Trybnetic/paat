@@ -22,7 +22,7 @@ classifiers = ['Development Status :: 4 - Beta',
                'Intended Audience :: Science/Research']
 
 [tool.poetry.dependencies]
-python = "3.9,3.10"  # Compatible python versions must be declared here
+python = ">=3.9,<3.11"  # Compatible python versions must be declared here
 pandas = "^1.2.4"
 scipy = "^1.6.2"
 psutil = "^5.8.0"
@@ -31,7 +31,7 @@ resampy = "^0.2.2"
 joblib = "^1.0.1"
 numpy = "^1.20.3"
 bitstring = "^3.1.7"
-tensorflow = "^2.7" 
+tensorflow = ">=2.7, <2.15"  #Pin tensorflow below 2.15 for now as tensorflow-io-gcs-filesystem does not yet work on windows
 torch = "^1.10.1"
 agcounts = "^0.1.1"
 toml = "^0.10.2"
