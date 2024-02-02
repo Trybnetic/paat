@@ -1,5 +1,5 @@
-Package overview
-================
+API Documentation
+=================
 
 .. automodule:: paat
 

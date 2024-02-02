@@ -42,26 +42,26 @@ agcounts = "^0.1.1"
 toml = "^0.10.2"
 tables = "^3.7.0"
 
-
-[tool.poetry.dev-dependencies]
-pytest = "^7.0"
-pytest-cov = "^2.4"
-pydocstyle = "^6.1.1"
-flake8 = "^4.0.1"
-sphinx = "^1.4"
-sphinx_rtd_theme = "1.0.0"
-notebook = "^6.4.10"
-seaborn = "^0.11.2"
-numpydoc = "1.2"
-easydev = "0.9.35"
-pylint = "^2.0.0"
-nbsphinx = "0.8.8"
-vulture = "^2.3"
-pygt3x = "^0.1.1"
-
 [tool.poetry.extras]
-docs = ["sphinx", "sphinx_rtd_theme", "numpydoc", "easydev", "nbsphinx"]
+docs = ["sphinx", "sphinx_rtd_theme", "numpydoc", "easydev", "nbsphinx", "docutils"]
 
+
+[tool.poetry.group.dev.dependencies]
+sphinx = "^7.2.6"
+sphinx-rtd-theme = "^2.0.0"
+pytest = "^8.0.0"
+pytest-cov = "^4.1.0"
+pycodestyle = "^2.11.1"
+flake8 = "^7.0.0"
+notebook = "^7.0.7"
+seaborn = "^0.13.2"
+numpydoc = "^1.6.0"
+easydev = "^0.12.1"
+pylint = "^3.0.3"
+nbsphinx = "^0.9.3"
+vulture = "^2.11"
+pygt3x = "^0.5.2"
+jinja2 = "<3.1.0"
 
 [tool.pylint]
   [tool.pylint.basic]
