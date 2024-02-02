@@ -22,7 +22,6 @@ BROND_COEFF_B = np.array([0.049109, -0.12284, 0.14356, -0.11269, 0.053804, -0.02
                           -0.046015, 0.036283, -0.012977, -0.0046262, 0.012835, -0.0093762,
                           0.0034485, -0.00080972, -0.00019623])
 
-["Y", "X", "Z"]
 
 def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=False, dtype=np.float32):
     r"""
@@ -37,7 +36,7 @@ def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=Fal
     round_negative_to_zero : Boolean (optional)
         If set to True, round negative values to zero
     dtype : np.dtype (optional)
-        set the data type of the return array. Standard float 16, but can be set to better precision
+        set the data type of the return array. Standard float 32, but can be set to better precision
 
 
     Returns
@@ -76,6 +75,30 @@ def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=Fal
 
     # reshape the array into number of acceleration values, 1 column
     return vector_magnitude.reshape(data.shape[0], 1)
+
+
+def calculate_enmo(data, dtype=np.float32):
+    """
+    Calculate the Euclidean norm minus one from raw acceleration data.
+    This function is a wrapper of `calculate_vector_magnitude`.
+
+    Parameters
+    ----------
+    data : array_like
+        numpy array with acceleration data
+    dtype : np.dtype (optional)
+        set the data type of the return array. Standard float 32, but can be set to better precision
+
+
+    Returns
+    -------
+    vector_magnitude : np.array (acceleration values, 1)(np.float)
+       numpy array with vector magnitude of the acceleration
+    """
+    if isinstance(data, pd.DataFrame):
+        data = data[["Y", "X", "Z"]].values
+
+    return calculate_vector_magnitude(data, minus_one=True, round_negative_to_zero=True)
 
 
 def calculate_frequency_features(data, win_len=60, win_step=60, sample_rate=100, nfft=512, nfilt=40):
@@ -210,14 +233,14 @@ def _calc_one_axis_brond_counts(acc, sample_freq, epoch_length, deadband=0.068, 
         resampled_data = resampy.resample(acc, sample_freq, target_hz)
 
     # Step 1: Aliasing filter (0.01-7hz)
-    B2, A2 = signal.butter(4, np.array([0.01, 7])/(target_hz/2), btype='bandpass')
+    B2, A2 = signal.butter(4, np.array([0.01, 7]) / (target_hz / 2), btype='bandpass')
     dataf = signal.filtfilt(B2, A2, resampled_data)
 
     # Step 2: ActiGraph filter
     filtered = signal.lfilter(0.965 * B, A, dataf)
 
     # Step 3, 4 & 5: Downsample to 10hz, clip at peak (2.13g) and rectify
-    rectified = np.abs(np.clip(filtered[::3], a_min=-1*peak, a_max=peak))
+    rectified = np.abs(np.clip(filtered[::3], a_min=-1 * peak, a_max=peak))
 
     # Step 6 & 7: Dead-band and convert to 8bit resolution
     downsampled = np.where(rectified < deadband, 0, rectified) // adcResolution
@@ -262,7 +285,6 @@ def calculate_brond_counts(data, sample_freq, epoch_length):
     if isinstance(epoch_length, str):
         epoch_length = pd.Timedelta(epoch_length).seconds
 
-
     counts = pd.DataFrame({"Y": _calc_one_axis_brond_counts(data["Y"].values, sample_freq, epoch_length),
                            "X": _calc_one_axis_brond_counts(data["X"].values, sample_freq, epoch_length),
                            "Z": _calc_one_axis_brond_counts(data["Z"].values, sample_freq, epoch_length)},
@@ -293,6 +315,6 @@ def calculate_actigraph_counts(data, sample_freq, epoch_length):
     sec_per_epoch = pd.Timedelta(epoch_length).seconds
 
     counts = get_counts(data[["Y", "X", "Z"]].values, sample_freq, sec_per_epoch)
-    index = data.resample(epoch_length).mean().index
+    index = data.resample(epoch_length).mean(numeric_only=True).index
     counts = pd.DataFrame(counts, columns=["Y", "X", "Z"], index=index[:len(counts)])
     return counts

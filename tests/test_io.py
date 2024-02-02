@@ -11,7 +11,8 @@ from paat import io, preprocessing
 
 @pytest.fixture
 def unscaled_data(file_path):
-    return io.read_gt3x(file_path, rescale=False, pandas=True)
+    acc, _ = io.read_gt3x(file_path, rescale=False, pandas=True)
+    return acc
 
 
 def test_loading_data(file_path, load_gt3x_file):
@@ -27,7 +28,6 @@ def test_against_actigraph_implementation(file_path, unscaled_data):
         ref = reader.to_pandas()
 
     npt.assert_almost_equal(unscaled_data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)
-    #assert np.allclose(data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)
 
 
 def test_exceptions():

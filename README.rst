@@ -55,6 +55,21 @@ examples and more information on the functions can be found in the documentation
     # Load data from file
     data, sample_freq = paat.read_gt3x('path/to/gt3x/file')
 
+    # Annotate the acceleration data
+    data = paat.annotate(data, sample_freq)
+
+
+The annotation function is a convenience function that applies the standard 
+workflow. However, *paat* gives you the freedom to adjust your pipeline as you 
+wish and combine it with other packages if required. Each step in *paat* is 
+defined as an own function, so you can adjust everything. For example, here is 
+a more detailed annotation pipeline:
+
+.. code-block:: python
+
+    # Load data from file
+    data, sample_freq = paat.read_gt3x('path/to/gt3x/file')
+
     # Detect non-wear time
     data.loc[:, "Non Wear Time"] = paat.detect_non_wear_time_syed2021(data, sample_freq)
 

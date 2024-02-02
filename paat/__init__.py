@@ -22,23 +22,24 @@ import sys
 import platform
 from importlib import metadata
 
-from pip._vendor import pkg_resources
+import pkg_resources
 import toml
 
 from . import estimates, features, io, preprocessing, sleep, wear_time
 
 # Expose API functions
 from .estimates import calculate_pa_levels, create_activity_column
-from .features import calculate_actigraph_counts, calculate_vector_magnitude, calculate_brond_counts
+from .features import calculate_actigraph_counts, calculate_vector_magnitude, calculate_brond_counts, calculate_enmo
 from .io import read_gt3x
 from .sleep import detect_sleep_weitz2022, detect_sleep_triaxial_weitz2022
 from .wear_time import detect_non_wear_time_naive, detect_non_wear_time_hees2011, detect_non_wear_time_syed2021
+from .visualizations import visualize
+from .analysis import annotate, summary
 
 try:
     __version__ = metadata.version(__package__)
 except metadata.PackageNotFoundError:
     __version__ = toml.load("pyproject.toml")["tool"]["poetry"]["version"] + "dev"
-
 
 
 def sysinfo():
