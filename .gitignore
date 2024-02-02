@@ -11,6 +11,7 @@ tests/__pycache__
 # Documentation
 docs/build/
 docs/source/_static/copybutton.js
+source/
 
 .ipynb_checkpoints/
 
