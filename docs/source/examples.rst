@@ -1,5 +1,5 @@
-Examples
-========
+Usage Examples
+==============
 
 To ease working with PAAT and to make you able to analyze your GT3X files as soon
 as possible, we made a collection of code snippets and jupyter notebooks. Feel
