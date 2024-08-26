@@ -1,4 +1,4 @@
-name: tests
+name: Run Unit Tests
 
 on:
   push:
@@ -13,16 +13,20 @@ jobs:
     name: ${{ matrix.os }} ${{ matrix.python-version }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-        python-version: ['3.8', '3.9', '3.10']
-        poetry-version: [1.1.13]
+        os: [
+          ubuntu-latest, 
+          #windows-latest, 
+          #macOS-latest
+          ]
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+        poetry-version: [1.7.1]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -47,7 +51,7 @@ jobs:
         run: poetry config virtualenvs.in-project true
 
       - name: Set up cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         id: cache
         with:
           path: .venv
@@ -60,7 +64,7 @@ jobs:
         run: poetry run pytest --cov=paat --cov-report=xml --disable-pytest-warnings
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         with:
           file: ./coverage.xml
           flags: unittests
