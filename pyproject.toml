@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "paat"
-version = "1.0.0-beta.2"
+version = "1.0.0b5"
 description = "A comprehensive toolbox to analyse and model raw physical activity data"
 
 license = "MIT"
@@ -42,7 +42,7 @@ agcounts = "^0.1.1"
 toml = "^0.10.2"
 tables = "^3.7.0"
 matplotlib = "^3.6.1"
-seaborn = "^0.12.0"
+seaborn = "^0.13.2"
 
 [tool.poetry.extras]
 docs = ["sphinx", "sphinx_rtd_theme", "numpydoc", "easydev", "nbsphinx", "docutils"]
@@ -56,7 +56,6 @@ pytest-cov = "^4.1.0"
 pycodestyle = "^2.11.1"
 flake8 = "^7.0.0"
 notebook = "^7.0.7"
-seaborn = "^0.13.2"
 numpydoc = "^1.6.0"
 easydev = "^0.12.1"
 pylint = "^3.0.3"
