@@ -41,10 +41,10 @@ examples and more information on the functions can be found in the documentation
     data, sample_freq = paat.read_gt3x('path/to/gt3x/file')
 
     # Detect non-wear time
-    data.loc[:, "Non Wear Time"] = paat.detect_non_wear_time_syed2021(data, sample_freq)
+    data.loc[:, "Non Wear Time"] = paat.detect_non_wear_time_hees2011(data, sample_freq)
 
     # Detect sleep episodes
-    data.loc[:, "Sleep"] = paat.detect_sleep_weitz2022(data, sample_freq)
+    data.loc[:, "Sleep"] = paat.detect_time_in_bed_weitz2024(data, sample_freq)
 
     # Classify moderate-to-vigorous and sedentary behavior
     data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(data, sample_freq)
@@ -58,9 +58,6 @@ examples and more information on the functions can be found in the documentation
 
 .. note::
 
-    In this example, methods of `Syed et al. (2021) <https://doi.org/10.1038/s41598-021-87757-z>`_
-    and `Weitz et al. (2022) <https://www.medrxiv.org/content/10.1101/2022.03.07.22270992>`_ and activity
-    thresholds of `Sanders et al. (2019) <https://doi.org/10.1080/02640414.2018.1555904>`_.
-    However, these are only examples. There are multiple methods implemented in PAAT
+    Note that these are only examples. There are multiple methods implemented in PAAT
     and the processing pipeline can easily be adjusted to individual needs. More examples
     can be found in the examples section.
