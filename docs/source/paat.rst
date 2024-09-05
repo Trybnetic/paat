@@ -6,6 +6,7 @@ API Documentation
 This toolbox is divided into different modules:
 
 - Input & Output Module (:mod:`paat.io`)
+- Calibration Module (:mod:`paat.calibration`)
 - Preprocessing Module (:mod:`paat.preprocessing`)
 - Features Module (:mod:`paat.features`)
 - Wear Time Module (:mod:`paat.wear_time`)
@@ -17,6 +18,11 @@ level to increase usability. However, when designing applications based on PAAT,
 it might be cleaner to call the functions directly from the module.
 
 .. automodule:: paat.io
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: paat.calibration
     :members:
     :undoc-members:
     :show-inheritance:
