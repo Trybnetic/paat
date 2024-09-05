@@ -540,11 +540,12 @@ def read_metadata(file):
         a dict containing all meta data produced by ActiGraph
 
     """
-    # unzip .gt3x file and get the file location of the binary log.bin (which contains the raw data) and the info.txt which contains the meta-data
-    _, info_txt = _unzip_gt3x_file(file=file, save_location=tmpdirname)
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        # unzip .gt3x file and get the file location of the binary log.bin (which contains the raw data) and the info.txt which contains the meta-data
+        _, info_txt = _unzip_gt3x_file(file=file, save_location=tmpdirname)
 
-    # get meta data from info.txt file
-    meta = _extract_info(info_txt)
+        # get meta data from info.txt file
+        meta = _extract_info(info_txt)
 
     meta = _format_meta_data(meta)
 
