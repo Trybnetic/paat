@@ -14,6 +14,24 @@ def estimate_calibration_coefficents(data):
 
 
 def calibrate(acc, scale, offset):
+    """
+    Calibrates the acceleration data based on the `scale` and `offset` variables.
+    
+    Parameters
+    ----------
+    acc : array_like
+        numpy array with acceleration data
+    scale : array_like
+        numpy array with the scale factors
+    offset : array_like
+        numpy array with the offset factors
+    
+    Returns
+    -------
+    acc : array_like
+        numpy array with calibrated acceleration data
+
+    """
     columns = ["Y", "X", "Z"]
     index = acc.index.copy()
     acc = (scale * acc[columns].values) + offset
