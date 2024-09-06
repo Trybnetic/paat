@@ -20,6 +20,30 @@ def test_loading_data(file_path, load_gt3x_file):
 
     assert np.array_equal(acceleration, data[["Y", "X", "Z"]].values)
 
+def test_loading_metadata(file_path):
+    meta = io.read_metadata(file_path)
+    
+    expected = {
+        'Acceleration_Max': 8.0,
+        'Acceleration_Min': -8.0,
+        'Acceleration_Scale': 256.0,
+        'Battery_Voltage': '4,17',
+        'Board_Revision': 3,
+        'Device_Type': 'wGT3XBT',
+        'Download_Date': 1641205985000,
+        'Firmware': '1.9.2',
+        'Last_Sample_Time': 1641205800000,
+        'Sample_Rate': 100,
+        'Serial_Number': 'MOS2C06152277',
+        'Start_Date': 1641205200000,
+        'Stop_Date': 1641205800000,
+        'Subject_Name': 'MOS2C06152277',
+        'TimeZone': '01:00:00',
+        'Unexpected_Resets': 0
+    }
+
+    assert meta == expected
+
 
 @pytest.mark.slow
 def test_against_actigraph_implementation(file_path, unscaled_data):

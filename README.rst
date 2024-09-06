@@ -56,17 +56,17 @@ examples and more information on the functions can be found in the documentation
     data, sample_freq = paat.read_gt3x('path/to/gt3x/file')
 
     # Detect non-wear time
-    data.loc[:, "Non Wear Time"] = paat.detect_non_wear_time_syed2021(data, sample_freq)
+    data.loc[:, "Non Wear Time"] = paat.detect_non_wear_time_hees2011(data, sample_freq)
 
     # Detect sleep episodes
-    data.loc[:, "Sleep"] = paat.detect_sleep_weitz2022(data, sample_freq)
+    data.loc[:, "Time in Bed"] = paat.detect_time_in_bed_weitz2024(data, sample_freq)
 
     # Classify moderate-to-vigorous and sedentary behavior
     data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(data, sample_freq)
 
     # Merge the activity columns into one labelled column. columns indicates the
     # importance of the columns, later names are more important and will be kept
-    data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["SB", "MVPA", "Sleep", "Non Wear Time"])
+    data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["SB", "MVPA", "Time in Bed", "Non Wear Time"])
 
     # Remove the other columns after merging
     data =  data[["X", "Y", "Z", "Activity"]]

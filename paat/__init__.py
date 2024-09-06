@@ -30,8 +30,9 @@ from . import estimates, features, io, preprocessing, sleep, wear_time
 # Expose API functions
 from .estimates import calculate_pa_levels, create_activity_column
 from .features import calculate_actigraph_counts, calculate_vector_magnitude, calculate_brond_counts
-from .io import read_gt3x
-from .sleep import detect_sleep_weitz2022, detect_sleep_triaxial_weitz2022, detect_time_in_bed_weitz2024
+from .io import read_gt3x, read_metadata
+from .calibration import calibrate
+from .sleep import detect_time_in_bed_weitz2024
 from .wear_time import detect_non_wear_time_naive, detect_non_wear_time_hees2011, detect_non_wear_time_syed2021
 
 try:

@@ -462,7 +462,7 @@ def _create_time_vector(start, n_samples, hz):
     return time_data.flatten()
 
 
-def read_gt3x(file, rescale=True, pandas=True):
+def read_gt3x(file, rescale=True, pandas=True, metadata=False):
     """
     Reads a .gt3x file and returns the tri-axial acceleration values together
     with the corresponding time stamps and all meta data.
@@ -475,6 +475,8 @@ def read_gt3x(file, rescale=True, pandas=True):
         boolean indicating whether raw acceleration data should be rescaled to g values
     pandas : boolean (optional)
         boolean indicating whether the data should be returned as a pandas DataFrame
+    metadata : boolean (optional)
+        boolean indicating whether the full metadata should be returned
 
     Returns
     -------
@@ -515,6 +517,36 @@ def read_gt3x(file, rescale=True, pandas=True):
     if pandas:
         data = pd.DataFrame(values, columns=["Y", "X", "Z"], index=time)
         data = data[["X", "Y", "Z"]]
-        return data, meta['Sample_Rate']
+        if metadata:
+            return data, meta['Sample_Rate'], meta
+        else:
+            return data, meta['Sample_Rate']
     else:
         return time, values, meta
+
+
+def read_metadata(file):
+    """
+    Reads the metadata from a .gt3x file.
+
+    Parameters
+    ----------
+    file : string
+        file location of the .gt3x file
+    
+    Returns
+    -------
+    meta : dict
+        a dict containing all meta data produced by ActiGraph
+
+    """
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        # unzip .gt3x file and get the file location of the binary log.bin (which contains the raw data) and the info.txt which contains the meta-data
+        _, info_txt = _unzip_gt3x_file(file=file, save_location=tmpdirname)
+
+        # get meta data from info.txt file
+        meta = _extract_info(info_txt)
+
+    meta = _format_meta_data(meta)
+
+    return meta
