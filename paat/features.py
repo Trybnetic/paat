@@ -37,7 +37,7 @@ def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=Fal
     round_negative_to_zero : Boolean (optional)
         If set to True, round negative values to zero
     dtype : np.dtype (optional)
-        set the data type of the return array. Standard float 16, but can be set to better precision
+        set the data type of the return array. Standard float 32, but can be set to better precision
 
 
     Returns
@@ -76,6 +76,27 @@ def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=Fal
 
     # reshape the array into number of acceleration values, 1 column
     return vector_magnitude.reshape(data.shape[0], 1)
+
+
+def calculate_enmo(data, dtype=np.float32):
+    """
+    Calculate the Euclidean norm minus one from raw acceleration data.
+    This function is a wrapper of `calculate_vector_magnitude`.
+    Parameters
+    ----------
+    data : array_like
+        numpy array with acceleration data
+    dtype : np.dtype (optional)
+        set the data type of the return array. Standard float 32, but can be set to better precision
+    Returns
+    -------
+    vector_magnitude : np.array (acceleration values, 1)(np.float)
+       numpy array with vector magnitude of the acceleration
+    """
+    if isinstance(data, pd.DataFrame):
+        data = data[["Y", "X", "Z"]].values
+
+    return calculate_vector_magnitude(data, minus_one=True, round_negative_to_zero=True)
 
 
 def calculate_frequency_features(data, win_len=60, win_step=60, sample_rate=100, nfft=512, nfilt=40):
