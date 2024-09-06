@@ -19,7 +19,7 @@ def test_pipeline():
     data.loc[:, "Non Wear Time"] = paat.detect_non_wear_time_syed2021(data, sample_freq)
 
     # Detect sleep episodes
-    data.loc[:, "Sleep"] = paat.detect_sleep_weitz2022(data, sample_freq)
+    data.loc[:, "Sleep"] = paat.detect_time_in_bed_weitz2024(data, sample_freq)
 
     # Classify moderate-to-vigorous and sedentary behavior
     data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(data, sample_freq)
