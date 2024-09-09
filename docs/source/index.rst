@@ -51,7 +51,10 @@ examples and more information on the functions can be found in the documentation
 
     # Merge the activity columns into one labelled column. columns indicates the
     # importance of the columns, later names are more important and will be kept
-    data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["SB", "MVPA", "Time in Bed", "Non Wear Time"])
+    data.loc[:, "Activity"] = paat.create_activity_column(
+        data, 
+        columns=["SB", "MVPA", "Time in Bed", "Non Wear Time"]
+    )
 
     # Remove the other columns after merging
     data =  data[["X", "Y", "Z", "Activity"]]
