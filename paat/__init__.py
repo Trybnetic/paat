@@ -29,7 +29,7 @@ from . import estimates, features, io, preprocessing, sleep, wear_time
 
 # Expose API functions
 from .estimates import calculate_pa_levels, create_activity_column
-from .features import calculate_actigraph_counts, calculate_vector_magnitude, calculate_brond_counts
+from .features import calculate_actigraph_counts, calculate_vector_magnitude, calculate_brond_counts, calculate_enmo
 from .io import read_gt3x, read_metadata
 from .calibration import calibrate
 from .sleep import detect_time_in_bed_weitz2024
