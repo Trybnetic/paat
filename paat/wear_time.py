@@ -322,13 +322,10 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
 def detect_non_wear_time_syed2021(data, sample_freq, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
                                   start_stop_label_decision='and', min_segment_length=1, sliding_window=1, verbose=False):
     """
-    Infer non-wear time from raw 100Hz triaxial data. Data at different sample frequencies will be resampled to 100hz.
-
-    Paper:
-    A novel algorithm to detect non-wear time from raw accelerometer data using convolutional neural networks
+    Infer non-wear time from raw 100Hz triaxial data based on the method proposed by Syed et al. (2021). 
+    Data at different sample frequencies will be resampled to 100hz.
 
     The steps are described in the paper but are summarized here too:
-
 
     Detect candidate non-wear episodes:
         Perform a forward pass through the raw acceleration signal and calculate the SD for each 1-minute interval and for each individual axis.
@@ -355,6 +352,11 @@ def detect_non_wear_time_syed2021(data, sample_freq, cnn_model_file=None, std_th
         those candidate non-wear episodes do not have a preceding or following window to extract features from—classify the start or stop
         as non-wear time by default.
 
+    References
+    ----------
+
+    Syed, S., Morseth, B., Hopstock, L. A., & Horsch, A. (2021). A novel algorithm to detect non-wear time from raw 
+    accelerometer data using deep convolutional neural networks. *Scientific Reports*, 11(1), 8832. https://doi.org/10.1038/s41598-021-87757-z
 
     Parameters
     ----------
@@ -545,11 +547,7 @@ def detect_non_wear_time_syed2021(data, sample_freq, cnn_model_file=None, std_th
 def detect_non_wear_time_hees2011(data, sample_freq, min_non_wear_time_window=60, window_overlap=15, std_mg_threshold=3.0, std_min_num_axes=2,
                                   value_range_mg_threshold=50.0, value_range_min_num_axes=2):
     """
-    Estimation of non-wear time periods based on Hees 2013 paper
-
-    Estimation of Daily Energy Expenditure in Pregnant and Non-Pregnant Women Using a Wrist-Worn Tri-Axial Accelerometer
-    Vincent T. van Hees  , Frida Renström , Antony Wright, Anna Gradmark, Michael Catt, Kong Y. Chen, Marie Löf, Les Bluck, Jeremy Pomeroy, Nicholas J. Wareham, Ulf Ekelund, Søren Brage, Paul W. Franks
-    Published: July 29, 2011 https://doi.org/10.1371/journal.pone.0022922
+    Estimation of non-wear time periods based on Van Hees et al. (2011, 2013)
 
     Accelerometer non-wear time was estimated on the basis of the standard deviation and the value range of each accelerometer axis, calculated for consecutive blocks of 30 minutes.
     A block was classified as non-wear time if the standard deviation was less than 3.0 mg (1 mg = 0.00981 m·s−2) for at least two out of the three axes or if the value range, for
@@ -557,6 +555,22 @@ def detect_non_wear_time_hees2011(data, sample_freq, min_non_wear_time_window=60
 
     Important to note that the default encoding for this function of non-wear time = 0, and that of wear time is 1.
 
+
+    References
+    ----------
+
+    Van Hees, V. T., Renström, F., Wright, A., Gradmark, A., Catt, M., Chen, K. Y., 
+    Löf, M., Bluck, L., Pomeroy, J., Wareham, N. J., Ekelund, U., Brage, S., & Franks, 
+    P. W. (2011). Estimation of Daily Energy Expenditure in Pregnant and Non-Pregnant 
+    Women Using a Wrist-Worn Tri-Axial Accelerometer. *PLOS ONE*, 6(7), 7. 
+    https://doi.org/10.1371/journal.pone.0022922
+
+    Hees, V. T. van, Gorzelniak, L., León, E. C. D., Eder, M., Pias, M., Taherian, S., 
+    Ekelund, U., Renström, F., Franks, P. W., Horsch, A., & Brage, S. (2013). 
+    Separating Movement and Gravity Components in an Acceleration Signal and 
+    Implications for the Assessment of Human Daily Physical Activity. *PLOS ONE*, 
+    8(4), e61691. https://doi.org/10.1371/journal.pone.0061691
+    
     Parameters
     ----------
     data : DataFrame
