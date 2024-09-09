@@ -68,7 +68,7 @@ def detect_time_in_bed_weitz2024(data, sample_freq, resampled_frequency="1min", 
         model_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'models', 'TIB_model.h5')
         model = models.load_model(model_path)
 
-    predictions = (model.predict(X[np.newaxis], verbose=0).squeeze() > .5)
+    predictions = (model.predict(X[np.newaxis], verbose=0).squeeze() < .5)
 
     seconds = pd.Timedelta(resampled_frequency).seconds
     predictions = np.repeat(predictions, seconds * sample_freq)
