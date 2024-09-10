@@ -12,24 +12,15 @@ import numpy as np
 from . import features
 
 
-def calculate_pa_levels(data, sample_freq, mvpa_cutpoint=.069, sb_cutpoint=.015, interval="1s"):
+def calculate_pa_levels(data, sample_freq, mvpa_cutpoint, sb_cutpoint, interval="1s"):
     """
     Calculate moderate to vigourous physical activity (MVPA) and sedentary behavior
-    based on cutpoints (mvpa_cutpoint and sb_cutpoint). On default, this procedure
-    uses the algorithm and  values from Sanders et al. (2019). This means
+    based on cutpoints (mvpa_cutpoint and sb_cutpoint) on 1s resolution. The algorithm
+    works by
 
         1. The Euclidian norm minus one (ENMO) is calculated from the triaxial signal
         2. The ENMO is averaged over 1s epochs
-        3. These epochs are compared against the cutpoints MVPA = 69mg and SB = 15mg
-
-    References
-    ----------
-
-    George J. Sanders, Lynne M. Boddy, S. Andy Sparks, Whitney B. Curry, Brenda Roe,
-    Axel Kaehne & Stuart J. Fairclough (2019) Evaluation of wrist and hip sedentary
-    behaviour and moderate-to-vigorous physical activity raw acceleration cutpoints
-    in older adults, Journal of Sports Sciences, 37:11, 1270-1279,
-    DOI: 10.1080/02640414.2018.1555904
+        3. These epochs are compared against the mvpa_cutpoint and the sb_cutpoint
 
     Parameters
     ----------
@@ -37,10 +28,10 @@ def calculate_pa_levels(data, sample_freq, mvpa_cutpoint=.069, sb_cutpoint=.015,
         a DataFrame containg the raw acceleration data
     sample_freq : int
         the sampling frequency in which the data was recorded
-    mvpa_cutpoint : float (optional)
+    mvpa_cutpoint : float
         a float indicating the cutpoint between light physical activity and
         moderate-to-vigourous activity
-    sb_cutpoint : float (optional)
+    sb_cutpoint : float
         a float indicating the cutpoint between light physical activity and
         sedentary behavior
     interval : str (optional)
