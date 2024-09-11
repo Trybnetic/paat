@@ -21,7 +21,7 @@ from bitstring import Bits
 from . import preprocessing
 
 
-def _unzip_gt3x_file(file, save_location=None, delete_source_file=False):
+def _unzip_gt3x_file(file, save_location=None, delete_source_file=False, metadata_only=False):
     """
     Unzip the .gt3x file
 
@@ -33,6 +33,8 @@ def _unzip_gt3x_file(file, save_location=None, delete_source_file=False):
         location where the unzipped files should be saved, if not given, files are saved within the same folder as f
     delete_source_file : Boolean (Optional)
         if True, then the original .gt3x file will be deleted after it is unzipped
+    metadata_only : Boolean (optional)
+        if True, only the metadata info.txt file is unzipped. This saves a lot of time if only the metadata should loaded
 
     Returns
     -------
@@ -51,8 +53,18 @@ def _unzip_gt3x_file(file, save_location=None, delete_source_file=False):
     if not os.path.exists(save_location):
         os.makedirs(save_location)
 
+    # create the path locations where the log.bin and info.txt files are stored
+    log_bin = os.path.join(save_location, 'log.bin')
+    info_txt = os.path.join(save_location, 'info.txt')
+
+    if metadata_only:
+        with zipfile.ZipFile(file, 'r') as myzip:
+            myzip.extract("info.txt", path=save_location)
+
+        return info_txt
+
     # check if file already exists
-    if not os.path.exists(os.path.join(save_location, 'log.bin')) and not os.path.exists(os.path.join(save_location, 'info.txt')):
+    if not os.path.exists(log_bin) and not os.path.exists(info_txt):
 
         try:
             # unzip the file
@@ -70,10 +82,6 @@ def _unzip_gt3x_file(file, save_location=None, delete_source_file=False):
                 os.remove(file)
     else:
         logging.debug('file already unpacked: %s', file)
-
-    # create the path locations where the log.bin and info.txt files are stored
-    log_bin = os.path.join(save_location, 'log.bin')
-    info_txt = os.path.join(save_location, 'info.txt')
 
     # return location of the files
     return log_bin, info_txt
@@ -542,7 +550,7 @@ def read_metadata(file):
     """
     with tempfile.TemporaryDirectory() as tmpdirname:
         # unzip .gt3x file and get the file location of the binary log.bin (which contains the raw data) and the info.txt which contains the meta-data
-        _, info_txt = _unzip_gt3x_file(file=file, save_location=tmpdirname)
+        info_txt = _unzip_gt3x_file(file=file, save_location=tmpdirname, metadata_only=True)
 
         # get meta data from info.txt file
         meta = _extract_info(info_txt)
