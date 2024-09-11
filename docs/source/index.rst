@@ -47,11 +47,19 @@ examples and more information on the functions can be found in the documentation
     data.loc[:, "Time in Bed"] = paat.detect_time_in_bed_weitz2024(data, sample_freq)
 
     # Classify moderate-to-vigorous and sedentary behavior
-    data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(data, sample_freq)
+    data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(
+        data, 
+        sample_freq,
+        mvpa_cutpoint=.069, 
+        sb_cutpoint=.015
+    )
 
     # Merge the activity columns into one labelled column. columns indicates the
     # importance of the columns, later names are more important and will be kept
-    data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["SB", "MVPA", "Time in Bed", "Non Wear Time"])
+    data.loc[:, "Activity"] = paat.create_activity_column(
+        data, 
+        columns=["SB", "MVPA", "Time in Bed", "Non Wear Time"]
+    )
 
     # Remove the other columns after merging
     data =  data[["X", "Y", "Z", "Activity"]]

@@ -82,16 +82,19 @@ def calculate_enmo(data, dtype=np.float32):
     """
     Calculate the Euclidean norm minus one from raw acceleration data.
     This function is a wrapper of `calculate_vector_magnitude`.
+    
     Parameters
     ----------
     data : array_like
         numpy array with acceleration data
     dtype : np.dtype (optional)
         set the data type of the return array. Standard float 32, but can be set to better precision
+    
     Returns
     -------
     vector_magnitude : np.array (acceleration values, 1)(np.float)
-       numpy array with vector magnitude of the acceleration
+       numpy array with the Eucledian Norm Minus One (ENMO) of the acceleration
+
     """
     if isinstance(data, pd.DataFrame):
         data = data[["Y", "X", "Z"]].values

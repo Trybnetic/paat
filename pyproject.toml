@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "paat"
-version = "1.0.0b5"
+version = "1.0.0b6"
 description = "A comprehensive toolbox to analyse and model raw physical activity data"
 
 license = "MIT"
@@ -22,7 +22,7 @@ classifiers = [
   'Environment :: Console',
   'Intended Audience :: Science/Research',
   'Operating System :: MacOS :: MacOS X',
-#  'Operating System :: Microsoft :: Windows',
+  'Operating System :: Microsoft :: Windows',
   'Operating System :: POSIX',
 ]
 

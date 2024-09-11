@@ -12,14 +12,15 @@
 #
 import os
 import sys
+import time
 sys.path.insert(0, os.path.abspath('.'))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'Physical Activity Analysis Toolbox'
-copyright = '2021 Marc Weitz & Shaheen Syed'
-author = 'Marc Weitz & Shaheen Syed'
+author = 'Marc Weitz, Shaheen Syed & Alexander Horsch'
+copyright = time.strftime('2022 - %Y ') + author
 
 
 # -- General configuration ---------------------------------------------------

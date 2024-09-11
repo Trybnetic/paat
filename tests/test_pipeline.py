@@ -22,10 +22,18 @@ def test_pipeline():
     data.loc[:, "Sleep"] = paat.detect_time_in_bed_weitz2024(data, sample_freq)
 
     # Classify moderate-to-vigorous and sedentary behavior
-    data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(data, sample_freq)
+    data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(
+        data, 
+        sample_freq, 
+        mvpa_cutpoint=.069, 
+        sb_cutpoint=.015
+    )
 
     # Merge the activity columns into one labelled column
-    data.loc[:, "Activity"] = paat.create_activity_column(data, columns=["Non Wear Time", "Sleep", "MVPA", "SB"])
+    data.loc[:, "Activity"] = paat.create_activity_column(
+        data, 
+        columns=["Non Wear Time", "Sleep", "MVPA", "SB"]
+    )
 
     # Remove the other columns after merging
     data =  data[["X", "Y", "Z", "Activity"]]
