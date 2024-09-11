@@ -470,7 +470,7 @@ def _create_time_vector(start, n_samples, hz):
     return time_data.flatten()
 
 
-def read_gt3x(file, rescale=True, pandas=True, metadata=False):
+def read_gt3x(file, rescale=True, pandas=True, metadata=False, use_pygt3x=False):
     """
     Reads a .gt3x file and returns the tri-axial acceleration values together
     with the corresponding time stamps and all meta data.
@@ -485,6 +485,8 @@ def read_gt3x(file, rescale=True, pandas=True, metadata=False):
         boolean indicating whether the data should be returned as a pandas DataFrame
     metadata : boolean (optional)
         boolean indicating whether the full metadata should be returned
+    use_pygt3x : boolean (optional)
+        boolean indicating whether to use ActiGraph's Pygt3x library to read the file.
 
     Returns
     -------
@@ -503,24 +505,32 @@ def read_gt3x(file, rescale=True, pandas=True, metadata=False):
         a dict containing all meta data produced by ActiGraph
 
     """
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        # unzip .gt3x file and get the file location of the binary log.bin (which contains the raw data) and the info.txt which contains the meta-data
-        log_bin, info_txt = _unzip_gt3x_file(file=file, save_location=tmpdirname)
+    if use_pygt3x:
+        with FileReader(file) as reader:
+            values = reader.to_pandas()
+    
+        time = pd.to_datetime(values.index, unit="s").values
+        values = values.values
 
-        # get meta data from info.txt file
-        meta = _extract_info(info_txt)
+        meta = read_metadata(file)
+    else:
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            # unzip .gt3x file and get the file location of the binary log.bin (which contains the raw data) and the info.txt which contains the meta-data
+            log_bin, info_txt = _unzip_gt3x_file(file=file, save_location=tmpdirname)
 
-        meta = _format_meta_data(meta)
+            # get meta data from info.txt file
+            meta = _extract_info(info_txt)
+            meta = _format_meta_data(meta)
 
-        # extract acceleration data from the log file
-        values, time_data = _extract_log(log_bin, meta['Acceleration_Scale'], meta['Sample_Rate'], use_scaling=rescale)
+            # extract acceleration data from the log file
+            values, time_data = _extract_log(log_bin, meta['Acceleration_Scale'], meta['Sample_Rate'], use_scaling=rescale)
 
-        # create time array
-        time = _create_time_array(time_data, hz=meta['Sample_Rate'])
+            # create time array
+            time = _create_time_array(time_data, hz=meta['Sample_Rate'])
 
-        # Add additional keys to meta (Note: they are important to later reconstruct the time vector)
-        meta["Number_Of_Samples"] = values.shape[0]
-        meta["Start_Time"] = time[0].astype(int)
+    # Add additional keys to meta (Note: they are important to later reconstruct the time vector)
+    meta["Number_Of_Samples"] = values.shape[0]
+    meta["Start_Time"] = time[0].astype(int)
 
     if pandas:
         data = pd.DataFrame(values, columns=["Y", "X", "Z"], index=time)
