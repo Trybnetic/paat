@@ -320,3 +320,59 @@ def calculate_actigraph_counts(data, sample_freq, epoch_length):
     index = data.resample(epoch_length).mean().index
     counts = pd.DataFrame(counts, columns=["Y", "X", "Z"], index=index[:len(counts)])
     return counts
+
+
+def _mad(chunk):
+    """
+    Calculate the mean amplitude deviation (MAD) of the raw
+    acceleration chunk.
+
+    Parameters
+    ----------
+    chunk : pd.Series
+        a chunk of a DataFrame
+
+
+    Returns
+    -------
+    m : float
+        the mean amplitude deviation (MAD) of the raw acceleration chunk 
+    """
+    r = np.sqrt(np.sum(np.square(chunk[["X", "Y", "Z"]].values), axis=1))
+    m = np.mean(np.abs(r - r.mean()))
+    return m
+
+
+def calculate_mad(data, freq="6s")
+    """
+    Calculate the mean amplitude deviation (MAD) of the raw
+    acceleration signal based on Vähä-Ypyä et al. (2015), by
+    
+    .. math:: MAD = \frac{1}{n} \sum_i | r_i - \bar{r} |
+    
+    with
+    
+    .. math:: r = \sqrt{y^2 + x^2 + z^2}
+
+    References
+    ----------
+
+    Vähä-Ypyä, H., Vasankari, T., Husu, P., Suni, J., & Sievänen, H. (2015). A universal, 
+    accurate intensity-based classification of different physical activities using raw 
+    data of accelerometer. *Clinical Physiology and Functional Imaging*, 35(1), 64–70. 
+    https://doi.org/10.1111/cpf.12127
+    
+    Parameters
+    ----------
+    data : array_like
+        numpy array with acceleration data
+    freq : str
+        the sampling frequency on which the MAD values should be calculated
+    
+    Returns
+    -------
+    mad : np.array (acceleration values, 1)(np.float)
+       numpy array with the Mean Amplitude Deviation (MAD) of the acceleration
+    """
+    mad = mad_data = data.resample(freq).apply(_mad)
+    return mad
