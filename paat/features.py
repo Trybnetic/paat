@@ -343,7 +343,7 @@ def _mad(chunk):
     return m
 
 
-def calculate_mad(data, freq="6s")
+def calculate_mad(data, freq="6s"):
     """
     Calculate the mean amplitude deviation (MAD) of the raw
     acceleration signal based on Vähä-Ypyä et al. (2015), by
