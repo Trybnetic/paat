@@ -54,6 +54,18 @@ def test_against_actigraph_implementation(file_path, unscaled_data):
     #assert np.allclose(data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)
 
 
+@pytest.mark.slow
+def test_paat_vs_pygt3x_loading():
+    file_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'resources/GT3X+ (01 day).gt3x')
+
+    ref, ref_sample_freq = io.read_gt3x(file_path)
+
+    data, sample_freq = io.read_gt3x(file_path, use_pygt3x=True)
+
+    assert np.allclose(data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)
+    assert ref_sample_freq == sample_freq
+
+
 def test_exceptions():
     with pytest.raises(NotImplementedError) as e_info:
         time_data = np.arange(10)
