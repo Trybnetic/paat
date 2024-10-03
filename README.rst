@@ -3,7 +3,7 @@ Physical Activity Analysis Toolbox (PAAT)
 =========================================
 
     **Note:** This package is currently under development and the API might change
-    anytime!
+    anytime! For reproducible versions, see `zenodo <https://doi.org/10.5281/zenodo.13885706>`_.
 
 
 .. image:: https://github.com/Trybnetic/paat/actions/workflows/python-test.yml/badge.svg
@@ -22,6 +22,9 @@ Physical Activity Analysis Toolbox (PAAT)
  :target: https://github.com/trybnetic/paat/blob/master/LICENSE.txt
  :alt: License
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.13885749.svg
+  :target: https://doi.org/10.5281/zenodo.13885749
+  :alt: zenodo
 
 The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to
 analyze raw acceleration data. We developed all code mainly for analyzing
@@ -39,7 +42,7 @@ At the moment, the easiest way to install *paat* directly from GitHub by running
 
 .. code:: bash
 
-    pip install git+https://github.com/Trybnetic/paat.git
+    pip install paat
 
 
 Usage
