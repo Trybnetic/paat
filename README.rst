@@ -3,7 +3,7 @@ Physical Activity Analysis Toolbox (PAAT)
 =========================================
 
     **Note:** This package is currently under development and the API might change
-    anytime! For reproducible versions, see `zenodo <https://doi.org/10.5281/zenodo.13885706>`_.
+    anytime! For reproducible versions, see `zenodo <https://doi.org/10.5281/zenodo.13885749>`_.
 
 
 .. image:: https://github.com/Trybnetic/paat/actions/workflows/python-test.yml/badge.svg
