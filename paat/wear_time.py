@@ -245,7 +245,7 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
         return episodes.T
 
     # create a new dataframe that will contain the grouped rows
-    grouped_episodes = pd.DataFrame()
+    grouped_episodes = []
 
     # get all current values from the first row
     current_start = episodes.iloc[0]['start']
@@ -280,24 +280,28 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
                 counter_label = f'{current_counter}-{next_counter}'
 
                 # save to new dataframe
-                grouped_episodes[counter_label] = pd.Series({'counter': counter_label,
-                                                             'start_index': current_start_index,
-                                                             'start': current_start,
-                                                             'stop_index': current_stop_index,
-                                                             'stop': current_stop,
-                                                             'label': None if not training else current_label})
+                grouped_episodes += [pd.Series({
+                    'counter': counter_label,
+                    'start_index': current_start_index,
+                    'start': current_start,
+                    'stop_index': current_stop_index,
+                    'stop': current_stop,
+                    'label': None if not training else current_label
+                })]
         else:
 
             # create the counter label
             counter_label = current_counter if (next_counter - current_counter == 1) else f'{current_counter}-{next_counter - 1}'
 
             # save to new dataframe
-            grouped_episodes[counter_label] = pd.Series({'counter': counter_label,
-                                                         'start_index': current_start_index,
-                                                         'start': current_start,
-                                                         'stop_index': current_stop_index,
-                                                         'stop': current_stop,
-                                                         'label': None if not training else current_label})
+            grouped_episodes += [pd.Series({
+                'counter': counter_label,
+                'start_index': current_start_index,
+                'start': current_start,
+                'stop_index': current_stop_index,
+                'stop': current_stop,
+                'label': None if not training else current_label
+            })]
 
             # update tracker variables
             current_start = next_start
@@ -311,14 +315,16 @@ def _group_episodes(episodes, distance_in_min=3, correction=3, hz=100, training=
             if next_counter == episodes.iloc[-1]['counter']:
 
                 # save to new dataframe
-                grouped_episodes[next_counter] = pd.Series({'counter': next_counter,
-                                                            'start_index': current_start_index,
-                                                            'start': current_start,
-                                                            'stop_index': current_stop_index,
-                                                            'stop': current_stop,
-                                                            'label': None if not training else current_label})
+                grouped_episodes += [pd.Series({
+                    'counter': next_counter,
+                    'start_index': current_start_index,
+                    'start': current_start,
+                    'stop_index': current_stop_index,
+                    'stop': current_stop,
+                    'label': None if not training else current_label
+                })]
 
-    return grouped_episodes
+    return pd.concat(grouped_episodes, axis=1)
 
 
 def detect_non_wear_time_syed2021(data, sample_freq, cnn_model_file=None, std_threshold=0.004, distance_in_min=5, episode_window_sec=7, edge_true_or_false=True,
