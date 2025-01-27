@@ -18,7 +18,7 @@ jobs:
           #windows-latest, 
           #macOS-latest
           ]
-        python-version: ['3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.9', '3.10', '3.11']
         poetry-version: [1.7.1]
       fail-fast: false
     runs-on: ${{ matrix.os }}
