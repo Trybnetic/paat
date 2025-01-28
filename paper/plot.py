@@ -13,8 +13,8 @@ from matplotlib.colors import to_rgba
 from PIL import Image
 
 
-out_path_week = "example_week.csv.tar.gz"
-out_path_day = "example_day.csv.tar.gz"
+out_path_week = "data/example_week.csv.tar.gz"
+out_path_day = "data/example_day.csv.tar.gz"
 
 # Load produced files
 agg, sample_freq = pd.read_csv(out_path_week, compression='gzip'), 100
@@ -43,9 +43,18 @@ COLOR = {
     'MVPA': "red"
 }
 
-plt.rcParams['axes.labelsize'] = 12
+label_fontsize = 14
+tick_fontsize = 13
+legend_fontsize = 12
 
-for without_TiB in [False, True]:
+plot_presentation_plots = False 
+
+if plot_presentation_plots:
+    plot_without_TiB = [False, True]
+else:
+    plot_without_TiB = [False]
+
+for without_TiB in plot_without_TiB:
     if without_TiB:
         COLOR = {key: value for key, value in COLOR.items() if key != "Time in bed"}
         day.loc[day["Activity"] == "Time in bed", "Activity"] = "SB"
@@ -55,7 +64,12 @@ for without_TiB in [False, True]:
     else:
         suffix = ""
 
-    for ii in range(4):
+    if plot_presentation_plots:
+        subplots = range(4)
+    else:
+        subplots = [3]
+
+    for ii in subplots:
 
         fig = plt.figure(figsize=(12,5))
         gs = fig.add_gridspec(2,2,width_ratios=[2,1])
@@ -64,7 +78,7 @@ for without_TiB in [False, True]:
             fig.add_subplot(gs[1,0]),
             fig.add_subplot(gs[:,1])
         ]
-        fig.set_facecolor(to_rgba('white', alpha=0))
+        # fig.set_facecolor(to_rgba('white', alpha=0))
 
         ax = axes[0]
         ax.text(-0.1, 1.025, " ", transform=ax.transAxes, 
@@ -80,7 +94,7 @@ for without_TiB in [False, True]:
             fancybox=False,
             shadow=False,
             ncol=5,
-            fontsize=10
+            fontsize=legend_fontsize
         )
         legend.set_visible(False)
         ax.text(0.8, -.55 * ymax, " ", transform=ax.transAxes, 
@@ -92,9 +106,9 @@ for without_TiB in [False, True]:
         """
         ax = axes[0]
         ax = sns.lineplot(data=day[['X', 'Y', 'Z']], ax=ax, legend=True)
-        ax.set_ylabel("Acceleration [g]")
-        ax.legend(fontsize=10, loc="lower right")
-        ax.tick_params(labelsize=10)
+        ax.set_ylabel("Acceleration [g]", fontsize=label_fontsize)
+        ax.legend(fontsize=legend_fontsize, loc="lower right")
+        ax.tick_params(labelsize=tick_fontsize)
         #ax.set_title("Example Day")
         #ax.set_xticks([])
         ax.set_facecolor("white")
@@ -106,7 +120,8 @@ for without_TiB in [False, True]:
         if ii >= 1:
             ax = axes[1]
             ax = sns.lineplot(data=day['ENMO'], ax=ax, legend=True)
-            ax.set_ylabel("ENMO [g]")
+            ax.set_ylabel("ENMO [g]", fontsize=label_fontsize)
+            fig.align_ylabels(axes[:1])
             
             if ii >= 2:
                 # Add background
@@ -131,8 +146,8 @@ for without_TiB in [False, True]:
             
 
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-        ax.set_xlabel("Time")
-        ax.tick_params(labelsize=10)
+        ax.set_xlabel("Time", fontsize=label_fontsize)
+        ax.tick_params(labelsize=tick_fontsize)
 
 
         """
@@ -154,11 +169,13 @@ for without_TiB in [False, True]:
                 bottom += weight_count[column]
 
             #ax.set_title("Daily Summaries")
-            ax.set_xlabel("Day")
-            ax.set_ylabel("Fraction of the day")
+            ax.set_xlabel("Day", fontsize=label_fontsize)
+            ax.set_ylabel("Fraction of the day", fontsize=label_fontsize)
             ax.set_ylim(0,1)
             ax.grid(axis="y")
             ax.set_facecolor("white")
+            ax.tick_params(labelsize=tick_fontsize)
+            fig.align_xlabels(axes[1:])
         else:
             axes[2].axis('off')
 
@@ -167,20 +184,21 @@ for without_TiB in [False, True]:
         plt.tight_layout()
         plt.subplots_adjust(wspace=.2, hspace=0)
 
-        plt.savefig(
-            f'../img/paat_presentation_{ii}{suffix}.png', 
-            dpi=600)
+        if plot_presentation_plots:
+            plt.savefig(
+                f'img/paat_presentation_{ii}{suffix}.png', 
+                dpi=600)
 
         if (ii == 3) & (not without_TiB):
             ax = axes[0]
-            ax.text(-0.1, 1.025, "A", transform=ax.transAxes, 
+            ax.text(-0.0975, 1.025, "A", transform=ax.transAxes, 
                     size=20, weight='bold')
             ax = axes[2]
-            ax.text(-0.17, 1.025, "B", transform=ax.transAxes, 
+            ax.text(-0.193, 1.025, "B", transform=ax.transAxes, 
                     size=20, weight='bold')
                     
             plt.savefig(
-                '../img/paper_fig1.png', 
+                'img/paper_fig1.png', 
                 dpi=600)
 
             plot = BytesIO()
@@ -192,5 +210,5 @@ for without_TiB in [False, True]:
             png = Image.open(plot)
 
             # (3) save as TIFF
-            png.save('../img/paper_fig1.tiff')
+            png.save('img/paper_fig1.tiff')
             plot.close()
