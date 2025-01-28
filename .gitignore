@@ -18,3 +18,11 @@ source/
 poetry.lock
 .coverage
 coverage.xml
+
+# Paper
+paper/media/
+paper/jats/
+paper/img/paat_presentation*
+paper.jats
+paper.pdf
+paper/process.py
