@@ -43,7 +43,7 @@ data analysis tools within the Python ecosystem.
 <!-- Measurement of physical activity -->
 Physical activity is one of the strongest predictors of overall health. Its absence has been linked to various
 noncommunicable diseases such as cancer, cardiovascular diseases, or diabetes as well as mental diseases like depression
-or anxiety. Various methods exist to measure physical activity, including surveys or wearable devices. Acceleromters are
+or anxiety. Various methods exist to measure physical activity, including surveys or wearable devices. Accelerometers are
 small body-worn sensors commonly used in research to record participants' acceleration over time. From the acceleration
 signal physical activity levels and energy expenditure as well as other lifestyle-related variables such as sleep can be
 estimated. By that, accelerometers provide a reasonably cheap but still more objective alternative to surveys while
@@ -55,11 +55,11 @@ counts [@neishabouri_quantification_2022]. More recently, the raw acceleration i
 development [@van_hees_challenges_2016]. Most method development has focused on the wrist during its common use in many
 large-scale surveillance studies, which also lead to the development of the popular accelerometer analysis package GGIR
 [@migueles_ggir_2019]. Today, a plethora of accelerometer packages exist each fulfilling different purposes, for
-instance, to analyze actigraphy and light exposure data [@hammad_pyactigraphy_2021] or processing the UK Biobank data
+instance, to analyze accelerometer and light exposure data [@hammad_pyactigraphy_2021] or processing the UK Biobank data
 [@chan_actipy_2024]. However, none of these packages focuses on acceleration data collected from the hip even though the
 interest in hip-specific methods is increasing. New methods have been developed or validated recently
 [@syed_evaluating_2020;@syed_novel_2021;@weitz_automatic_2024] as well as various large-scale population studies using
-hip-based accelerometry to measure physical activity [@hopstock_seventh_2022;@weber_large_scale_2024]. 
+hip-mounted accelerometers to measure physical activity [@hopstock_seventh_2022;@weber_large_scale_2024]. 
 
 ![Visualization of the results obtained from *paat*. (A) The package can be used
 to load and process the raw data (upper row). The loaded data can then be annotated by a variety of methods. The
