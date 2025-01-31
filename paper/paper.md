@@ -49,21 +49,25 @@ recently, the raw acceleration itself became into the focus of method developmen
 method development has focused on the wrist during its common use in many large-scale surveillance studies, which also
 lead to the development of the popular accelerometer analysis package GGIR [@migueles_ggir_2019]. But also the interest
 in hip-specific methods has increased lately. Several methods have been developed or validated recently
-[@syed_evaluating_2020,@syed_novel_2021,@weitz_automatic_2024]. Corresponding code to any of these methods has been even
+[@syed_evaluating_2020;@syed_novel_2021;@weitz_automatic_2024]. Corresponding code to any of these methods has been even
 published on Github, but were difficult to use and to maintain. 
 
 In this package, we collected various methods to analyze raw acceleration data from the hip. This seems particularly
 important as many recent methods involve machine learning which are known to commonly struggle to generalize.
-Simultaneously, openly available data is scarce in the field due to the sensitive nature of the data. Our package was
-therefore also designed to facilitate validation of these methods. This was solved by designing the package in a way
-that all methods can be run in isolation. Additionally, the package is designed to be extensible allowing users to
-easily add custom algorithms and is structured according to the respective applications (io, calibration, preprocessing,
-features, wear time, sleep, estimation). By that, we also want to facilitate the integration into existing packages.
+Simultaneously, openly available data and standardized benchmarking procedures are scarce in the field
+[@palotti_benchmark_2019;@sadeh_role_2011]. Reasons for this might be the sensitive nature, but also the high costs of
+collecting of the data. Our package was therefore also designed to facilitate validation of these methods. This was
+solved by designing the package in a way that all methods can be run in isolation. Additionally, the package is designed
+to be extensible allowing users to easily add custom algorithms and is structured according to the respective
+applications (io, calibration, preprocessing, features, wear time, sleep, estimation; which are described in more detail
+below). By doing that, we also want to facilitate the integration into existing packages and ecosystems.
 
 ![Visualization of the results obtained from *paat*. (A) The package can be used to load and process the raw data (upper
-row). The implemented non-wear time and time in bed algorithm exploit raw acceleration data directly. To estimate
-physical activity, the raw data is reduced to the ENMO of the signal (lower row). (B) Aggregated daily or average (Ø)
-results can be obtained and then be used for further analyzes. \label{fig:processing}](img/paper_fig1.png)
+row). The loaded data can then be annotated by a variety of methods. The implemented non-wear time and time in bed
+algorithm exploit raw acceleration data directly. To estimate physical activity, the raw data is reduced to the ENMO of
+the signal (lower row). Alternatively, also other metrics like MAD can be estimated and used for further processing. (B)
+Aggregated daily or average (Ø) results can be obtained and then be used for further analyzes.
+\label{fig:processing}](img/paper_fig1.png)
 
 
 # Implementation and structure
