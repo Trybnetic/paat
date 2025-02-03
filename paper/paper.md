@@ -61,12 +61,8 @@ interest in hip-specific methods is increasing. New methods have been developed 
 [@syed_evaluating_2020;@syed_novel_2021;@weitz_automatic_2024] as well as various large-scale population studies using
 hip-mounted accelerometers to measure physical activity [@hopstock_seventh_2022;@weber_large_scale_2024]. 
 
-![Visualization of the results obtained from *paat*. (A) The package can be used
-to load and process the raw data (upper row). The loaded data can then be annotated by a variety of methods. The
-implemented non-wear time and time in bed algorithm exploit raw acceleration data directly. To estimate physical
-activity, the raw data is reduced to the ENMO of the signal (lower row). Alternatively, also other metrics like MAD can
-be estimated and used for further processing. (B) Aggregated daily or average (Ø) results can be obtained and then be
-used for further analyzes. \label{fig:processing}](img/paper_fig1.png) 
+![Visualization of the results obtained from *paat*. (A) The package can be used to load and process the raw data (upper row). The loaded data can then be annotated by a variety of methods. The implemented non-wear time and time in bed algorithm exploit raw acceleration data directly. To estimate physical activity, the raw data is reduced to the ENMO of the signal (lower row). Alternatively, also other metrics like MAD can be estimated and used for further processing. (B) Aggregated daily or average (Ø) results can be obtained and then be used for further analyzes. \label{fig:processing}](img/paper_fig1.png) 
+
 <!-- The need for the package -->
 For many recently developed methods, corresponding code was even available on Github, but was often difficult to use due
 to no existing dependency management and missing maintenance. However, easy accessibility of these methods seems
