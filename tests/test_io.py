@@ -20,6 +20,7 @@ def test_loading_data(file_path, load_gt3x_file):
 
     assert np.array_equal(acceleration, data[["Y", "X", "Z"]].values)
 
+
 def test_loading_metadata(file_path):
     meta = io.read_metadata(file_path)
     
@@ -56,7 +57,12 @@ def test_against_actigraph_implementation(file_path, unscaled_data):
 
 @pytest.mark.slow
 def test_paat_vs_pygt3x_loading():
-    file_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'resources/GT3X+ (01 day).gt3x')
+    """
+    Currently do not run this test as it results in a
+    "ValueError: could not convert string to float: '198,12'",
+    see https://github.com/actigraph/pygt3x/pull/46 for more info
+    """
+    file_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'resources/10min_recording.gt3x')
 
     ref, ref_sample_freq = io.read_gt3x(file_path)
 
@@ -79,3 +85,4 @@ def test_exceptions():
         hz = 33
         io._create_time_vector(start, n_samples, hz)
         assert e_info
+
