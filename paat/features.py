@@ -317,6 +317,6 @@ def calculate_actigraph_counts(data, sample_freq, epoch_length):
     sec_per_epoch = pd.Timedelta(epoch_length).seconds
 
     counts = get_counts(data[["Y", "X", "Z"]].values, sample_freq, sec_per_epoch)
-    index = data.resample(epoch_length).mean().index
+    index = data.resample(epoch_length).mean(numeric_only=True).index
     counts = pd.DataFrame(counts, columns=["Y", "X", "Z"], index=index[:len(counts)])
     return counts
