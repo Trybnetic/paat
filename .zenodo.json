@@ -1,0 +1,29 @@
+{
+    "title": "paat: Physical Activity Analysis Toolbox",
+    "license": {
+      "id": "MIT"
+    },
+    "creators": [
+        {
+            "name": "Marc Weitz",
+            "affiliation": "UiT The Arctic University of Norway, Department of Computer Science"
+        },
+        {
+            "name": "Shaheen Syed",
+            "affiliation": "UiT The Arctic University of Norway, Department of Computer Science"
+        },
+        {
+            "name": "Alexander Horsch",
+            "affiliation": "UiT The Arctic University of Norway, Department of Computer Science"
+        }
+    ],
+    "keywords": [
+        "physical-activity",
+        "health-science", 
+        "actigraph", 
+        "accelerometry",
+        "medical-informatics"
+
+    ],
+    "language": "eng"
+}

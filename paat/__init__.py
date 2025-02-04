@@ -22,7 +22,6 @@ import sys
 import platform
 from importlib import metadata
 
-from pip._vendor import pkg_resources
 import toml
 
 from . import estimates, features, io, preprocessing, sleep, wear_time
@@ -46,8 +45,7 @@ def sysinfo():
     """
     Prints system the dependency information
     """
-    paat = pkg_resources.working_set.by_key["paat"]
-    dependencies = [requirement.project_name for requirement in paat.requires()]
+    dependencies = [dep.split(" ")[0] for dep in metadata.requires("paat")]
 
     header = ("PAAT Information\n"
               "=================\n\n")

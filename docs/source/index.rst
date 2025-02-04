@@ -24,7 +24,7 @@ At the moment, the easiest way to install *paat* directly from GitHub by running
 
 .. code:: bash
 
-    pip install git+https://github.com/Trybnetic/paat.git
+    pip install paat
 
 
 Usage

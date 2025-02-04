@@ -378,8 +378,8 @@ def _create_time_array(time_data, hz=100):
 
 
 def _format_time(tstamp):
-    tstamp = int(tstamp) // 10000000 + np.datetime64('0001-01-01T00:00:00').astype(int)
-    return int(tstamp) * 1000
+    dt = np.datetime64('0001-01-01T00:00:00') + np.timedelta64(int(tstamp) // 10000000, 's')
+    return str(dt)
 
 
 def _format_meta_data(meta):
