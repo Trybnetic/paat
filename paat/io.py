@@ -511,7 +511,7 @@ def read_gt3x(file, rescale=True, pandas=True, metadata=False, use_pygt3x=False)
             values = reader.to_pandas()
     
         time = pd.to_datetime(values.index, unit="s").values
-        values = values.values
+        values = values[["Y", "X", "Z"]].values
 
         meta = read_metadata(file)
     else:

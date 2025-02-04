@@ -55,13 +55,7 @@ def test_against_actigraph_implementation(file_path, unscaled_data):
     #assert np.allclose(data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)
 
 
-@pytest.mark.slow
 def test_paat_vs_pygt3x_loading():
-    """
-    Currently do not run this test as it results in a
-    "ValueError: could not convert string to float: '198,12'",
-    see https://github.com/actigraph/pygt3x/pull/46 for more info
-    """
     file_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'resources/10min_recording.gt3x')
 
     ref, ref_sample_freq = io.read_gt3x(file_path)
