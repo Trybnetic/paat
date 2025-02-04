@@ -17,6 +17,7 @@ import sys
 import numpy as np
 import pandas as pd
 from bitstring import Bits
+from pygt3x.reader import FileReader
 
 from . import preprocessing
 
