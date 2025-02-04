@@ -31,33 +31,34 @@ bibliography: paper.bib
 
 The Physical Activity Analysis Toolbox (*paat*) is a versatile Python package designed to analyze physical activity
 data. It is used in research and health-related fields to process raw acceleration data collected from the hip. It
-supports importing, cleaning, and preprocessing raw data, and includes algorithms for classifying time in bed and non
-wear time. Furthermore, it supports estimating various physical activity levels such as moderate-to-vigorous physical
+supports importing, cleaning, and preprocessing raw data, and includes algorithms to classify time in bed and non wear
+time. Furthermore, it supports estimating various physical activity levels such as moderate-to-vigorous physical
 activity or sedentary behavior, with customizable thresholds from multiple metrics. These estimates can be aggregated
-and used for further statistical analysis or be used direct for more sophisticated physical activity pattern analysis.
-Additionally, *paat* is extensible, allowing users to add custom algorithms or modules and integrates well with other
-data analysis tools within the Python ecosystem. 
+and used for further statistical analysis or be used directly for more sophisticated physical activity pattern analysis.
+Additionally, *paat* is extensible, allowing users to add custom algorithms or modules, and it integrates well with
+other data analysis tools within the Python ecosystem. 
 
 # Statement of need
 
 <!-- Measurement of physical activity -->
 Physical activity is one of the strongest predictors of overall health. Its absence has been linked to various
 noncommunicable diseases such as cancer, cardiovascular diseases, or diabetes as well as mental diseases like depression
-or anxiety. Various methods exist to measure physical activity, including surveys or wearable devices. Accelerometers are
-small body-worn sensors commonly used in research to record participants' acceleration over time. From the acceleration
-signal physical activity levels and energy expenditure as well as other lifestyle-related variables such as sleep can be
-estimated. By that, accelerometers provide a reasonably cheap but still more objective alternative to surveys while
-simultaneously keeping the researcher and participant burden low. 
+or anxiety. Various methods exist to measure physical activity. One of these methods use accelerometers to estimate
+physical activity. Accelerometers are small body-worn sensors which measure acceleration over time. They have become a
+popular assessment tool in research and public health as they provide a reasonably cheap but still more objective
+alternative to surveys while simultaneously keeping the researcher and participant burden low. 
 
 <!-- Accelerometry -->
 Over decades, the raw acceleration as measured in ms$^{−2}$ has been transformed into summary metrics like activity
-counts [@neishabouri_quantification_2022]. More recently, the raw acceleration itself became into the focus of method
-development [@van_hees_challenges_2016]. Most method development has focused on the wrist during its common use in many
-large-scale surveillance studies, which also lead to the development of the popular accelerometer analysis package GGIR
-[@migueles_ggir_2019]. Today, a plethora of accelerometer packages exist each fulfilling different purposes, for
-instance, to analyze accelerometer and light exposure data [@hammad_pyactigraphy_2021] or processing the UK Biobank data
-[@chan_actipy_2024]. However, none of these packages focuses on acceleration data collected from the hip even though the
-interest in hip-specific methods is increasing. New methods have been developed or validated recently
+counts [@neishabouri_quantification_2022]. More recently, the raw acceleration itself has also gotten into the focus of
+method development [@van_hees_challenges_2016]. Accelerometers can be applied to various locations on the body, but most
+recent method development has focused on the wrist. One reason for this is its common use in many large-scale
+surveillance studies, like the UK Biobank [@doherty_large_2017] or the American NHANES study [@troiano_evolution_2014].
+This also lead to the development of the popular accelerometer analysis package GGIR [@migueles_ggir_2019]. Today, a
+plethora of accelerometer packages exist each fulfilling different purposes, for instance, to analyze accelerometer and
+light exposure data [@hammad_pyactigraphy_2021] or to preprocess accelerometer data [@chan_actipy_2024]. However, none
+of these packages focuses on acceleration data collected from the hip even though the interest in hip-specific methods
+is increasing. New methods have been developed or validated recently
 [@syed_evaluating_2020;@syed_novel_2021;@weitz_automatic_2024] as well as various large-scale population studies using
 hip-mounted accelerometers to measure physical activity [@hopstock_seventh_2022;@weber_large_scale_2024]. 
 
