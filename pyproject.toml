@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "paat"
-version = "1.0.0b7"
+version = "1.0.0b8"
 description = "A comprehensive toolbox to analyse and model raw physical activity data"
 
 license = "MIT"
@@ -44,7 +44,6 @@ pygt3x = "^0.7.1"
 [tool.poetry.extras]
 docs = ["sphinx", "sphinx_rtd_theme", "numpydoc", "easydev", "nbsphinx", "docutils"]
 
-
 [tool.poetry.group.dev.dependencies]
 sphinx = "^7.2.6"
 sphinx-rtd-theme = "^2.0.0"
@@ -71,6 +70,10 @@ jinja2 = "<3.1.0"
   [tool.pylint.message_control]
   disable = ["E1101", "C0330", "C0326"]
 
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
