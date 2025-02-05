@@ -18,3 +18,5 @@ source/
 poetry.lock
 .coverage
 coverage.xml
+
+.vscode/
