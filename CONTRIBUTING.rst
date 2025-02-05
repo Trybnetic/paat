@@ -7,7 +7,7 @@ The *paat* project welcomes help in the following ways:
 * Making Pull Requests for
   `code <https://github.com/trybnetic/paat/tree/main/paat>`_,
   `tests <https://github.com/trybnetic/paat/tree/main/tests>`_
-  or `documentation <https://github.com/trybnetic/paat/tree/main/doc>`_.
+  or `documentation <https://github.com/trybnetic/paat/tree/main/docs>`_.
 * Commenting on `open issues <https://github.com/trybnetic/paat/issues>`_
   and `pull requests <https://github.com/trybnetic/paat/pulls>`_.
 * Helping to answer `questions in the issue section
