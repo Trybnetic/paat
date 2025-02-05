@@ -32,7 +32,7 @@ Usage
 
 For now, several functions to work with raw data from ActiGraph devices are
 implemented while others are still work in progress. The following code snippet
-should give you a brief overview and idea on how to use this package. Further
+should give you a brief overview and idea on how to use this package. Further,
 examples and more information on the functions can be found in the documentation.
 
 .. code-block:: python
@@ -67,5 +67,7 @@ examples and more information on the functions can be found in the documentation
 .. note::
 
     Note that these are only examples. There are multiple methods implemented in PAAT
-    and the processing pipeline can easily be adjusted to individual needs. More examples
-    can be found in the examples section.
+    and the processing pipeline can easily be adjusted to individual needs. More (and 
+    also interactive) examples can be found in the :doc:`examples section <examples>` 
+    and an overview over the implemented methods including references to the original 
+    publications is also provided in the :doc:`API documentation <paat>`. 
