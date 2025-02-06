@@ -83,49 +83,6 @@ same pipeline by structuring it according to the respective applications (io, ca
 time, sleep, estimation; which are described in more detail below). By doing that, we also want to facilitate the
 integration into existing packages and ecosystems.
 
-# Implementation and structure
-
-While *paat* can process multiday recordings of accelerometer data (see \autoref{fig:processing}), it has also been
-developed to use various functionalities in isolation. For that reason, the package is organized into different
-submodules according to the respective functions. The most important high-level functions are also exposed on package
-level to facilitate the usage of the package. Further, more low-level functions are included in the respective
-submodules and can be found in the package's documentation. In this section, we briefly introduce the respective
-submodules and their most important functions.
-
-## File reading 
-
-ActiGraph's GT3X files can be read using the `read_gt3x` function which behaves similar to the IO functions known from
-pandas. However, it also provides the sampling frequency as this can be relevant for further processing. If additional
-metadata is required, this can be read either by setting `metadata=True` or using the `read_metadata` function.
-
-## Non-wear time
-
-To identify Non-Wear Time (NWT), several functions are implemented in *paat*: `detect_non_wear_time_naive` implements a very simple
-standard deviation based approach to NWT. The improved Van Hees NWT algorithm [@van_hees_estimation_2011;
-@hees_separating_2013] is implemented in the `detect_non_wear_time_hees2011` function. The
-`detect_non_wear_time_syed2021` function implements the CNN-based NWT approach proposed by @syed_novel_2021.
-
-## Sleep/Time in bed
-
-To detect the time in bed (TiB) the algorithm of @weitz_automatic_2024 is implemented in the
-`detect_time_in_bed_weitz2024` function.
-
-## Physical activity levels
-
-Physical activity level estimation as implemented `calculate_pa_levels`. It provides sedentary behavior (SB), light
-physical activity (LPA) and moderate-to-vigorous physical activity (MVPA) estimates based on a MVPA (`mvpa_cutpoint`)
-and a sedentary (`sb_cutpoint`) cutpoint. 
-
-## Different metrics
-
-While *paat* has been developed with primary focus on Euclidean Norm Minus One (ENMO) based physical activity
-estimation, several other metrics have been included in the `paat.features` module as well. The Median Amplitude
-Deviation (MAD) [@vaha-ypya_universal_2015] can be calculated with the `calculate_mad` function. Brønd activity counts
-[@brond_generating_2017] can be calculated with the `calculate_brond_counts` and ActiGraph activity counts
-[@neishabouri_quantification_2022] with the `calculate_actigraph_counts` function. However, the latter function only
-interfaces the corresponding function from the agcounts package [@actigraph_llc_agcounts_2022] and provides a Pandas
-DataFrame in the same style as *paat*.
-
 # Use in research
 
 *paat* has already been used in various studies. @syed_evaluating_2020, for instance, developed and used the general
