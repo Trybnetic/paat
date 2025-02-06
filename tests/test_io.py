@@ -20,6 +20,7 @@ def test_loading_data(file_path, load_gt3x_file):
 
     assert np.array_equal(acceleration, data[["Y", "X", "Z"]].values)
 
+
 def test_loading_metadata(file_path):
     meta = io.read_metadata(file_path)
     
@@ -54,6 +55,17 @@ def test_against_actigraph_implementation(file_path, unscaled_data):
     #assert np.allclose(data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)
 
 
+def test_paat_vs_pygt3x_loading():
+    file_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'resources/10min_recording.gt3x')
+
+    ref, ref_sample_freq = io.read_gt3x(file_path)
+
+    data, sample_freq = io.read_gt3x(file_path, use_pygt3x=True)
+
+    assert np.allclose(data[["X", "Y", "Z"]].values, ref[["X", "Y", "Z"]].values)
+    assert ref_sample_freq == sample_freq
+
+
 def test_exceptions():
     with pytest.raises(NotImplementedError) as e_info:
         time_data = np.arange(10)
@@ -67,3 +79,4 @@ def test_exceptions():
         hz = 33
         io._create_time_vector(start, n_samples, hz)
         assert e_info
+

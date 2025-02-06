@@ -26,3 +26,5 @@ paper/img/paat_presentation*
 paper.jats
 paper.pdf
 paper/process.py
+
+.vscode/
