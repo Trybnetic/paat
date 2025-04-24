@@ -18,6 +18,10 @@ Physical Activity Analysis Toolbox (PAAT)
  :target: https://paat.readthedocs.io/en/latest/?badge=latest
  :alt: Documentation Status
 
+.. image:: https://img.shields.io/pypi/pyversions/paat.svg
+  :target: https://pypi.python.org/pypi/paat/
+  :alt: Python Versions
+
 .. image:: https://img.shields.io/github/license/trybnetic/paat.svg
  :target: https://github.com/trybnetic/paat/blob/master/LICENSE.txt
  :alt: License
