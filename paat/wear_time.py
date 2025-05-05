@@ -14,7 +14,8 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import numpy as np
 import pandas as pd
-from tensorflow.keras import models
+# from tensorflow.keras import models
+import keras
 
 from . import preprocessing, features
 
@@ -414,7 +415,7 @@ def detect_non_wear_time_syed2021(data, sample_freq, cnn_model_file=None, std_th
 
     # use one of the default models if no model file is given
     if cnn_model_file is None:
-        cnn_model_file = os.path.join(os.path.pardir, os.path.dirname(__file__), 'models', f'cnn_v2_{str(episode_window_sec)}.h5')
+        cnn_model_file = os.path.join(os.path.pardir, os.path.dirname(__file__), 'models', f'cnn_v2_{str(episode_window_sec)}.pb')
 
     # check if data is triaxial
     if raw_acc.shape[1] != 3:
@@ -465,7 +466,7 @@ def detect_non_wear_time_syed2021(data, sample_freq, cnn_model_file=None, std_th
     grouped_episodes = _group_episodes(episodes=episodes.T, distance_in_min=distance_in_min, correction=3, hz=sample_freq, training=False).T
 
     # load CNN model
-    cnn_model = models.load_model(cnn_model_file)
+    cnn_model = keras.layers.TFSMLayer(cnn_model_file, call_endpoint='serving_default')
 
     # For each episode, extend the edges, create features and infer label
     for _, row in grouped_episodes.iterrows():
@@ -497,7 +498,7 @@ def detect_non_wear_time_syed2021(data, sample_freq, cnn_model_file=None, std_th
             start_episode = start_episode.reshape(1, start_episode.shape[0], start_episode.shape[1])
 
             # get binary class from model
-            start_label = (cnn_model.predict(start_episode, verbose=verbose) > 0.5).astype("int32")
+            start_label = (cnn_model(start_episode)["output_0"].numpy().squeeze() >= .5).astype("int32")
 
             # if the start label is 1, this means that it is wear time, and we set the first start_stop_label to 1
             if start_label == 1:
@@ -515,7 +516,8 @@ def detect_non_wear_time_syed2021(data, sample_freq, cnn_model_file=None, std_th
             stop_episode = stop_episode.reshape(1, stop_episode.shape[0], stop_episode.shape[1])
 
             # get binary class from model
-            stop_label = (cnn_model.predict(stop_episode, verbose=verbose) > 0.5).astype("int32")
+            stop_label = (cnn_model(stop_episode)["output_0"].numpy().squeeze() >= .5).astype("int32")
+            
 
             # if the start label is 1, this means that it is wear time, and we set the first start_stop_label to 1
             if stop_label == 1:

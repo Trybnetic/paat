@@ -20,9 +20,6 @@ your research, we would be grateful if you cite the corresponding original paper
 import os
 import sys
 import platform
-from importlib import metadata
-
-import toml
 
 from . import estimates, features, io, preprocessing, sleep, wear_time
 
@@ -35,28 +32,34 @@ from .sleep import detect_time_in_bed_weitz2024
 from .wear_time import detect_non_wear_time_naive, detect_non_wear_time_hees2011, detect_non_wear_time_syed2021
 
 try:
-    __version__ = metadata.version(__package__)
-except metadata.PackageNotFoundError:
-    __version__ = toml.load("pyproject.toml")["tool"]["poetry"]["version"] + "dev"
+    from packaging.requirements import Requirement
+except ModuleNotFoundError:  # this should only happend during setup phase
+    Requirement = None
 
+try:
+    from importlib import metadata
+    __version__ = metadata.version(__package__)
+    show_deps = True
+except metadata.PackageNotFoundError:
+    import toml
+    __version__ = toml.load("pyproject.toml")["tool"]["poetry"]["version"] + "dev"
+    show_deps = False
 
 
 def sysinfo():
     """
     Prints system the dependency information
     """
-    dependencies = [dep.split(" ")[0] for dep in metadata.requires("paat")]
-
-    header = ("PAAT Information\n"
+    out = ("PAAT Information\n"
               "=================\n\n")
 
-    general = ("General Information\n"
+    out += ("General Information\n"
                "-------------------\n"
                f"Python version: {sys.version.split()[0]}\n"
                f"PAAT version: {__version__}\n\n")
 
     uname = platform.uname()
-    osinfo = ("Operating System\n"
+    out += ("Operating System\n"
               "----------------\n"
               "OS: {s.system} {s.machine}\n"
               "Kernel: {s.release}\n").format(s=uname)
@@ -69,14 +72,14 @@ def sysinfo():
                 _, total, used, *_ = memory[0].split()
             else:
                 total, used = '?', '?'
-            osinfo += f"{identifier} {used}MiB/{total}MiB\n"
+            out += f"{identifier} {used}MiB/{total}MiB\n"
 
-    osinfo += "\n"
+    out += "\n"
 
-    deps = ("Dependencies\n"
-            "------------")
+    if show_deps:
+        out += ("Dependencies\n"
+                "------------")
+        for dep in [dep.split(" ")[0] for dep in metadata.requires("paat")]:
+            out += f"\n{dep}: {metadata.version(dep)}"
 
-    for dep in dependencies:
-        deps += f"\n{dep}: {metadata.version(dep)}"
-
-    print(header + general + osinfo + deps)
+    print(out)
