@@ -46,42 +46,17 @@ noncommunicable diseases such as cancer, cardiovascular diseases, or diabetes as
 or anxiety. Various methods exist to measure physical activity. One of these methods use accelerometers to estimate
 physical activity. Accelerometers are small body-worn sensors which measure acceleration over time. They have become a
 popular assessment tool in research and public health as they provide a reasonably cheap but still more objective
-alternative to surveys while simultaneously keeping the researcher and participant burden low. 
+alternative to surveys while simultaneously keeping the researcher and participant burden low. Accelerometers measure the raw acceleration in ms$^{−2}$ often also expressed as multiples of Earth's gravitation ($1g =  9.80665ms^{−2}$). However, due to historic limitations of on-device storage, the raw acceleration has often been processed to summary metrics like activity counts [@neishabouri_quantification_2022]. However, over the last decade the raw acceleration itself has also gotten into the focus of method development [@van_hees_challenges_2016]. A fundamental limitation of accelerometry is that many methods are only applicable to a certain wear location and demographic group and often do not generalize beyond that. Therefore, separate sets of methods have been developed for different populations and study protocols.
 
-<!-- Accelerometry -->
-Over decades, the raw acceleration as measured in ms$^{−2}$ has been transformed into summary metrics like activity
-counts [@neishabouri_quantification_2022]. More recently, the raw acceleration itself has also gotten into the focus of
-method development [@van_hees_challenges_2016]. Accelerometers can be applied to various locations on the body, but most
-recent method development has focused on the wrist. One reason for this is its common use in many large-scale
-surveillance studies, like the UK Biobank [@doherty_large_2017] or the American NHANES study [@troiano_evolution_2014].
-This also lead to the development of the popular accelerometer analysis package GGIR [@migueles_ggir_2019]. Today, a
-plethora of accelerometer packages exist each fulfilling different purposes, for instance, to analyze accelerometer and
-light exposure data [@hammad_pyactigraphy_2021] or to preprocess accelerometer data [@chan_actipy_2024]. However, none
-of these packages focuses on acceleration data collected from the hip even though the interest in hip-specific methods
-is increasing. New methods have been developed or validated recently
-[@syed_evaluating_2020;@syed_novel_2021;@weitz_automatic_2024] as well as various large-scale population studies using
-hip-mounted accelerometers to measure physical activity [@hopstock_seventh_2022;@weber_large_scale_2024]. 
+<!-- Accelerometry packages -->
+Today, a plethora of accelerometer packages exist each fulfilling different purposes. The most popular package is GGIR [@migueles_ggir_2019] which provides a broad set of well validated raw data methods mainly focusing on wrist-based accelerometry in R. @hammad_pyactigraphy_2021 implemented *pyactigraphy* to analyze accelerometer activity count and light exposure data. *Actipy* provides various file reading and autocalibration functions, but only provide a limited set of methods for the further data analysis [@chan_actipy_2024]. *SciKit Digital Health (SKDH)* provides a variety of algorithms for deriving clinical features of gait, sit to stand, physical activity, and sleep [@adamowicz_scikit_2022]. *Paat* is more specific in its focus on 
 
 ![Visualization of the results obtained from *paat*. (A) The package can be used to load and process the raw data (upper row). The loaded data can then be annotated by a variety of methods. The implemented non-wear time and time in bed algorithm exploit raw acceleration data directly. To estimate physical activity, the raw data is reduced to the ENMO of the signal (lower row). Alternatively, also other metrics like MAD can be estimated and used for further processing. (B) Aggregated daily or average (Ø) results can be obtained and then be used for further analyzes. \label{fig:processing}](img/paper_fig1.png) 
 
-<!-- The need for the package -->
-For many recently developed methods, corresponding code was even available on Github, but was often difficult to use due
-to no existing dependency management and missing maintenance. However, easy accessibility of these methods seems
-particularly important to foster validation and application, especially as openly available data and standardized
-benchmarking procedures are scarce in the field [@palotti_benchmark_2019;@sadeh_role_2011]. Reasons for this might be
-the sensitive nature, but also the high costs of collecting of the data and might potentially compromise the adoption of
-machine learning based methods which are known to struggle to generalize. External validation of methods is an
-alternative to standardized benchmarking and is commonly done in this field
-[@palotti_benchmark_2019;@syed_evaluating_2020;@skovgaard_generalizability_2023] and should, thus, be facilitated.
+hip-placed accelerometer data, but some methods might be also interesting for other packages once they are validated and used more commonly in application. 
 
 <!-- PAAT -->
-For that reason, we collected various methods to analyze raw acceleration data from the hip in this package to
-facilitate validation and application of the included methods. We designed the package in a way that all methods can be
-run in isolation, but can also be combined to design reproducible analysis pipelines. Additionally, we designed the
-package to be extensible allowing users to easily add custom algorithms or use algorithms from other packages in the
-same pipeline by structuring it according to the respective applications (io, calibration, preprocessing, features, wear
-time, sleep, estimation; which are described in more detail below). By doing that, we also want to facilitate the
-integration into existing packages and ecosystems.
+For that reason, *paat* contains various methods to analyze raw acceleration data from the hip. As many of the methods have only recently been proposed, the primary objective of *paat* is to facilitate validation of these methods on external data. Therefore, we designed the package in a way that all methods can be run in isolation, but can also be combined to create reproducible analysis pipelines. Additionally, we designed the package to be extensible allowing users to easily add custom algorithms or use algorithms from other packages in the same pipeline by structuring it according to the respective applications. By doing that, we also want to facilitate the integration into existing packages and ecosystems.
 
 # Use in research
 
@@ -90,7 +65,7 @@ gt3x reading functionality and implemented and used the NWT algorithm from @van_
 study of different NWT algorithms. @syed_novel_2021 also used the functions to develop a new non-wear time algorithm
 which is now included in *paat*. @weitz_influence_2024 used the package to load and process the acceleration data to
 investigate the effect of accelerometer calibration on physical activity in general and MVPA in particular.
-@weitz_automatic_2024 used the package to load and process the data in order to train a machine learning model to
+@weitz_automatic_2025 used the package to load and process the data in order to train a machine learning model to
 identify time-in-bed episodes. The developed method is now also included in this package.
 
 # Acknowledgements

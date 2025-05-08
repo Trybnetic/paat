@@ -138,16 +138,26 @@ Section: Journal for the Measurement of Physical Behaviour},
 	file = {Snapshot:/home/msw/Zotero/storage/HXYIKBTP/14514694.html:text/html},
 }
 
-@article{weitz_automatic_2024,
-	title = {Automatic time in bed detection from hip-worn accelerometers for large epidemiological studies: {The} {Tromso} {Study}},
-	url = {http://medrxiv.org/content/early/2025/02/19/2022.03.07.22270992.abstract},
-	doi = {10.1101/2022.03.07.22270992},
-	abstract = {Accelerometers are frequently used to assess physical activity in large epidemiological studies. They can monitor movement patterns and cycles over several days under free-living conditions and are usually either worn on the wrist or the hip. While wrist-worn accelerometers have been frequently used to additionally assess sleep and time in bed behavior, hip-worn accelerometers have been widely neglected for this task due to their primary focus on physical activity. Here, we present a new method with the objective to identify the time in bed to enable further analysis options for large-scale studies using hip-placement like time in bed or sedentary time analyses. We introduced new and accelerometer specific data augmentation methods, such as mimicking a wrongly worn accelerometer, additional noise, and random croping, to improve training and generalization performance. Subsequently, we trained a neural network model on a sample from the population-based Tromsø Study and evaluated it on two additional datasets. Our algorithm achieved an accuracy of 94\% on the training data, 92\% on unseen data from the same population and comparable results to consumer-wearable data obtained from a demographically different population. Generalization performance was overall good, however, we found that on a few particular days or participants, the trained model fundamentally over- or underestimated time in bed (e.g., predicted all or nothing as time in bed). Despite these limitations, we anticipate our approach to be a starting point for more sophisticated methods to identify time in bed or at some point even sleep from hip-worn acceleration signals. This can enable the re-use of already collected data, for example, for longitudinal analyses where sleep-related research questions only recently got into focus or sedentary time needs to be estimated in 24h wear protocols.},
-	journal = {medRxiv},
-	author = {Weitz, Marc and Syed, Shaheen and Hopstock, Laila Arnesdatter and Morseth, Bente and Henriksen, Andre and Horsch, Alexander},
-	month = jan,
+
+@article{weitz_automatic_2025,
+	title = {Automatic time in bed detection from hip-worn accelerometers for large epidemiological studies: {The} {Tromsø} {Study}},
+	volume = {20},
+	issn = {1932-6203},
+	shorttitle = {Automatic time in bed detection from hip-worn accelerometers for large epidemiological studies},
+	url = {https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0321558},
+	doi = {10.1371/journal.pone.0321558},
+	abstract = {Accelerometers are frequently used to assess physical activity in large epidemiological studies. They can monitor movement patterns and cycles over several days under free-living conditions and are usually either worn on the wrist or the hip. While wrist-worn accelerometers have been frequently used to additionally assess sleep and time in bed behavior, hip-worn accelerometers have been widely neglected for this task due to their primary focus on physical activity. Here, we present a new method with the objective to identify the time in bed to enable further analysis options for large-scale studies using hip-placement like time in bed or sedentary time analyses. We introduced new and accelerometer-specific data augmentation methods, such as mimicking a wrongly worn accelerometer, additional noise, and random croping, to improve training and generalization performance. Subsequently, we trained a neural network model on a sample from the population-based Tromsø Study and evaluated it on two additional datasets. Our algorithm achieved an accuracy of 94\% on the training data, 92\% on unseen data from the same population and comparable results to consumer-wearable data obtained from a demographically different population. Generalization performance was overall good, however, we found that on a few particular days or participants, the trained model fundamentally over- or underestimated time in bed (e.g., predicted all or nothing as time in bed). Despite these limitations, we anticipate our approach to be a starting point for more sophisticated methods to identify time in bed or at some point even sleep from hip-worn acceleration signals. This can enable the re-use of already collected data, for example, for longitudinal analyses where sleep-related research questions only recently got into focus or sedentary time needs to be estimated in 24 h wear protocols.},
+	language = {en},
+	number = {5},
+	urldate = {2025-05-06},
+	journal = {PLOS ONE},
+	author = {Weitz, Marc and Syed, Shaheen and Hopstock, Laila A. and Morseth, Bente and Henriksen, André and Horsch, Alexander},
+	month = may,
 	year = {2025},
-	file = {Weitz et al. - 2025 - Automatic time in bed detection from hip-worn acce.pdf:/home/msw/Zotero/storage/XBU4TGBV/Weitz et al. - 2025 - Automatic time in bed detection from hip-worn acce.pdf:application/pdf},
+	note = {Publisher: Public Library of Science},
+	keywords = {Accelerometers, Hip, Machine learning, Machine learning algorithms, Physical activity, Sedentary behavior, Sleep, Wrist},
+	pages = {e0321558},
+	file = {Full Text PDF:/home/msw/Zotero/storage/QGLU7YZB/Weitz et al. - 2025 - Automatic time in bed detection from hip-worn acce.pdf:application/pdf},
 }
 
 @article{neishabouri_quantification_2022,
@@ -352,4 +362,29 @@ Section: Review},
 	keywords = {Accelerometers, Physical activity, Wrist, Acceleration, Age groups, Analysis of variance, Bioenergetics, Instrument calibration, paper2, paper1, thesis},
 	pages = {e0169649},
 	file = {Snapshot:/home/msw/Zotero/storage/HTR4TN8Q/article.html:text/html;Full Text PDF:/home/msw/Zotero/storage/T74NX67X/Doherty et al. - 2017 - Large Scale Population Assessment of Physical Acti.pdf:application/pdf},
+}
+
+
+@article{adamowicz_scikit_2022,
+	title = {{SciKit} {Digital} {Health}: {Python} {Package} for {Streamlined} {Wearable} {Inertial} {Sensor} {Data} {Processing}},
+	volume = {10},
+	copyright = {Unless stated otherwise, all articles are open-access distributed under the terms of the Creative Commons Attribution License (http://creativecommons.org/licenses/by/4.0/), which permits unrestricted use, distribution, and reproduction in any medium, provided the original work ("first published in JMIR mHealth and uHealth...") is properly cited with original URL and bibliographic citation information. The complete bibliographic information, a link to the original publication on http://mhealth.jmir.org/, as well as this copyright and license information must be included.},
+	shorttitle = {{SciKit} {Digital} {Health}},
+	url = {https://mhealth.jmir.org/2022/4/e36762},
+	doi = {10.2196/36762},
+	abstract = {Wearable inertial sensors are providing enhanced insight into patient mobility and health. Significant research efforts have focused on wearable algorithm design and deployment in both research and clinical settings; however, open-source, general-purpose software tools for processing various activities of daily living are relatively scarce. Furthermore, few studies include code for replication or off-the-shelf software packages. In this work, we introduce SciKit Digital Health (SKDH), a Python software package (Python Software Foundation) containing various algorithms for deriving clinical features of gait, sit to stand, physical activity, and sleep, wrapped in an easily extensible framework. SKDH combines data ingestion, preprocessing, and data analysis methods geared toward modern data science workflows and streamlines the generation of digital endpoints in “good practice” environments by combining all the necessary data processing steps in a single pipeline. Our package simplifies the construction of new data processing pipelines and promotes reproducibility by following a convention over configuration approach, standardizing most settings on physiologically reasonable defaults in healthy adult populations or those with mild impairment. SKDH is open source, as well as free to use and extend under a permissive Massachusetts Institute of Technology license, and is available from GitHub (PfizerRD/scikit-digital-health), the Python Package Index, and the conda-forge channel of Anaconda.},
+	language = {EN},
+	number = {4},
+	urldate = {2025-05-06},
+	journal = {JMIR mHealth and uHealth},
+	author = {Adamowicz, Lukas and Christakis, Yiorgos and Czech, Matthew D. and Adamusiak, Tomasz},
+	month = apr,
+	year = {2022},
+	note = {Company: JMIR mHealth and uHealth
+Distributor: JMIR mHealth and uHealth
+Institution: JMIR mHealth and uHealth
+Label: JMIR mHealth and uHealth
+Publisher: JMIR Publications Inc., Toronto, Canada},
+	pages = {e36762},
+	file = {Full Text:/home/msw/Zotero/storage/KZ5N98J6/Adamowicz et al. - 2022 - SciKit Digital Health Python Package for Streamli.pdf:application/pdf;Snapshot:/home/msw/Zotero/storage/EFXBESF5/e36762.html:text/html},
 }
