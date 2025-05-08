@@ -19,7 +19,7 @@ jobs:
           #macOS-latest
           ]
         python-version: ['3.10', '3.11', '3.12']
-        poetry-version: [1.7.1]
+        poetry-version: [2.1.3]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
