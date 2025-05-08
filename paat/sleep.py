@@ -25,7 +25,13 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def detect_time_in_bed_weitz2024(data, sample_freq, resampled_frequency="1min", means=None, stds=None, model=None):
     """
-    Infer time in bed from raw acceleration signal.
+    Infer time in bed from raw acceleration signal using the method of Weitz et al. (2025).
+
+    References
+    ----------
+
+    Weitz, M., Syed, S., Hopstock, L. A., Morseth, B., Henriksen, A., & Horsch, A. (2025). Automatic time in bed detection from hip-worn accelerometers for large epidemiological studies: The Tromsø Study. *PLOS ONE*, 20(5), e0321558. https://doi.org/10.1371/journal.pone.0321558
+
 
     Parameters
     ----------
