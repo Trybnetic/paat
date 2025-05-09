@@ -6,6 +6,7 @@ Features Module
 acceleration signal.
 
 """
+
 import numpy as np
 import pandas as pd
 from numpy.lib.stride_tricks import sliding_window_view
@@ -22,7 +23,6 @@ BROND_COEFF_B = np.array([0.049109, -0.12284, 0.14356, -0.11269, 0.053804, -0.02
                           -0.046015, 0.036283, -0.012977, -0.0046262, 0.012835, -0.0093762,
                           0.0034485, -0.00080972, -0.00019623])
 
-["Y", "X", "Z"]
 
 def calculate_vector_magnitude(data, minus_one=False, round_negative_to_zero=False, dtype=np.float32):
     r"""
@@ -348,20 +348,17 @@ def calculate_mad(data, freq="6s"):
     Calculate the mean amplitude deviation (MAD) of the raw
     acceleration signal based on Vähä-Ypyä et al. (2015), by
     
-    .. math:: MAD = \frac{1}{n} \sum_i | r_i - \bar{r} |
-    
+    .. math:: MAD = \\frac{1}{n} \sum_i | r_i - \\bar{r} |
+
     with
     
-    .. math:: r = \sqrt{y^2 + x^2 + z^2}
+    .. math:: r = \\sqrt{y^2 + x^2 + z^2}
 
     References
     ----------
-
-    Vähä-Ypyä, H., Vasankari, T., Husu, P., Suni, J., & Sievänen, H. (2015). A universal, 
-    accurate intensity-based classification of different physical activities using raw 
-    data of accelerometer. *Clinical Physiology and Functional Imaging*, 35(1), 64–70. 
-    https://doi.org/10.1111/cpf.12127
+    Vähä-Ypyä, H., Vasankari, T., Husu, P., Suni, J., & Sievänen, H. (2015). A universal, accurate intensity-based classification of different physical activities using raw data of accelerometer. *Clinical Physiology and Functional Imaging*, 35(1), 64–70. https://doi.org/10.1111/cpf.12127
     
+
     Parameters
     ----------
     data : array_like
@@ -373,6 +370,7 @@ def calculate_mad(data, freq="6s"):
     -------
     mad : np.array (acceleration values, 1)(np.float)
        numpy array with the Mean Amplitude Deviation (MAD) of the acceleration
+       
     """
     mad = mad_data = data.resample(freq).apply(_mad)
     return mad
