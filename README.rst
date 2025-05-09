@@ -2,10 +2,6 @@
 Physical Activity Analysis Toolbox (PAAT)
 =========================================
 
-    **Note:** This package is currently under development and the API might change
-    anytime! For reproducible versions, see `zenodo <https://doi.org/10.5281/zenodo.13885749>`_.
-
-
 .. image:: https://github.com/Trybnetic/paat/actions/workflows/python-test.yml/badge.svg
  :target: https://github.com/Trybnetic/paat/actions/workflows/python-test.yml
  :alt: Tests
@@ -30,32 +26,27 @@ Physical Activity Analysis Toolbox (PAAT)
   :target: https://doi.org/10.5281/zenodo.13885749
   :alt: zenodo
 
-The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to
-analyze raw acceleration data. We developed all code mainly for analyzing
-ActiGraph data (GT3X files) in large sample study settings where manual annotation
-and analysis is not feasible. Most functions come along with scientific papers
-describing the methodology in detail. Even though, the package was and is primarily
-develop for analyzing ActiGraph data, we warmly welcome contributions for other
-clinical sensors as well!
+The physical activity analysis toolbox (PAAT) is a comprehensive toolbox to analyze raw acceleration data. We developed all code mainly for analyzing ActiGraph data (GT3X files) in large sample study settings where manual annotation and analysis is not feasible. Most functions come along with scientific papers describing the methodology in detail. Even though, the package was and is primarily develop for analyzing ActiGraph data, we warmly welcome contributions for other clinical sensors as well!
 
 
 Installation
 ============
 
-At the moment, the easiest way to install *paat* directly from GitHub by running:
+The easiest way is to install *paat* directly from PyPI using pip:
 
 .. code:: bash
 
     pip install paat
 
+For reproducible versions, see `zenodo <https://doi.org/10.5281/zenodo.13885749>`_.
+
 
 Usage
 =====
 
-For now, several functions to work with raw data from ActiGraph devices are
-implemented while others are still work in progress. The following code snippet
-should give you a brief overview and idea on how to use this package. Further
-examples and more information on the functions can be found in the documentation.
+*PAAT* comprises several functions to work with raw data from ActiGraph devices. The following code snippet should give you a brief overview and idea on how to use this package. Further examples and more information on the functions can be found in the documentation.
+
+It is also possible to use other packages such as `actipy <https://github.com/OxWearables/actipy>`_ or `SciKit Digital Health (SKDH) <https://github.com/pfizer-opensource/scikit-digital-health>`_ to load the data. The only prerequisite is that a pandas DataFrame with a TimeStamp index and the sampling frequency is provided.
 
 .. code-block:: python
 
@@ -87,40 +78,28 @@ examples and more information on the functions can be found in the documentation
     data =  data[["X", "Y", "Z", "Activity"]]
 
 
-
 Getting involved
 ================
 
 The *paat* project welcomes help in the following ways:
 
 * Making Pull Requests for
-  `code <https://github.com/trybnetic/paat/tree/master/paat>`_,
-  `tests <https://github.com/trybnetic/paat/tree/master/tests>`_
-  or `documentation <https://github.com/trybnetic/paat/tree/master/doc>`_.
-* Commenting on `open issues <https://github.com/trybnetic/paat/issues>`_
-  and `pull requests <https://github.com/trybnetic/paat/pulls>`_.
-* Helping to answer `questions in the issue section
-  <https://github.com/trybnetic/paat/labels/question>`_.
-* Creating feature requests or adding bug reports in the `issue section
-  <https://github.com/trybnetic/paat/issues/new>`_.
+  `code <https://github.com/trybnetic/paat/tree/master/paat>`_,   `tests <https://github.com/trybnetic/paat/tree/master/tests>`_   or `documentation <https://github.com/trybnetic/paat/tree/master/doc>`_.
+* Commenting on `open issues <https://github.com/trybnetic/paat/issues>`_   and `pull requests <https://github.com/trybnetic/paat/pulls>`_.
+* Helping to answer `questions in the issue section <https://github.com/trybnetic/paat/labels/question>`_.
+* Creating feature requests or adding bug reports in the `issue section <https://github.com/trybnetic/paat/issues/new>`_.
 
 
 Authors and Contributers
 ========================
 
 *paat* was mainly developed by
-`Marc Weitz <https://github.com/trybnetic>`_
-and `Shaheen Syed <https://github.com/shaheen-syed/>`_. For the full list of
-contributors have a look at `Github's Contributor summary
-<https://github.com/trybnetic/paat/contributors>`_.
+`Marc Weitz <https://github.com/trybnetic>`_ and `Shaheen Syed <https://github.com/shaheen-syed/>`_. For the full list of contributors have a look at `Github's Contributor summary <https://github.com/trybnetic/paat/contributors>`_.
 
-Currently, it is maintained by `Marc Weitz <https://github.com/trybnetic>`_. In case
-you want to contact the project maintainers, please send an email to
-marc [dot] weitz [at] uit [dot] no
+Currently, it is maintained by `Marc Weitz <https://github.com/trybnetic>`_. In case you want to contact the project maintainers, please send an email to marc [dot] weitz [at] uit [dot] no
 
 
 Acknowledgments
 ===============
 
-This work was supported by the High North Population Studies at UiT The Arctic
-University of Norway.
+This work was supported by the High North Population Studies at UiT The Arctic University of Norway.

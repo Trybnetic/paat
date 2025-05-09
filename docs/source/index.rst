@@ -20,19 +20,21 @@ Quickstart
 Installation
 ~~~~~~~~~~~~
 
-At the moment, the easiest way to install *paat* directly from GitHub by running:
+The easiest way is to install *paat* directly from PyPI using pip:
 
 .. code:: bash
 
     pip install paat
 
+For reproducible versions, see `zenodo <https://doi.org/10.5281/zenodo.13885749>`_.
+
 
 Usage
 ~~~~~
 
-For now, several functions to work with raw data from ActiGraph devices are implemented while others are still work in progress. The following code snippet should give you a brief overview and idea on how to use this package. Further, examples and more information on the functions can be found in the documentation.
+*PAAT* comprises several functions to work with raw data from ActiGraph devices. The following code snippet should give you a brief overview and idea on how to use this package. Further examples and more information on the functions can be found in the documentation.
 
-It is also possible to use other packages such as `actipy <lhttps://github.com/OxWearables/actipy>`_ or `SciKit Digital Health (SKDH) <https://github.com/pfizer-opensource/scikit-digital-health>`_ to load the data. The only prerequisite is that a pandas DataFrame with a TimeStamp index and the sampling frequency is provided.
+It is also possible to use other packages such as `actipy <https://github.com/OxWearables/actipy>`_ or `SciKit Digital Health (SKDH) <https://github.com/pfizer-opensource/scikit-digital-health>`_ to load the data. The only prerequisite is that a pandas DataFrame with a TimeStamp index and the sampling frequency is provided.
 
 .. code-block:: python
 
@@ -65,8 +67,4 @@ It is also possible to use other packages such as `actipy <lhttps://github.com/O
 
 .. note::
 
-    Note that these are only examples. There are multiple methods implemented in PAAT
-    and the processing pipeline can easily be adjusted to individual needs. More (and 
-    also interactive) examples can be found in the :doc:`examples section <examples>` 
-    and an overview over the implemented methods including references to the original 
-    publications is also provided in the :doc:`API documentation <paat>`. 
+    Note that these are only examples. There are multiple methods implemented in PAAT and the processing pipeline can easily be adjusted to individual needs. More (and also interactive) examples can be found in the :doc:`examples section <examples>` and an overview over the implemented methods including references to the original publications is also provided in the :doc:`API documentation <paat>`. 
