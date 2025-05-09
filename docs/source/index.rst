@@ -48,6 +48,7 @@ It is also possible to use other packages such as `actipy <https://github.com/Ox
     data.loc[:, "Time in Bed"] = paat.detect_time_in_bed_weitz2024(data, sample_freq)
 
     # Classify moderate-to-vigorous and sedentary behavior using the cutpoints from Sanders et al. (2019)
+    # Classify moderate-to-vigorous and sedentary behavior using the cutpoints from Sanders et al. (2019)
     data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(
         data, 
         sample_freq,
