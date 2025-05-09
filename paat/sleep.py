@@ -13,19 +13,18 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-# from tensorflow.keras import models
 import keras
-
-# Hide GPU from visible devices
-tf.config.set_visible_devices([], 'GPU')
-#tf.compat.v1.disable_eager_execution()
-
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 def detect_time_in_bed_weitz2024(data, sample_freq, resampled_frequency="1min", means=None, stds=None, model=None):
     """
-    Infer time in bed from raw acceleration signal.
+    Infer time in bed from raw acceleration signal using the method of Weitz et al. (2025).
+
+    References
+    ----------
+
+    Weitz, M., Syed, S., Hopstock, L. A., Morseth, B., Henriksen, A., & Horsch, A. (2025). Automatic time in bed detection from hip-worn accelerometers for large epidemiological studies: The Tromsø Study. *PLOS ONE*, 20(5), e0321558. https://doi.org/10.1371/journal.pone.0321558
+
 
     Parameters
     ----------
@@ -66,14 +65,9 @@ def detect_time_in_bed_weitz2024(data, sample_freq, resampled_frequency="1min", 
 
     # Load model if not specified
     if not model:
-        # model_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'models', 'TIB_model.h5')
-        # model = models.load_model(model_path)
-
         model_path = os.path.join(os.path.pardir, os.path.dirname(__file__), 'models', 'TIB_model.pb')
         model= keras.layers.TFSMLayer(model_path, call_endpoint='serving_default')
 
-    # predictions = (model.predict(X[np.newaxis], verbose=0).squeeze() >= .5)
-    # predictions = (model(X[np.newaxis]).squeeze() >= .5)
     predictions = (model(X[np.newaxis])["output_0"].numpy().squeeze() >= .5)
 
     seconds = pd.Timedelta(resampled_frequency).seconds

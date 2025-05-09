@@ -30,10 +30,9 @@ At the moment, the easiest way to install *paat* directly from GitHub by running
 Usage
 ~~~~~
 
-For now, several functions to work with raw data from ActiGraph devices are
-implemented while others are still work in progress. The following code snippet
-should give you a brief overview and idea on how to use this package. Further,
-examples and more information on the functions can be found in the documentation.
+For now, several functions to work with raw data from ActiGraph devices are implemented while others are still work in progress. The following code snippet should give you a brief overview and idea on how to use this package. Further, examples and more information on the functions can be found in the documentation.
+
+It is also possible to use other packages such as `actipy <lhttps://github.com/OxWearables/actipy>`_ or `SciKit Digital Health (SKDH) <https://github.com/pfizer-opensource/scikit-digital-health>`_ to load the data. The only prerequisite is that a pandas DataFrame with a TimeStamp index and the sampling frequency is provided.
 
 .. code-block:: python
 
@@ -46,7 +45,7 @@ examples and more information on the functions can be found in the documentation
     # Detect sleep episodes
     data.loc[:, "Time in Bed"] = paat.detect_time_in_bed_weitz2024(data, sample_freq)
 
-    # Classify moderate-to-vigorous and sedentary behavior
+    # Classify moderate-to-vigorous and sedentary behavior using the cutpoints from Sanders et al. (2019)
     data.loc[:, ["MVPA", "SB"]] = paat.calculate_pa_levels(
         data, 
         sample_freq,

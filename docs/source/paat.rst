@@ -82,5 +82,5 @@ Vähä-Ypyä, H., Vasankari, T., Husu, P., Suni, J., & Sievänen, H. (2015). A u
 classification of different physical activities using raw data of accelerometer. *Clinical Physiology and Functional
 Imaging*, 35(1), 64–70. https://doi.org/10.1111/cpf.12127
 
-Weitz, M., Syed, S., Hopstock, L. A., Morseth, B., André Henriksen, & Horsch, A. (under review). Automatic time in bed detection
-from hip-worn accelerometers for large epidemiological studies: The Tromsø Study.
+Weitz, M., Syed, S., Hopstock, L. A., Morseth, B., Henriksen, A., & Horsch, A. (2025). Automatic time in bed detection from hip-worn accelerometers for large epidemiological studies: The Tromsø Study. *PLOS ONE*, 20(5), e0321558. https://doi.org/10.1371/journal.pone.0321558
+

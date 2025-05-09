@@ -28,23 +28,24 @@ different NWT algorithms. Syed et al. [3]_ also used the functions to develop a 
 non-wear time algorithm which is now included in *paat*. Weitz et al. [4]_ used 
 the package to load and process the acceleration data to investigate the effect of 
 accelerometer calibration on physical activity in general and MVPA in particular. 
+Weitz et al. [5]_ used the package to load and process the data in order to train a 
+machine learning model to identify time-in-bed episodes.
 
 If you are using *paat* in research, feel free to cite it as
 
-    Weitz, M., Syed, S., & Horsch A. (2024). PAAT: Physical Activity Analysis 
-    Toolbox for analysis of hip-worn raw accelerometer data
+    Weitz, M., Syed, S., & Horsch, A. (2024). PAAT: Physical Activity Analysis Toolbox. Zenodo. https://doi.org/10.5281/zenodo.13885749
+
 
 If you are using BibTex you may want to use this example BibTex entry::
 
-    @misc{weitz_paat_2024,
-          author       = {Marc Weitz and
-                          Shaheen Syed and
-                          Alexander Horsch},
-          title        = {PAAT: Physical Activity Analysis Toolbox for analysis
-                          of hip-worn raw accelerometer data},
-          year         = 2024,
-          url          = {https://github.com/Trybnetic/paat}
-    }
+        @misc{weitz_paat_2024,
+                title = {{PAAT}: {Physical} {Activity} {Analysis} {Toolbox}},
+                url = {https://doi.org/10.5281/zenodo.13885749},
+                publisher = {Zenodo},
+                author = {Weitz, Marc and Syed, Shaheen and Horsch, Alexander},
+                year = {2024},
+                doi = {10.5281/zenodo.13885749},
+        }
 
 This also helps us to keep this page up to date.
 
@@ -70,4 +71,9 @@ This also helps us to keep this page up to date.
         Accelerometer Calibration on the Estimation of Objectively Measured Physical 
         Activity: The Tromsø Study. *Journal for the Measurement of Physical Behaviour*, 7(1).
         https://doi.org/10.1123/jmpb.2023-0019
+
+.. [5] Weitz, M., Syed, S., Hopstock, L. A., Morseth, B., Henriksen, A., & Horsch, A. 
+        (2025). Automatic time in bed detection from hip-worn accelerometers for large 
+        epidemiological studies: The Tromsø Study. *PLOS ONE*, 20(5), e0321558. 
+        https://doi.org/10.1371/journal.pone.0321558
 
