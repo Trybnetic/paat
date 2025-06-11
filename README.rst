@@ -46,7 +46,7 @@ Usage
 
 *PAAT* comprises several functions to work with raw data from ActiGraph devices. The following code snippet should give you a brief overview and idea on how to use this package. Further examples and more information on the functions can be found in the documentation.
 
-It is also possible to use other packages such as `actipy <https://github.com/OxWearables/actipy>`_ or `SciKit Digital Health (SKDH) <https://github.com/pfizer-opensource/scikit-digital-health>`_ to load the data. The only prerequisite is that a pandas DataFrame with a TimeStamp index and the sampling frequency is provided.
+It is also possible to use other packages such as `actipy <https://github.com/OxWearables/actipy>`_ or `SciKit Digital Health (SKDH) <https://github.com/pfizer-opensource/scikit-digital-health>`_ to load the data. The only prerequisite is that a pandas DataFrame with a TimeStamp index and the sampling frequency is provided. The pandas DataFrame should have raw acceleration data of the vertical axis ("Y" column), the sagittal axis ("X" column), and the frontal axis ("Z" column).
 
 .. code-block:: python
 
