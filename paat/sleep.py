@@ -53,6 +53,7 @@ def detect_time_in_bed_weitz2024(data, sample_freq, resampled_frequency="1min", 
     if resampled_frequency:
         data = data[['X', 'Y', 'Z']].resample(resampled_frequency).mean()
 
+    # Order data as YXZ as this is how the model was trained
     X = data.reset_index()[["Y", "X", "Z"]].values.copy()
 
     # If no means and stds are given, calculate subject's mean and std
