@@ -50,6 +50,8 @@ def detect_time_in_bed_weitz2024(data, sample_freq, resampled_frequency="1min", 
         a numpy array indicating whether the values of the acceleration data were spent in bed
 
     """
+    n_data = len(data)
+
     if resampled_frequency:
         data = data[['X', 'Y', 'Z']].resample(resampled_frequency).mean()
 
@@ -72,6 +74,8 @@ def detect_time_in_bed_weitz2024(data, sample_freq, resampled_frequency="1min", 
     predictions = (model(X[np.newaxis])["output_0"].numpy().squeeze() >= .5)
 
     seconds = pd.Timedelta(resampled_frequency).seconds
-    predictions = np.repeat(predictions, seconds * sample_freq)
+    # Slices the predictions to the length of the provided data
+    # This can be relecant if the provided data has incomplete minutes at the start or the end
+    predictions = np.repeat(predictions, seconds * sample_freq)[:n_data]
 
     return predictions
