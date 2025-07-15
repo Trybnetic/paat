@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - test-tib-mwe
   pull_request:
     branches:
       - main
