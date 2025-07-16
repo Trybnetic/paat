@@ -1,19 +1,22 @@
 {
-    "title": "paat: Physical Activity Analysis Toolbox",
+    "title": "PAAT: Physical Activity Analysis Toolbox for the analysis of hip-worn raw accelerometer data in Python",
     "license": {
       "id": "MIT"
     },
     "creators": [
         {
             "name": "Marc Weitz",
+            "orcid": "0009-0006-8225-833X",
             "affiliation": "UiT The Arctic University of Norway, Department of Computer Science"
         },
         {
             "name": "Shaheen Syed",
+            "orcid": "0000-0001-5462-874X",
             "affiliation": "UiT The Arctic University of Norway, Department of Computer Science"
         },
         {
             "name": "Alexander Horsch",
+            "orcid": "0000-0001-7745-0139",
             "affiliation": "UiT The Arctic University of Norway, Department of Computer Science"
         }
     ],
